@@ -37,7 +37,6 @@ export class UsersEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: UserArea,
-    length: 100,
     default: UserArea.Toshkent,
     nullable: true,
   })
@@ -60,7 +59,6 @@ export class UsersEntity extends BaseEntity {
 
   @Column({
     type: 'integer',
-    length: 100,
     nullable: true,
   })
   phone: number;
