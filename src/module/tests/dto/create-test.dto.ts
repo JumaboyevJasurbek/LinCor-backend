@@ -21,7 +21,11 @@ export class CreateTestDto {
   @IsNotEmpty()
   option3: string;
 
-  //   @IsNotEmpty()
-  //   @IsString()
-  //   answer: string;
+  @IsNotEmpty()
+  @IsString()
+  answer: string;
+
+  // @IsNotEmpty()
+  // @IsString()
+  // discount: string;
 }

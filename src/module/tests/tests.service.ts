@@ -17,18 +17,18 @@ export class TestsService {
   }
 
   findAll() {
-    return `This action returns all tests`;
+    return this.test.find();
   }
 
   findOne(id: string) {
-    return `This action returns a #${id} test`;
+    return this.test.findAndCountBy({ id });
   }
 
   update(id: string, updateTestDto: UpdateTestDto) {
-    return `This action updates a #${id} test`;
+    return this.test.update(id, updateTestDto);
   }
 
   remove(id: string) {
-    return `This action removes a #${id} test`;
+    return this.test.delete(id);
   }
 }

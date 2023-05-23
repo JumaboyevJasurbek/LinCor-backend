@@ -18,5 +18,9 @@ export class UpdateTestDto extends PartialType(CreateTestDto) {
   @IsString()
   option3: string;
 
+  @IsString()
   answer: string;
+
+  // @IsString()
+  // discount: string;
 }
