@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -17,6 +18,12 @@ export class TakeEntity extends BaseEntity {
 
   @CreateDateColumn({ name: 'created_at' })
   create_data: Date;
+
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  active: boolean;
 
   @ManyToOne(() => UsersEntity, (user) => user.open_course, {
     onDelete: 'CASCADE',
