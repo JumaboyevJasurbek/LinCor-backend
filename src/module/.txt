@@ -47,11 +47,31 @@ adminLogin {
 Parol update {
     Login {
         nodemailer {
-            
+            email page
+            code page
+            parol newParol code page
         }
     }
     Ichkarida {
         token keladi shundan update qilib qoyaman 
         parol,
+    }
+}
+
+One {
+    token keladi shu token egasini hamma malumotlarini qaytaraman {
+        user paroldan tashqari hamma malumotlari,
+        sotib olgan courselar: {
+            courseni ozini hamma malumotlari 
+            va
+            qachon sotib olgani 
+            qachon tugashi
+            courselar sertifikati olingan bolsa ? olingan sana : id 
+            courselarni workbooklar olingan soni(korilgan darslar soni) 
+            jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi
+        },
+        sotib olgan videolar soni,
+        sotib olgan sertifikatlar soni,
+        6 ta course dan 
     }
 }
