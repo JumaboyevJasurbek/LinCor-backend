@@ -11,7 +11,7 @@ import { Sertifikat } from './sertifikat.entity';
 import { Discount } from './discount.entity';
 import { Sequence } from 'src/types';
 
-@Entity({ name: 'courses' })
+@Entity()
 export class CourseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

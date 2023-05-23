@@ -9,7 +9,7 @@ import { TakeEntity } from './take.entity';
 import { VideoEntity } from './video.entity';
 import { Sequence } from 'src/types';
 
-@Entity({name: "topic"})
+@Entity()
 export class TopikEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

@@ -10,7 +10,7 @@ import {
 import { CourseEntity } from './course.entity';
 import { TakenSertifikat } from './taken.sertifikat';
 
-@Entity({name: "sertificate"})
+@Entity()
 export class Sertifikat extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

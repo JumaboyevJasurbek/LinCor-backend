@@ -9,7 +9,7 @@ import {
 import { TakeEntity } from './take.entity';
 import { TakenDiscount } from './taken_discount';
 
-@Entity({name: "users"})
+@Entity()
 export class UsersEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

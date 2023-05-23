@@ -10,7 +10,7 @@ import { CourseEntity } from './course.entity';
 import { UsersEntity } from './users.entity';
 import { TopikEntity } from './topik.entity';
 
-@Entity({ name: 'take' })
+@Entity()
 export class TakeEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

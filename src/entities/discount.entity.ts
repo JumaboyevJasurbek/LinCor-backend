@@ -11,7 +11,7 @@ import { CourseEntity } from './course.entity';
 import { TakenDiscount } from './taken_discount';
 import { TestsEntity } from './tests.entity';
 
-@Entity({ name: 'discount' })
+@Entity()
 export class Discount extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
