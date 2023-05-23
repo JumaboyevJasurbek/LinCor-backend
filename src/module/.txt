@@ -86,7 +86,7 @@ One {
     }
 }
 
-PATH {
+PATCH {
     surname,
     ism,
     area,

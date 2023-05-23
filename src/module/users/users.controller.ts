@@ -6,16 +6,33 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { RegistrDto } from './dto/registr';
 
-@Controller('users')
+@Controller('user')
 @ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Post('registr')
+  @ApiBadRequestResponse()
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.OK)
+  async registr(@Body() body: RegistrDto) {
+    return await this.usersService.registr(body);
+  }
 
   @Get()
   findAll() {

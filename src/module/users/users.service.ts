@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { RegistrDto } from './dto/registr';
 
 @Injectable()
 export class UsersService {
+  async registr(body: RegistrDto) {
+    console.log(body);
+  }
+
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
   }
