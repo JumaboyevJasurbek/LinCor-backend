@@ -1,10 +1,18 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { connectDb } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { config } from './config';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
+import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
+import { TokenUserMiddleWare } from './middleware/token.user.middleware';
+import { UsersModule } from './module/users/users.module';
 dotenv.config();
 
 @Module({
@@ -14,6 +22,29 @@ dotenv.config();
     JwtModule.register({
       secret: process.env.SECRET_KEY,
     }),
+    UsersModule,
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // User
+    consumer
+      .apply(TokenUserMiddleWare)
+      .exclude(
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+      )
+      .forRoutes({ path: '/**', method: RequestMethod.ALL });
+
+    // Admin
+    consumer
+      .apply(TokenAdminMiddleWare)
+      .exclude(
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+      )
+      .forRoutes({ path: '/**', method: RequestMethod.ALL });
+  }
+}

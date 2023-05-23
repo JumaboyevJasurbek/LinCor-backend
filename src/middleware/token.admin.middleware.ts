@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'src/utils/jwt';
 
 @Injectable()
-export class TokenUserMiddleWare implements NestMiddleware {
+export class TokenAdminMiddleWare implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     console.log(req.headers);
     const { headers }: any = req;
@@ -25,12 +25,12 @@ export class TokenUserMiddleWare implements NestMiddleware {
     if (!admin?.email && !admin?.password) {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
-    // if (
-    //   admin?.email !== 'shakhboz2427@gmail.com' &&
-    //   admin?.password !== 'adminprodvd2427'
-    // ) {
-    //   throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
-    // }
+    if (
+      admin?.email !== 'ahmadjonovakmal079@gmail.com' &&
+      admin?.password !== '12345678'
+    ) {
+      throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
+    }
 
     next();
   }

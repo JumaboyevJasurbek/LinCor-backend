@@ -17,7 +17,7 @@ export class UsersEntity extends BaseEntity {
   @Column({
     type: 'character varying',
     length: 100,
-    nullable: false,
+    nullable: true,
   })
   surname: string;
 
@@ -27,6 +27,12 @@ export class UsersEntity extends BaseEntity {
     nullable: false,
   })
   username: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  image: string;
 
   @Column({
     type: 'enum',

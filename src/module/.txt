@@ -1,0 +1,57 @@
+Token ichiga email, id yashiriladi, adminda email va parol yashiriladi
+
+Reg {
+    Nodemailer {
+        familiya,
+        ism,
+        hudud,
+        email,
+        parol,
+    }
+    Google {
+        email,
+        ism,
+        parol: uid,
+        image
+    }
+    Git Hub {
+        email,
+        ism,
+        parol: uid,
+        image
+    }
+}
+
+Login {
+    Nodemailer {
+        email,
+        parol
+    }
+    Google {
+        email,
+        parol
+    }
+    Git Hub {
+        email,
+        parol
+    }
+}
+
+adminLogin {
+    nodemailer {
+        email,
+        parol,
+    }
+}
+
+Parol update {
+    Login {
+        nodemailer {
+            
+        }
+    }
+    Ichkarida {
+        token keladi shundan update qilib qoyaman 
+        parol,
+    }
+}
