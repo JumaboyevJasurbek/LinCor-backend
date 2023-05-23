@@ -14,6 +14,7 @@ import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
 import { TokenUserMiddleWare } from './middleware/token.user.middleware';
 import { UsersModule } from './module/users/users.module';
 import { TestsModule } from './module/tests/tests.module';
+import { SertificateModule } from './module/sertificate/sertificate.module';
 dotenv.config();
 
 @Module({
@@ -25,6 +26,7 @@ dotenv.config();
     }),
     UsersModule,
     TestsModule,
+    SertificateModule,
   ],
 })
 export class AppModule implements NestModule {
