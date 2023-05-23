@@ -10,7 +10,7 @@ import { VideoEntity } from './video.entity';
 import { Sertifikat } from './sertifikat.entity';
 import { Discount } from './discount.entity';
 
-@Entity()
+@Entity({ name: 'courses' })
 export class CourseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

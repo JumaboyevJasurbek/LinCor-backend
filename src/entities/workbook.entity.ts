@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { VideoEntity } from './video.entity';
 
-@Entity()
+@Entity({ name: 'workbook' })
 export class WorkbookEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
