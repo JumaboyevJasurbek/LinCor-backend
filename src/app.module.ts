@@ -41,9 +41,10 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenUserMiddleWare)
       .exclude(
-        { path: '/user/:id', method: RequestMethod.POST },
-        { path: '/user/:id', method: RequestMethod.POST },
-        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/registr', method: RequestMethod.POST },
+        { path: '/user/registr/:id', method: RequestMethod.POST },
+        { path: '/user/login', method: RequestMethod.POST },
+        { path: '/user/login/email/:code', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -51,9 +52,10 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(
-        { path: '/user/:id', method: RequestMethod.POST },
-        { path: '/user/:id', method: RequestMethod.POST },
-        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/registr', method: RequestMethod.POST },
+        { path: '/user/registr/:id', method: RequestMethod.POST },
+        { path: '/user/login', method: RequestMethod.POST },
+        { path: '/user/login/email/:code', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
