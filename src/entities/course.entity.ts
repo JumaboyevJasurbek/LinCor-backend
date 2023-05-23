@@ -9,6 +9,7 @@ import { TakeEntity } from './take.entity';
 import { VideoEntity } from './video.entity';
 import { Sertifikat } from './sertifikat.entity';
 import { Discount } from './discount.entity';
+import { Sequence } from 'src/types';
 
 @Entity({ name: 'courses' })
 export class CourseEntity extends BaseEntity {
@@ -41,11 +42,13 @@ export class CourseEntity extends BaseEntity {
   image: string;
 
   @Column({
-    type: 'integer',
+    type: 'enum',
     nullable: false,
+    default: Sequence.A,
+    enum: Sequence,
     unique: true,
   })
-  sequence: number;
+  sequence: Sequence;
 
   @OneToMany(() => VideoEntity, (video) => video.course)
   course_videos: VideoEntity[];

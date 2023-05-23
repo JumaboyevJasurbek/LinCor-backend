@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { TakeEntity } from './take.entity';
 import { VideoEntity } from './video.entity';
+import { Sequence } from 'src/types';
 
 @Entity({name: "topic"})
 export class TopikEntity extends BaseEntity {
@@ -39,11 +40,13 @@ export class TopikEntity extends BaseEntity {
   image: string;
 
   @Column({
-    type: 'integer',
+    type: 'enum',
     nullable: false,
+    default: Sequence.A,
+    enum: Sequence,
     unique: true,
   })
-  sequence: number;
+  sequence: Sequence;
 
   @OneToMany(() => VideoEntity, (video) => video.topik)
   topik_videos: VideoEntity[];

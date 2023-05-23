@@ -15,7 +15,7 @@ export class TestsEntity extends BaseEntity {
   id: string;
 
   @Column({
-    type: 'number',
+    type: 'integer',
     nullable: false,
   })
   sequence: number;
@@ -47,11 +47,10 @@ export class TestsEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: Answer,
-    length: 100,
     default: Answer.A,
     nullable: false,
   })
-  answer: Answer;
+  answer: string;
 
   @ManyToOne(() => Discount, (discount) => discount.test, {
     onDelete: 'CASCADE',

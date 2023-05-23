@@ -31,3 +31,9 @@ export enum Answer {
   B = 'b',
   C = 'c',
 }
+
+export enum Sequence {
+  A = 1,
+  B = 2,
+  C = 3,
+}
