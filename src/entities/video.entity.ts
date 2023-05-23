@@ -21,7 +21,7 @@ export class VideoEntity extends BaseEntity {
     type: 'text',
     nullable: false,
   })
-  link: string;
+  link: string; 
 
   @Column({
     type: 'character varying',

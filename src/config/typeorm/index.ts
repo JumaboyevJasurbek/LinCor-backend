@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
+import { Vedio } from 'src/module/vedio/entities/vedio.entity';
 dotenv.config();
 
 export const connectDb: TypeOrmModuleOptions = {
@@ -9,7 +10,7 @@ export const connectDb: TypeOrmModuleOptions = {
   password: String(process.env.DB_PASSWORD),
   username: process.env.DB_USERNAME,
   database: process.env.DATABASE,
-  entities: [],
+  entities: [Vedio],
   autoLoadEntities: true,
   synchronize: true,
-};
+}; 

@@ -13,6 +13,7 @@ import * as dotenv from 'dotenv';
 import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
 import { TokenUserMiddleWare } from './middleware/token.user.middleware';
 import { UsersModule } from './module/users/users.module';
+import { VedioModule } from './module/vedio/vedio.module';
 dotenv.config();
 
 @Module({
@@ -23,6 +24,7 @@ dotenv.config();
       secret: process.env.SECRET_KEY,
     }),
     UsersModule,
+    VedioModule,
   ],
 })
 export class AppModule implements NestModule {
