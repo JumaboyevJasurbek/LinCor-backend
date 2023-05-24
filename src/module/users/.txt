@@ -31,16 +31,16 @@ Login {
     Nodemailer {
         email,
         parol
-    }
+    }                       ✅
     Google {
         email,
         parol
-    }
+    }                       ✅
     Git Hub {
         email,
         parol
-    }
-}
+    }                       ✅
+}                           ✅
 
 Parol update {
     Login {
@@ -49,12 +49,12 @@ Parol update {
             code page
             parol newParol code page
         }
-    }
+    }                       ✅
     Ichkarida {
         token keladi shundan update qilib qoyaman 
         parol,
-    }
-}
+    }                       ✅
+}                           ✅
 
 One {
     token keladi shu token egasini hamma malumotlarini qaytaraman {
@@ -96,7 +96,7 @@ PATCH {
     ism,
     area,
     phone,
-}
+}                           ✅
 
 PUT {
     nodemailer {
@@ -114,10 +114,10 @@ PUT {
 
 statistika + {
     daromat {
-        haftaga,
         oyiga,
         yiliga,
         userlar soni
+        nechta sertifikat olingan jami
     }
     Users: {
         passworddan tashqari hamma malumotlari        
@@ -162,4 +162,4 @@ adminLogin {
         email,
         parol,
     }
-}
+}                           ✅

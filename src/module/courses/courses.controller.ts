@@ -76,10 +76,7 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: string | string[] = googleCloud(file);
-    if (img_link) {
-      return this.coursesService.create(createCourseDto, img_link as any);
-    }
+    //
   }
 
   @Get('/list')
