@@ -9,22 +9,32 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { config } from './config';
 import { JwtModule } from '@nestjs/jwt';
-import * as dotenv from 'dotenv';
 import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
 import { TokenUserMiddleWare } from './middleware/token.user.middleware';
 import { UsersModule } from './module/users/users.module';
 import { CoursesModule } from './module/courses/courses.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { TestsModule } from './module/tests/tests.module';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Module({
   imports: [
     ConfigModule.forRoot(config),
     TypeOrmModule.forRoot(connectDb),
+    RedisModule.forRoot({
+      config: {
+        host: 'localhost',
+        port: 6379,
+        password: '',
+      },
+    }),
     JwtModule.register({
       secret: process.env.SECRET_KEY,
     }),
     UsersModule,
     CoursesModule,
+    TestsModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -37,6 +47,10 @@ export class AppModule implements NestModule {
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/courses/list', method: RequestMethod.GET },
+        { path: '/user/registr', method: RequestMethod.POST },
+        { path: '/user/registr/:id', method: RequestMethod.POST },
+        { path: '/user/login', method: RequestMethod.POST },
+        { path: '/user/login/email/:code', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -48,6 +62,10 @@ export class AppModule implements NestModule {
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/courses/list', method: RequestMethod.GET },
+        { path: '/user/registr', method: RequestMethod.POST },
+        { path: '/user/registr/:id', method: RequestMethod.POST },
+        { path: '/user/login', method: RequestMethod.POST },
+        { path: '/user/login/email/:code', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }

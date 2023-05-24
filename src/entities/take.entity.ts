@@ -1,5 +1,6 @@
 import {
   BaseEntity,
+  Column,
   CreateDateColumn,
   Entity,
   JoinColumn,
@@ -10,13 +11,19 @@ import { CourseEntity } from './course.entity';
 import { UsersEntity } from './users.entity';
 import { TopikEntity } from './topik.entity';
 
-@Entity()
+@Entity({ name: 'take' })
 export class TakeEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @CreateDateColumn({ name: 'created_at' })
   create_data: Date;
+
+  @Column({
+    type: 'boolean',
+    default: true,
+  })
+  active: boolean;
 
   @ManyToOne(() => UsersEntity, (user) => user.open_course, {
     onDelete: 'CASCADE',

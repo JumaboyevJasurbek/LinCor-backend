@@ -71,7 +71,7 @@ export class CoursesController {
   })
   async create(
     @Body() createCourseDto: CreateCourseDto,
-    @UploadedFile() file: any,
+    @UploadedFile() file: Express.Multer.File,
   ) {
     return this.coursesService.create(createCourseDto);
   }

@@ -7,10 +7,10 @@ Reg {
         hudud,
         email,
         parol,
-    }
+    }                       ✅
     Google {
-        email,
         ism,
+        email,
         parol: uid,
         image
     }
@@ -37,13 +37,6 @@ Login {
     }
 }
 
-adminLogin {
-    nodemailer {
-        email,
-        parol,
-    }
-}
-
 Parol update {
     Login {
         nodemailer {
@@ -67,6 +60,7 @@ One {
             qachon sotib olgani 
             qachon tugashi
             course ni chegirma blan olgan bolsa ( chegirma: boolean )
+            nechi foizlik chegirma: %
             active: boolean (Kursni hozirgi holati)
             sertifikat: courselar sertifikati olingan bolsa ? olingan sana : true
             korilgan darslar: courselarni workbooklar olingan soni(korilgan darslar soni) 
@@ -89,5 +83,78 @@ One {
                 active: true
             },
         }
+    }
+}
+
+PATCH {
+    surname,
+    ism,
+    area,
+    phone,
+}
+
+PUT {
+    nodemailer {
+        email
+    }
+    code {
+        kod keladi togri bolsa baza update qilinib
+        yengi token qaytadi
+    }
+}
+
+PUT {
+    image
+}
+
+statistika + {
+    daromat {
+        haftaga,
+        oyiga,
+        yiliga,
+        userlar soni
+    }
+    Users: {
+        passworddan tashqari hamma malumotlari        
+    }
+    user/one {
+        sotib olgan courselar: {
+            courseni ozini hamma malumotlari 
+            va
+            qachon sotib olgani 
+            qachon tugashi
+            course ni chegirma blan olgan bolsa ( chegirma: boolean )
+            nechi foizlik chegirma: %
+            active: boolean (Kursni hozirgi holati)
+            sertifikat: courselar sertifikati olingan bolsa ? olingan sana : true
+            korilgan darslar: courselarni workbooklar olingan soni(korilgan darslar soni) 
+            jami darslar: Course jami darslar
+            qolgan darslar: jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi
+        },
+        courses: {
+            course1: {
+                sotib olgan: true
+                active: false
+            },
+            course2: {
+                sotib olgan: false
+                active: true
+            },
+            course3: {
+                sotib olgan: true
+                active: true
+            },
+        }
+    }
+}
+
+admin/delete {
+    Userni tolliq ochirib yuboradi bazadan
+}
+
+adminLogin {
+    nodemailer {
+        email,
+        parol,
     }
 }
