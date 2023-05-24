@@ -3,7 +3,9 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Body,
+  Req,
   Param,
   Delete,
   HttpCode,
@@ -12,6 +14,8 @@ import {
 import { UsersService } from './users.service';
 import {
   ApiBadRequestResponse,
+  ApiHeader,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
@@ -24,6 +28,9 @@ import { FirebaseLoginDto } from './dto/firebase.login';
 import { AdminLoginDto } from './dto/admin.login';
 import { PasswordDto } from './dto/password-email';
 import { PasswordUpdateDto } from './dto/password-update';
+import { PatchUserDto } from './dto/patch-all';
+import { Request } from 'express';
+import { InPasswordDto } from './dto/inPassword';
 
 @Controller('user')
 @ApiTags('Users')
@@ -125,6 +132,35 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async passwordUpdate(@Body() body: PasswordUpdateDto) {
     return await this.usersService.passwordUpdate(body);
+  }
+
+  @Patch('/update')
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  async patch(@Body() body: PatchUserDto, @Req() req: Request) {
+    return await this.usersService.patch(req.user_id, body);
+  }
+
+  @Put('/in/password')
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  async passwordIN(@Body() body: InPasswordDto, @Req() req: Request) {
+    console.log(req.user_id);
+    return await this.usersService.passwordIN(req.user_id, body);
   }
 
   @Get()

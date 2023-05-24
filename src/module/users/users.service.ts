@@ -15,6 +15,8 @@ import { FirebaseLoginDto } from './dto/firebase.login';
 import { AdminLoginDto } from './dto/admin.login';
 import { PasswordDto } from './dto/password-email';
 import { PasswordUpdateDto } from './dto/password-update';
+import { PatchUserDto } from './dto/patch-all';
+import { InPasswordDto } from './dto/inPassword';
 
 @Injectable()
 export class UsersService {
@@ -387,12 +389,87 @@ export class UsersService {
     };
   }
 
+  async passwordIN(id: string, body: InPasswordDto) {
+    const findUser: any = await UsersEntity.findOne({
+      where: {
+        id,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    if (body.newPassword != body.password) {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
+
+    const solt = await bcrypt.genSalt();
+    await UsersEntity.createQueryBuilder()
+      .update()
+      .set({
+        parol: await bcrypt.hash(body.password, solt),
+      })
+      .where({ id: findUser.id })
+      .execute();
+    return {
+      message: 'User password successfully updated',
+      status: 200,
+    };
+  }
+
   findAll() {
     return `This action returns all users`;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+
+  async patch(userId: string, body: PatchUserDto) {
+    const findUser: any = await UsersEntity.findOne({
+      where: {
+        id: userId,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    if (body?.phone) {
+      const phone = Number(body?.phone.split(' ').join(''));
+      if (!phone) {
+        throw new HttpException('Phone Wrong format', HttpStatus.BAD_REQUEST);
+      }
+
+      if (String(phone).length > 9) {
+        throw new HttpException('Phone Wrong format', HttpStatus.BAD_REQUEST);
+      }
+
+      await UsersEntity.createQueryBuilder()
+        .update()
+        .set({
+          username: body.first_name || findUser.username,
+          surname: body.last_name || findUser.surname,
+          area: body.area || findUser.area,
+          phone: phone,
+        })
+        .where({
+          id: userId,
+        })
+        .execute();
+    } else {
+      await UsersEntity.createQueryBuilder()
+        .update()
+        .set({
+          username: body.first_name || findUser.username,
+          surname: body.last_name || findUser.surname,
+          area: body.area || findUser.area,
+          phone: findUser.phone,
+        })
+        .where({
+          id: userId,
+        })
+        .execute();
+    }
   }
 
   remove(id: number) {

@@ -49,12 +49,12 @@ Parol update {
             code page
             parol newParol code page
         }
-    }
+    }                       ✅
     Ichkarida {
         token keladi shundan update qilib qoyaman 
         parol,
-    }
-}
+    }                       ✅
+}                           ✅
 
 One {
     token keladi shu token egasini hamma malumotlarini qaytaraman {
@@ -96,7 +96,7 @@ PATCH {
     ism,
     area,
     phone,
-}
+}                           ✅
 
 PUT {
     nodemailer {
