@@ -57,10 +57,10 @@ export class CoursesController {
           type: 'number',
           default: 1,
         },
-        
+
         file: {
           type: 'string',
-          format: 'binary'
+          format: 'binary',
         },
       },
     },
@@ -70,7 +70,7 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiCreatedResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor('file')) 
+  @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
     description: 'token',
@@ -102,9 +102,9 @@ export class CoursesController {
     required: true,
   })
   findOne(@Param('id') id: string, @Request() req: any) {
-    const {user_id} = req
+    const { user_id } = req;
     console.log(user_id);
-    
+
     return this.coursesService.findOne(id, user_id);
   }
 

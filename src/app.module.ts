@@ -45,25 +45,25 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenUserMiddleWare)
       .exclude(
-        { path: '/courses/list', method: RequestMethod.GET },
-        { path: '/courses/create', method: RequestMethod.POST },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
-        { path: '/tests/admin', method: RequestMethod.GET },
-        { path: '/tests', method: RequestMethod.POST },
-        { path: '/tests/:id', method: RequestMethod.PATCH },
-        { path: '/tests/:id', method: RequestMethod.DELETE },
         { path: '/user/firebase/registr', method: RequestMethod.POST },
         { path: '/user/firebase/login', method: RequestMethod.POST },
         { path: '/user/admin/login', method: RequestMethod.POST },
         { path: '/user/admin/login/:id', method: RequestMethod.GET },
-        { path: '/vedio/all', method: RequestMethod.GET },
-        { path: '/vedio/create', method: RequestMethod.POST },
+        { path: '/courses/list', method: RequestMethod.GET },
         { path: '/user/password', method: RequestMethod.POST },
         { path: '/user/password/:code', method: RequestMethod.GET },
         { path: '/user/password/update', method: RequestMethod.PUT },
+        { path: '/courses/create', method: RequestMethod.POST },
+        { path: '/tests/admin', method: RequestMethod.GET },
+        { path: '/tests', method: RequestMethod.POST },
+        { path: '/tests/:id', method: RequestMethod.PATCH },
+        { path: '/tests/:id', method: RequestMethod.DELETE },
+        { path: '/vedio/all', method: RequestMethod.GET },
+        { path: '/vedio/create', method: RequestMethod.POST },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
