@@ -13,6 +13,8 @@ import { Auth_socials } from 'src/types';
 import { FirebaseRegistrDto } from './dto/firebase.registr';
 import { FirebaseLoginDto } from './dto/firebase.login';
 import { AdminLoginDto } from './dto/admin.login';
+import { PasswordDto } from './dto/password-email';
+import { PasswordUpdateDto } from './dto/password-update';
 
 @Injectable()
 export class UsersService {
@@ -298,6 +300,89 @@ export class UsersService {
     this.redis.del(random);
     return {
       token,
+      status: 200,
+    };
+  }
+
+  async password(body: PasswordDto) {
+    const randomSon = random();
+    const findUser = await UsersEntity.findOne({
+      where: {
+        email: body.email,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    await senMail(body.email, randomSon);
+
+    const newObj = {
+      email: body.email,
+      random: randomSon,
+    };
+
+    await this.redis.set(randomSon, JSON.stringify(newObj));
+
+    return {
+      message: 'Code send Email',
+      status: 200,
+    };
+  }
+
+  async passwordCode(random: string) {
+    const result: any = await this.redis.get(random);
+    const redis = JSON.parse(result);
+
+    if (!redis || redis.random != random) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    const findUser: any = await UsersEntity.findOne({
+      where: {
+        email: redis.email,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      message: 'Password togri',
+      status: 200,
+    };
+  }
+
+  async passwordUpdate(body: PasswordUpdateDto) {
+    const random = body.code;
+    const result: any = await this.redis.get(random);
+    const redis = JSON.parse(result);
+
+    if (!redis || redis.random != random) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    const findUser: any = await UsersEntity.findOne({
+      where: {
+        email: redis.email,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+    this.redis.del(random);
+    if (body.newPassword != body.password) {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
+
+    const solt = await bcrypt.genSalt();
+    await UsersEntity.createQueryBuilder()
+      .update()
+      .set({
+        parol: await bcrypt.hash(body.password, solt),
+      })
+      .where({ id: findUser.id })
+      .execute();
+    return {
+      message: 'User password successfully updated',
       status: 200,
     };
   }

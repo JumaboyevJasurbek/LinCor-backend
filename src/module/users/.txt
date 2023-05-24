@@ -31,16 +31,16 @@ Login {
     Nodemailer {
         email,
         parol
-    }
+    }                       ✅
     Google {
         email,
         parol
-    }
+    }                       ✅
     Git Hub {
         email,
         parol
-    }
-}
+    }                       ✅
+}                           ✅
 
 Parol update {
     Login {
@@ -162,4 +162,4 @@ adminLogin {
         email,
         parol,
     }
-}
+}                           ✅

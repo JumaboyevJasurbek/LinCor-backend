@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   Param,
   Delete,
@@ -21,6 +22,8 @@ import { LoginDto } from './dto/login';
 import { FirebaseRegistrDto } from './dto/firebase.registr';
 import { FirebaseLoginDto } from './dto/firebase.login';
 import { AdminLoginDto } from './dto/admin.login';
+import { PasswordDto } from './dto/password-email';
+import { PasswordUpdateDto } from './dto/password-update';
 
 @Controller('user')
 @ApiTags('Users')
@@ -91,12 +94,37 @@ export class UsersController {
     return await this.usersService.admin_login(body);
   }
 
-  @Get('/admin/login/:id')
+  @Get('/admin/login/:code')
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
-  async adminLoginEmail(@Param('id') params: string) {
+  async adminLoginEmail(@Param('code') params: string) {
     return await this.usersService.admin_login_email(params);
+  }
+
+  @Post('/password')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async password(@Body() body: PasswordDto) {
+    return await this.usersService.password(body);
+  }
+
+  @Get('/password/:code')
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async passwordCode(@Param('code') params: string) {
+    return await this.usersService.passwordCode(params);
+  }
+
+  @Put('/password/update')
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async passwordUpdate(@Body() body: PasswordUpdateDto) {
+    return await this.usersService.passwordUpdate(body);
   }
 
   @Get()
