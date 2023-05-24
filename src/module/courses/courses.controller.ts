@@ -10,6 +10,7 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -25,8 +26,6 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { TokenAdminMiddleWare } from 'src/middleware/token.admin.middleware';
-import { stringify } from 'querystring';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
 
@@ -40,7 +39,7 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['title', 'description', 'price', 'sequency'],
+      required: ['title', 'description', 'price', 'sequency', 'file'],
       properties: {
         title: {
           type: 'string',
@@ -58,6 +57,11 @@ export class CoursesController {
           type: 'number',
           default: 1,
         },
+        
+        file: {
+          type: 'string',
+          format: 'binary'
+        },
       },
     },
   })
@@ -66,7 +70,7 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiCreatedResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file')) 
   @ApiHeader({
     name: 'autharization',
     description: 'token',
@@ -76,9 +80,9 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: string | string[] = googleCloud(file);
+    const img_link: string = googleCloud(file);
     if (img_link) {
-      return this.coursesService.create(createCourseDto, img_link as any);
+      return this.coursesService.create(createCourseDto, img_link);
     }
   }
 
@@ -89,9 +93,19 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(id);
+  @Get('/course/:id')
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'token',
+    required: true,
+  })
+  findOne(@Param('id') id: string, @Request() req: any) {
+    const {user_id} = req
+    console.log(user_id);
+    
+    return this.coursesService.findOne(id, user_id);
   }
 
   @Patch(':id')

@@ -8,10 +8,11 @@ import { connectDb } from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { config } from './config';
-import { JwtModule } from '@nestjs/jwt';
+// import { JwtModule } from '@nestjs/jwt';
 import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
 import { TokenUserMiddleWare } from './middleware/token.user.middleware';
 import { UsersModule } from './module/users/users.module';
+import { VedioModule } from './module/vedio/vedio.module';
 import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
@@ -30,10 +31,11 @@ dotenv.config();
         password: '',
       },
     }),
-    JwtModule.register({
-      secret: process.env.SECRET_KEY,
-    }),
+    // JwtModule.register({
+    //   secret: process.env.SECRET_KEY,
+    // }),
     UsersModule,
+    VedioModule,
     CoursesModule,
     TestsModule,
     DiscountModule,
@@ -59,6 +61,8 @@ export class AppModule implements NestModule {
         { path: '/user/firebase/login', method: RequestMethod.POST },
         { path: '/user/admin/login', method: RequestMethod.POST },
         { path: '/user/admin/login/:id', method: RequestMethod.GET },
+        { path: '/vedio/all', method: RequestMethod.GET },
+        { path: '/vedio/create', method: RequestMethod.POST },
         { path: '/user/password', method: RequestMethod.POST },
         { path: '/user/password/:code', method: RequestMethod.GET },
         { path: '/user/password/update', method: RequestMethod.PUT },
@@ -70,13 +74,12 @@ export class AppModule implements NestModule {
       .apply(TokenAdminMiddleWare)
       .exclude(
         { path: '/courses/list', method: RequestMethod.GET },
-        { path: '/courses/create', method: RequestMethod.POST },
+        { path: '/courses/course/:id', method: RequestMethod.GET },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
         { path: '/tests/user', method: RequestMethod.GET },
-        // { path: '/tests', method: RequestMethod.POST },
         { path: '/user/firebase/registr', method: RequestMethod.POST },
         { path: '/user/firebase/login', method: RequestMethod.POST },
         { path: '/user/admin/login', method: RequestMethod.POST },
@@ -85,7 +88,8 @@ export class AppModule implements NestModule {
         { path: '/user/password/:code', method: RequestMethod.GET },
         { path: '/user/password/update', method: RequestMethod.PUT },
         { path: '/user/update', method: RequestMethod.PATCH },
-        { path: '/user/in/password', method: RequestMethod.PATCH },
+        { path: '/user/update/password', method: RequestMethod.PUT },
+        { path: '/user/update/image', method: RequestMethod.PUT },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
