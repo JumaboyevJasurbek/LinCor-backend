@@ -1,0 +1,26 @@
+POST 
+Create dto
+using TokenAdminMiddleWare
+Adding Course checking courses counts and counts doesn't more 3 cours else send message error
+
+GET All
+In Courses has videos and when getting it push only 1, 2 nd videos
+
+GET/:id
+TakeEntity ni tekshirish
+Agar user kursini sotib olmagan bo'lsa
+Kursga tegishli vidolarni realation true qilib faqat 1, 2 videoni Idisini va linkini va workbookni Idisini chiqarib berish
+Agar user kursni sotib olgan bo'lsa
+User kursni sotib olganini tekshirib unga kursni hamma vidolarini berish va Workbookni hammasini qo'shib berish
+sertifikat olanini tekshirish
+Discount
+
+PATCH
+Using TokenAdminMiddleWare
+Using id of course from headers
+Updating courses' elements
+
+DELETE
+Using TokenAdminMiddleWare
+Using id of course from headers
+Delete one course from courses elements

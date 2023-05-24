@@ -9,7 +9,7 @@ import {
 import { Discount } from './discount.entity';
 import { Answer } from 'src/types';
 
-@Entity()
+@Entity({ name: 'tests' })
 export class TestsEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

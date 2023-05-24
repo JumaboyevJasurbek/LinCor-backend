@@ -2,6 +2,7 @@ import { TokenUserMiddleWare } from './../../middleware/token.user.middleware';
 import { TokenAdminMiddleWare } from './../../middleware/token.admin.middleware';
 import { CreateVedioDto } from './dto/create-vedio.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
+import { googleCloud } from 'src/utils/google-cloud';
 import {
   Controller,
   Post,
@@ -14,6 +15,7 @@ import {
   Headers,
   Patch,
   Delete,
+  UploadedFile,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -38,7 +40,7 @@ export class VedioController {
     private readonly adminToken: TokenAdminMiddleWare,
   ) {}
 
-  @Post()
+  @Post('/create')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -48,7 +50,7 @@ export class VedioController {
         'title',
         'sequence',
         'description',
-        'time',
+        'duration',
         'course_id',
       ],
       properties: {
@@ -70,11 +72,11 @@ export class VedioController {
         },
         duration: {
           type: 'string',
-          default: '10:00',
+          default: '10:10',
         },
         course_id: {
           type: 'string',
-          default: 'uuid',
+          default: '92b708ed-afed-484a-b7e4-15ffc5c1e288',
         },
       },
     },
@@ -88,11 +90,17 @@ export class VedioController {
     required: true,
   })
   @UseInterceptors(FileInterceptor('link'))
-  create(@Body() createVedioDto: CreateVedioDto) {
-    return this.vedioService.create(createVedioDto);
+  create(
+    @Body() createVedioDto: CreateVedioDto,
+    @UploadedFile() link: Express.Multer.File,
+  ) {
+    const vedio: string = googleCloud(link);
+    if (vedio) {
+      return this.vedioService.create(createVedioDto, vedio);
+    }
   }
 
-  @Get()
+  @Get('/all')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -103,7 +111,7 @@ export class VedioController {
   })
   findAll(@Headers() header: any) {
     if (header.autharization) {
-      return this.vedioService.findAll();
+      return this.vedioService.findAll(header);
     }
   }
 

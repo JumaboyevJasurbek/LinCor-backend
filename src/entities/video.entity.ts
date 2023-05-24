@@ -12,7 +12,7 @@ import { WorkbookEntity } from './workbook.entity';
 import { WorkbookOpen } from './open_book';
 import { TopikEntity } from './topik.entity';
 
-@Entity()
+@Entity({ name: 'video' })
 export class VideoEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -21,7 +21,7 @@ export class VideoEntity extends BaseEntity {
     type: 'text',
     nullable: false,
   })
-  link: string; 
+  link: string;
 
   @Column({
     type: 'character varying',

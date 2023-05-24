@@ -6,9 +6,9 @@ export class CreateVedioDto {
   @IsNotEmpty()
   title: string;
 
-  @IsNumber() 
+  @IsString()
   @IsNotEmpty()
-  sequence: number;
+  sequence: string;
 
   @IsString()
   @IsNotEmpty()
@@ -16,7 +16,7 @@ export class CreateVedioDto {
 
   @IsString()
   @IsNotEmpty()
-  time: string;
+  duration: string;
 
   @IsString()
   @IsNotEmpty()

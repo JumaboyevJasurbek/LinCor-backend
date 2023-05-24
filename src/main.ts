@@ -18,7 +18,7 @@ async function bootstrap() {
   );
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new ErrorHandle());
-  app.setGlobalPrefix('api/v1');
+  app.setGlobalPrefix('api/v2');
 
   const config = app.get(ConfigService);
   const port = config.getOrThrow('app.port');

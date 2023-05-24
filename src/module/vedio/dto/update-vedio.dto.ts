@@ -16,7 +16,7 @@ export class UpdateVedioDto {
 
   @IsString()
   @IsOptional()
-  time: string;
+  duration: string;
 
   @IsString()
   @IsOptional()
