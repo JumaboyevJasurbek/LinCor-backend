@@ -18,6 +18,9 @@ import {
 } from '@nestjs/swagger';
 import { RegistrDto } from './dto/registr';
 import { LoginDto } from './dto/login';
+import { FirebaseRegistrDto } from './dto/firebase.registr';
+import { FirebaseLoginDto } from './dto/firebase.login';
+import { AdminLoginDto } from './dto/admin.login';
 
 @Controller('user')
 @ApiTags('Users')
@@ -59,6 +62,41 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async loginEmail(@Param('code') params: string) {
     return await this.usersService.login_email(params);
+  }
+
+  @Post('/firebase/registr')
+  @ApiBadRequestResponse()
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @ApiUnprocessableEntityResponse()
+  @HttpCode(HttpStatus.OK)
+  async FirebaseRegistr(@Body() body: FirebaseRegistrDto) {
+    return await this.usersService.firebase_registr(body);
+  }
+
+  @Post('/firebase/login')
+  @ApiBadRequestResponse()
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.OK)
+  async FirebaseLogin(@Body() body: FirebaseLoginDto) {
+    return await this.usersService.firebase_login(body);
+  }
+
+  @Post('/admin/login')
+  @ApiOkResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.OK)
+  async adminLogin(@Body() body: AdminLoginDto) {
+    return await this.usersService.admin_login(body);
+  }
+
+  @Get('/admin/login/:id')
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @HttpCode(HttpStatus.OK)
+  async adminLoginEmail(@Param('id') params: string) {
+    return await this.usersService.admin_login_email(params);
   }
 
   @Get()

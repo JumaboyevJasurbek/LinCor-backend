@@ -1,3 +1,6 @@
+Token tekshirishda Shahboz akani email va passwordlarini qoshib qoyish kerak
+Admin login qilishda Shahboz akani email va passwordlarini qoshib qoyish kerak
+
 Token ichiga email, id yashiriladi, adminda email va parol yashiriladi
 
 Reg {
@@ -12,15 +15,17 @@ Reg {
         ism,
         email,
         parol: uid,
-        image
-    }
+        image,
+        auth_socials
+    }                       ✅
     Git Hub {
         email,
         ism,
         parol: uid,
-        image
-    }
-}
+        image,
+        auth_socials
+    }                       ✅
+}                           ✅
 
 Login {
     Nodemailer {

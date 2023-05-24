@@ -42,7 +42,7 @@ export class RegistrDto {
   @ApiProperty({
     name: 'email',
     type: 'string',
-    default: 'eshmatbektoshmatov@gmail.com',
+    default: 'ahmadjonovakmal079@gmail.com',
     required: true,
   })
   email: string;
