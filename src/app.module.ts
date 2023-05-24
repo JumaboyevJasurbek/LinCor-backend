@@ -45,6 +45,10 @@ export class AppModule implements NestModule {
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
+        { path: '/tests/admin', method: RequestMethod.GET },
+        { path: '/tests', method: RequestMethod.POST },
+        { path: '/tests/:id', method: RequestMethod.PATCH },
+        { path: '/tests/:id', method: RequestMethod.DELETE },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -56,6 +60,8 @@ export class AppModule implements NestModule {
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
+        { path: '/tests/user', method: RequestMethod.GET },
+        // { path: '/tests', method: RequestMethod.POST },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
