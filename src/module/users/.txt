@@ -7,10 +7,10 @@ Reg {
         hudud,
         email,
         parol,
-    }
+    }                       ✅
     Google {
-        email,
         ism,
+        email,
         parol: uid,
         image
     }

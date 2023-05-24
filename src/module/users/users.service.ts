@@ -9,6 +9,7 @@ import { RedisService } from '@liaoliaots/nestjs-redis';
 import jwt from 'src/utils/jwt';
 import { InsertResult } from 'typeorm';
 import { LoginDto } from './dto/login';
+import { Auth_socials } from 'src/types';
 
 @Injectable()
 export class UsersService {
@@ -76,6 +77,7 @@ export class UsersService {
         area: redis.area,
         email: redis.email,
         parol: redis.password,
+        auth_socials: Auth_socials.NODEMAILER,
       })
       .returning('*')
       .execute()

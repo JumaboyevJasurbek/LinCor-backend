@@ -1,4 +1,4 @@
-import { UserArea } from 'src/types';
+import { Auth_socials, UserArea } from 'src/types';
 import {
   BaseEntity,
   Entity,
@@ -62,6 +62,14 @@ export class UsersEntity extends BaseEntity {
     nullable: true,
   })
   phone: number;
+
+  @Column({
+    type: 'enum',
+    enum: Auth_socials,
+    default: Auth_socials.NODEMAILER,
+    nullable: false,
+  })
+  auth_socials: Auth_socials;
 
   @OneToMany(() => TakeEntity, (course) => course.user_id)
   open_course: TakeEntity[];
