@@ -36,6 +36,7 @@ export class AppModule implements NestModule {
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/courses/list', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -46,6 +47,7 @@ export class AppModule implements NestModule {
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/courses/list', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }

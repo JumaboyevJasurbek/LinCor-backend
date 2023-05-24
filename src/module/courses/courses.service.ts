@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { CourseEntity } from 'src/entities/course.entity';
 
 @Injectable()
 export class CoursesService {
@@ -8,8 +9,8 @@ export class CoursesService {
     return 'This action adds a new course';
   }
 
-  findAll() {
-    return `This action returns all courses`;
+   async findAll(): Promise<CourseEntity[]> {
+    return await CourseEntity.find();
   }
 
   findOne(id: number) {
