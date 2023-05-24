@@ -17,10 +17,10 @@ export class Discount extends BaseEntity {
   id: string;
 
   @Column({
-    type: 'text',
+    type: 'number',
     nullable: false,
   })
-  percentage: string;
+  percentage: number;
 
   @ManyToOne(() => CourseEntity, (course) => course.discount, {
     onDelete: 'CASCADE',
