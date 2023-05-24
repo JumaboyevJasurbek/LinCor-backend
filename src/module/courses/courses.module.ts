@@ -5,6 +5,6 @@ import { TokenAdminMiddleWare } from 'src/middleware/token.admin.middleware';
 
 @Module({
   controllers: [CoursesController],
-  providers: [CoursesService, TokenAdminMiddleWare]
+  providers: [CoursesService]
 })
 export class CoursesModule {}

@@ -13,7 +13,17 @@ import {
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { ApiBadRequestResponse, ApiBody, ApiConsumes, ApiCreatedResponse, ApiHeader, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { TokenAdminMiddleWare } from 'src/middleware/token.admin.middleware';
 
 @Controller('courses')
@@ -21,7 +31,6 @@ import { TokenAdminMiddleWare } from 'src/middleware/token.admin.middleware';
 export class CoursesController {
   constructor(
     private readonly coursesService: CoursesService,
-    private readonly verifyAdmin: TokenAdminMiddleWare,
   ) {}
 
   @Post('/create')
@@ -29,7 +38,7 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['title', 'description', 'price', 'sequency', ],
+      required: ['title', 'description', 'price', 'sequency'],
       properties: {
         title: {
           type: 'string',
@@ -62,8 +71,8 @@ export class CoursesController {
   })
   async create(
     @Body() createCourseDto: CreateCourseDto,
-    @UploadedFile() file: 
-    ) {
+    @UploadedFile() file: any,
+  ) {
     return this.coursesService.create(createCourseDto);
   }
 
