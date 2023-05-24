@@ -43,6 +43,7 @@ export class TopikEntity extends BaseEntity {
     type: 'enum',
     nullable: false,
     default: Sequence.A,
+    enum: Sequence,
     unique: true,
   })
   sequence: Sequence;

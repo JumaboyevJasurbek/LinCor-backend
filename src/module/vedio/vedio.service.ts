@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateVedioDto } from './dto/create-vedio.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
+import { VideoEntity } from 'src/entities/video.entity';
+import { CourseEntity } from 'src/entities/course.entity';
 
 @Injectable()
 export class VedioService {
-  create(createVedioDto: CreateVedioDto) {
-    return 'This action adds a new vedio';
+  async create(header: any, createVedioDto: CreateVedioDto) {
+
+    const findCourse = await CourseEntity.find()
+    console.log(findCourse);
+    
+
+
+    return await VideoEntity.find({
+      relations: {
+        workbook: true,
+        open_book: true,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all vedio`;
+    return;
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} vedio`;
+    return;
   }
 
   update(id: number, updateVedioDto: UpdateVedioDto) {
-    return `This action updates a #${id} vedio`;
+    return;
   }
 
   remove(id: number) {
-    return `This action removes a #${id} vedio`;
+    return;
   }
 }

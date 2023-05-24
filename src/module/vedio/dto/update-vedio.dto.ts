@@ -1,4 +1,24 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateVedioDto } from './create-vedio.dto';
+import { IsNumber, IsOptional, IsString, Length } from 'class-validator';
 
-export class UpdateVedioDto extends PartialType(CreateVedioDto) {}
+export class UpdateVedioDto {
+  @IsString()
+  @Length(0, 100)
+  @IsOptional()
+  title: string;
+
+  @IsNumber()
+  @IsOptional()
+  sequence: number;
+
+  @IsString()
+  @IsOptional()
+  description: string;
+
+  @IsString()
+  @IsOptional()
+  time: string;
+
+  @IsString()
+  @IsOptional()
+  course_id: string;
+}

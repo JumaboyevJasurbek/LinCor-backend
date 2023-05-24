@@ -66,12 +66,28 @@ One {
             va
             qachon sotib olgani 
             qachon tugashi
-            courselar sertifikati olingan bolsa ? olingan sana : id 
-            courselarni workbooklar olingan soni(korilgan darslar soni) 
-            jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi
+            course ni chegirma blan olgan bolsa ( chegirma: boolean )
+            active: boolean (Kursni hozirgi holati)
+            sertifikat: courselar sertifikati olingan bolsa ? olingan sana : true
+            korilgan darslar: courselarni workbooklar olingan soni(korilgan darslar soni) 
+            jami darslar: Course jami darslar
+            qolgan darslar: jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi
         },
         sotib olgan videolar soni,
         sotib olgan sertifikatlar soni,
-        6 ta course dan 
+        courses: {
+            course1: {
+                sotib olgan: true
+                active: false
+            },
+            course2: {
+                sotib olgan: false
+                active: true
+            },
+            course3: {
+                sotib olgan: true
+                active: true
+            },
+        }
     }
 }

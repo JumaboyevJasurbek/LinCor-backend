@@ -3,6 +3,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  CreateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UsersEntity } from './users.entity';
@@ -18,6 +19,9 @@ export class TakenSertifikat extends BaseEntity {
   })
   @JoinColumn({ name: 'user_id' })
   user_id: UsersEntity;
+
+  @CreateDateColumn({ name: 'created_at' })
+  create_data: Date;
 
   @ManyToOne(() => Sertifikat, (sertifikat) => sertifikat.taken, {
     onDelete: 'CASCADE',

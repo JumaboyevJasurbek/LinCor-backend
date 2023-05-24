@@ -7,6 +7,7 @@ class AppConfig {
 export const appConfig = registerAs(
   'app',
   (): AppConfig => ({
-    port: process.env.POST ? Number(process.env.POST) : undefined,
+    port: process.env.PORT ? Number(process.env.PORT) : undefined,
   }),
 );
+ 
