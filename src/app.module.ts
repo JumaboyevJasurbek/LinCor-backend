@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
 import { TokenUserMiddleWare } from './middleware/token.user.middleware';
 import { UsersModule } from './module/users/users.module';
+import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import * as dotenv from 'dotenv';
@@ -32,6 +33,7 @@ dotenv.config();
       secret: process.env.SECRET_KEY,
     }),
     UsersModule,
+    CoursesModule,
     TestsModule,
   ],
 })
@@ -41,6 +43,11 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenUserMiddleWare)
       .exclude(
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/courses/list', method: RequestMethod.GET },
+        { path: '/courses/create', method: RequestMethod.POST },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
@@ -56,6 +63,11 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/user/:id', method: RequestMethod.POST },
+        { path: '/courses/list', method: RequestMethod.GET },
+        { path: '/courses/create', method: RequestMethod.POST },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
