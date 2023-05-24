@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -25,6 +26,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { TokenAdminMiddleWare } from 'src/middleware/token.admin.middleware';
+import { stringify } from 'querystring';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { googleCloud } from 'src/utils/google-cloud';
 
 @Controller('courses')
 @ApiTags('Courses')
@@ -64,6 +68,7 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiCreatedResponse()
   @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
     description: 'token',
@@ -73,7 +78,10 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this.coursesService.create(createCourseDto);
+    const img_link: string | string[] = googleCloud(file)
+    if (img_link) {
+      return this.coursesService.create(createCourseDto, img_link as any);
+    }
   }
 
   @Get('/list')
@@ -85,16 +93,16 @@ export class CoursesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
+    return this.coursesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(+id, updateCourseDto);
+    return this.coursesService.update(id, updateCourseDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+    return this.coursesService.remove(id);
   }
 }

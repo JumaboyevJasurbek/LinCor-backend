@@ -16,5 +16,5 @@ export class CreateCourseDto {
 
     @IsString()
     @IsNotEmpty()
-    sequency: string
+    sequency: number
 }
