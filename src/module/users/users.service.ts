@@ -416,6 +416,18 @@ export class UsersService {
     };
   }
 
+  async updateFile(file: string, id: string) {
+    await UsersEntity.createQueryBuilder()
+      .update()
+      .set({
+        image: file,
+      })
+      .where({
+        id,
+      })
+      .execute();
+  }
+
   findAll() {
     return `This action returns all users`;
   }

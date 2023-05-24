@@ -114,10 +114,10 @@ PUT {
 
 statistika + {
     daromat {
-        haftaga,
         oyiga,
         yiliga,
         userlar soni
+        nechta sertifikat olingan jami
     }
     Users: {
         passworddan tashqari hamma malumotlari        

@@ -77,7 +77,8 @@ export class AppModule implements NestModule {
         { path: '/user/password/:code', method: RequestMethod.GET },
         { path: '/user/password/update', method: RequestMethod.PUT },
         { path: '/user/update', method: RequestMethod.PATCH },
-        { path: '/user/in/password', method: RequestMethod.PATCH },
+        { path: '/user/update/password', method: RequestMethod.PUT },
+        { path: '/user/update/image', method: RequestMethod.PUT },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
