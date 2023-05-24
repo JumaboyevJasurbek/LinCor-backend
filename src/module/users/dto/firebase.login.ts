@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, Length } from 'class-validator';
+import { Auth_socials } from 'src/types';
 
-export class LoginDto {
+export class FirebaseLoginDto {
   @IsString()
   @Length(0, 100)
   @IsNotEmpty()
@@ -22,4 +23,15 @@ export class LoginDto {
     required: true,
   })
   password: string;
+
+  @IsEnum(Auth_socials)
+  @IsNotEmpty()
+  @ApiProperty({
+    name: 'auth_socials',
+    type: 'enum',
+    enum: Auth_socials,
+    default: 'github',
+    required: true,
+  })
+  auth_socials: Auth_socials;
 }

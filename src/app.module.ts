@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { TokenAdminMiddleWare } from './middleware/token.admin.middleware';
 import { TokenUserMiddleWare } from './middleware/token.user.middleware';
 import { UsersModule } from './module/users/users.module';
+import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import * as dotenv from 'dotenv';
@@ -32,6 +33,7 @@ dotenv.config();
       secret: process.env.SECRET_KEY,
     }),
     UsersModule,
+    CoursesModule,
     TestsModule,
   ],
 })
@@ -41,6 +43,8 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenUserMiddleWare)
       .exclude(
+        { path: '/courses/list', method: RequestMethod.GET },
+        { path: '/courses/create', method: RequestMethod.POST },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
@@ -49,6 +53,13 @@ export class AppModule implements NestModule {
         { path: '/tests', method: RequestMethod.POST },
         { path: '/tests/:id', method: RequestMethod.PATCH },
         { path: '/tests/:id', method: RequestMethod.DELETE },
+        { path: '/user/firebase/registr', method: RequestMethod.POST },
+        { path: '/user/firebase/login', method: RequestMethod.POST },
+        { path: '/user/admin/login', method: RequestMethod.POST },
+        { path: '/user/admin/login/:id', method: RequestMethod.GET },
+        { path: '/user/password', method: RequestMethod.POST },
+        { path: '/user/password/:code', method: RequestMethod.GET },
+        { path: '/user/password/update', method: RequestMethod.PUT },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -56,12 +67,23 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(
+        { path: '/courses/list', method: RequestMethod.GET },
+        { path: '/courses/create', method: RequestMethod.POST },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
         { path: '/tests/user', method: RequestMethod.GET },
         // { path: '/tests', method: RequestMethod.POST },
+        { path: '/user/firebase/registr', method: RequestMethod.POST },
+        { path: '/user/firebase/login', method: RequestMethod.POST },
+        { path: '/user/admin/login', method: RequestMethod.POST },
+        { path: '/user/admin/login/:id', method: RequestMethod.GET },
+        { path: '/user/password', method: RequestMethod.POST },
+        { path: '/user/password/:code', method: RequestMethod.GET },
+        { path: '/user/password/update', method: RequestMethod.PUT },
+        { path: '/user/update', method: RequestMethod.PATCH },
+        { path: '/user/in/password', method: RequestMethod.PATCH },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }

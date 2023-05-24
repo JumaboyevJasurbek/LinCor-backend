@@ -11,25 +11,12 @@ const storage = new Storage({
 const bucket = storage.bucket('producti0n');
 
 export const googleCloud = (file: any | any[]) => {
-  if (!file.length) {
-    const a: any[] = [];
-    a.push(file);
-    const imageLink = join(v4() + extname(a[0]?.originalname));
-    const blob = bucket.file(imageLink);
-    const blobStream = blob.createWriteStream();
+  const a: any[] = [];
+  a.push(file);
+  const imageLink = join(v4() + extname(a[0]?.originalname));
+  const blob = bucket.file(imageLink);
+  const blobStream = blob.createWriteStream();
 
-    blobStream.end(a[0]?.buffer);
-    return imageLink;
-  } else if (file.length) {
-    const result: string[] = [];
-    for (let i = 0; i < file.length; i++) {
-      const imageLink = join(v4() + extname(file[i].originalname));
-      const blob = bucket.file(imageLink);
-      const blobStream = blob.createWriteStream();
-      result.push(imageLink);
-
-      blobStream.end(file[i].buffer);
-    }
-    return result;
-  }
+  blobStream.end(a[0]?.buffer);
+  return imageLink;
 };
