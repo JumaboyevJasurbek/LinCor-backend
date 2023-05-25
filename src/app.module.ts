@@ -17,6 +17,7 @@ import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import { DiscountModule } from './module/discount/discount.module';
+import { UsersDiscountModule } from './module/users_discount/users_discount.module';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -39,6 +40,7 @@ dotenv.config();
     CoursesModule,
     TestsModule,
     DiscountModule,
+    UsersDiscountModule,
   ],
 })
 export class AppModule implements NestModule {
