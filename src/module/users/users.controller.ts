@@ -23,7 +23,6 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiOperation,
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
@@ -207,9 +206,14 @@ export class UsersController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Get('/:course')
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  findAll(@Param('course') course: string, @Req() req: Request) {
+    return this.usersService.findAll(course, req.user_id);
   }
 
   @Get(':id')
