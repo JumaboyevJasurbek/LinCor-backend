@@ -37,4 +37,4 @@ export const connectDb: TypeOrmModuleOptions = {
   ],
   autoLoadEntities: true,
   synchronize: true,
-}; 
+};

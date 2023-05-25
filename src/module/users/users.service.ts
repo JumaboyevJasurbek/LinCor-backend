@@ -1,12 +1,12 @@
+import * as bcrypt from 'bcrypt';
+import senMail from 'src/utils/nodemailer';
+import Redis from 'ioredis';
+import jwt from 'src/utils/jwt';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RegistrDto } from './dto/registr';
 import { random } from 'src/utils/random';
-import * as bcrypt from 'bcrypt';
-import Redis from 'ioredis';
 import { UsersEntity } from 'src/entities/users.entity';
-import senMail from 'src/utils/nodemailer';
 import { RedisService } from '@liaoliaots/nestjs-redis';
-import jwt from 'src/utils/jwt';
 import { InsertResult } from 'typeorm';
 import { LoginDto } from './dto/login';
 import { Auth_socials } from 'src/types';
@@ -17,6 +17,7 @@ import { PasswordDto } from './dto/password-email';
 import { PasswordUpdateDto } from './dto/password-update';
 import { PatchUserDto } from './dto/patch-all';
 import { InPasswordDto } from './dto/inPassword';
+import { takeUtils } from 'src/utils/take.utils';
 
 @Injectable()
 export class UsersService {
@@ -428,8 +429,8 @@ export class UsersService {
       .execute();
   }
 
-  findAll() {
-    return `This action returns all users`;
+  findAll(course: string, user_id: string) {
+    return takeUtils(course, user_id);
   }
 
   findOne(id: number) {

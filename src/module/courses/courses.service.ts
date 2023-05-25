@@ -33,8 +33,8 @@ export class CoursesService {
       );
     }
     const sequency = await CourseEntity.findOne({
-      where: {sequence: dto.sequency}
-    })
+      where: { sequence: dto.sequency },
+    });
     console.log(sequency);
 
     if (sequency) {
