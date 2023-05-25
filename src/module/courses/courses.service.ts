@@ -96,7 +96,7 @@ export class CoursesService {
         description: dto.description || course.description,
         price: dto.price || course.price,
         sequence: dto.sequence || course.sequence,
-        image: img_link || course.image,
+        image: img_link ? img_link : course.image,
       })
       .where({ id })
       .execute()

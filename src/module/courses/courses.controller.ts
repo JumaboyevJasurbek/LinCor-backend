@@ -106,7 +106,7 @@ export class CoursesController {
   })
   findOne(@Param('id') id: string, @Request() req: any) {
     const {user_id} = req
-    
+
     return this.coursesService.findOne(id, user_id);
   }
 
@@ -115,6 +115,7 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
+      required: ['file'],
       properties: {
         title: {
           type: 'string',
@@ -133,7 +134,7 @@ export class CoursesController {
           default: 1,
         },
         file: {
-          type: 'string',
+          type: 'string' || undefined,
           format: 'binary'
         },
       },
@@ -154,7 +155,7 @@ export class CoursesController {
     @Param('id') id: string, @Body() dto: UpdateCourseDto,
     @UploadedFile() file: Express.Multer.File
   ) {
-    const img_link: any = googleCloud(file)
+    const img_link: any = googleCloud(file) as any
     if (img_link) {
       return this.coursesService.update(id, dto, img_link);
     }
