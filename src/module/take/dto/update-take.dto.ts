@@ -1,9 +1,9 @@
-import { IsString } from "class-validator";
+import { IsString } from 'class-validator';
 
 export class UpdateTakeDto {
-    @IsString()
-    courseId: string
+  @IsString()
+  courseId: string;
 
-    @IsString()
-    userId: string
+  @IsString()
+  userId: string;
 }

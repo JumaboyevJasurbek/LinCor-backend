@@ -38,7 +38,7 @@ dotenv.config();
     VedioModule,
     CoursesModule,
     TestsModule,
-    TakeModule
+    TakeModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -1,11 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
-import { ApiBody } from "@nestjs/swagger";
-import { TakeServise } from "./take.servise";
-import { CreateTakeDto } from "./dto/create-take.dto";
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiBody } from '@nestjs/swagger';
+import { TakeServise } from './take.servise';
+import { CreateTakeDto } from './dto/create-take.dto';
 
 @Controller('take')
 export class TakeController {
-    constructor (private readonly takeServise : TakeServise) {}
+  constructor(private readonly takeServise: TakeServise) {}
 
   @Post('add')
   @HttpCode(HttpStatus.CREATED)
@@ -20,11 +20,11 @@ export class TakeController {
         courseId: {
           type: 'string',
           default: 'asvfewgv32r34gvwegewrgvrw',
-        } 
+        },
       },
     },
   })
-  create(@Body() createTakeDto:CreateTakeDto) {
-    return this.takeServise.create(createTakeDto) ;
+  create(@Body() createTakeDto: CreateTakeDto) {
+    return this.takeServise.create(createTakeDto);
   }
 }
