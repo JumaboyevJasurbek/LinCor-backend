@@ -48,6 +48,8 @@ export class AppModule implements NestModule {
         { path: '/user/:id', method: RequestMethod.POST },
         { path: '/courses/list', method: RequestMethod.GET },
         { path: '/courses/create', method: RequestMethod.POST },
+        { path: '/courses/update/:id', method: RequestMethod.PATCH },
+        { path: '/courses/delete/:id', method: RequestMethod.DELETE },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },

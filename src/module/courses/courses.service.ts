@@ -17,10 +17,6 @@ export class CoursesService {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
 
-    const activeUser = await TakeEntity.findOne({
-      where: { user_id: id as any },
-    });
-
     return course;
   }
 
@@ -33,8 +29,8 @@ export class CoursesService {
       );
     }
     const sequency = await CourseEntity.findOne({
-      where: {sequence: dto.sequency}
-    })
+      where: { sequence: dto.sequence },
+    });
     console.log(sequency);
 
     if (sequency) {
@@ -51,9 +47,9 @@ export class CoursesService {
         description: dto.description,
         price: dto.price,
         image: file,
-        sequence: dto.sequency,
+        sequence: dto.sequence,
       })
-      .execute();
+      .execute(); 
   }
 
   async findAll(): Promise<CourseEntity[]> {
@@ -62,15 +58,71 @@ export class CoursesService {
     });
   }
 
-  async findOne(id: string, user_id: any): Promise<CourseEntity> {
-    return await this.oneFoundCourse(id);
+  async findOne(id: string, user_id: any): Promise<CourseEntity>  {
+    const course = await CourseEntity.findOne({
+      where: { id },
+      relations: { course_videos: true, open_user: true },
+    }).catch(() => {
+      throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
+    });
+    if (!course) {
+      throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    }
+    const videos = course.course_videos;
+    return course
+    // const courseTakes = await TakeEntity.findOne({
+    //   where: {
+    //     course_id: id as any,
+    //     // user_id: true
+    //   }
+    // }).catch((e) => {
+    //   console.log(e)
+    //   throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
+    // });
+    // if (!course) {
+    //   throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
+    // }
+    // console.log(courseTakes);
+    // const courseTaken = courseTakes.find(e => e.user_id === user_id)
+    
+    // if (courseTaken && courseTaken.active === true) {
+    //   return course
+    // } else {
+    //   for (let i = 0; i < videos.length; i++) {
+    //     if (videos[i].sequence <= 2) {
+    //       videos[i].link = videos[i].link;
+    //     } else {
+    //       videos[i].link = '';
+    //     }
+    //   }
+
+    // return course;
+    // }
   }
 
-  async update(id: string, dto: UpdateCourseDto): Promise<void> {
-    // return `This action updates a #${id} course`;
+  async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
+    const course = await this.oneFoundCourse(id)
+    await CourseEntity.createQueryBuilder()
+    .update(CourseEntity)
+    .set({
+      title: dto.title || course.title,
+      description: dto.description || course.description,
+      price: dto.price || course.price,
+      sequence: dto.sequence || course.sequence,
+      image: img_link || course.image,
+    })
+    .where({id})
+    .execute()
+    .catch((e) => {
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    });
   }
 
   async remove(id: string): Promise<void> {
-    // return `This action removes a #${id} course`;
+    await this.oneFoundCourse(id)
+    await CourseEntity.delete(id)
+    .catch((e) => {
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
+    });
   }
 }

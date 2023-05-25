@@ -20,11 +20,14 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiHeader,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
@@ -103,18 +106,72 @@ export class CoursesController {
   })
   findOne(@Param('id') id: string, @Request() req: any) {
     const {user_id} = req
-    console.log(user_id);
-    
     return this.coursesService.findOne(id, user_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(id, updateCourseDto);
+  @Patch('/update/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string',
+          default: 'Korees tili boshlang`ich kursi',
+        },
+        description: {
+          type: 'string',
+          default: 'Bu korees tilini o`rganishni boshlaganlar uchun',
+        },
+        price: {
+          type: 'string',
+          default: '120 000',
+        },
+        sequency: {
+          type: 'number',
+          default: 1,
+        },
+        file: {
+          type: 'string',
+          format: 'binary'
+        },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Attendance in Punch In' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse()
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor('file')) 
+  @ApiHeader({
+    name: 'autharization',
+    description: 'token',
+    required: true,
+  })
+  async update (
+    @Param('id') id: string, @Body() dto: UpdateCourseDto,
+    @UploadedFile() file: Express.Multer.File
+  ) {
+    const img_link: any = googleCloud(file)
+    if (img_link) {
+      return this.coursesService.update(id, dto, img_link);
+    }
+    return this.coursesService.update(id, dto, undefined);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('/delete/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'token',
+    required: true,
+  })
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse()
+  @ApiUnprocessableEntityResponse()
+  @ApiForbiddenResponse()
+  remove(@Param('id') id: string,) {
     return this.coursesService.remove(id);
   }
 }
