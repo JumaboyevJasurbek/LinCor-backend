@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CoursesController } from './courses.controller';
-import { TokenAdminMiddleWare } from 'src/middleware/token.admin.middleware';
+import { VideoEntity } from 'src/entities/video.entity';
+import { TakeEntity } from 'src/entities/take.entity';
 
 @Module({
   controllers: [CoursesController],
-  providers: [CoursesService],
+  providers: [CoursesService, VideoEntity, TakeEntity],
 })
 export class CoursesModule {}

@@ -1,3 +1,4 @@
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   Controller,
   Get,
@@ -9,11 +10,15 @@ import {
   Param,
   Delete,
   HttpCode,
+  UploadedFile,
+  UseInterceptors,
   HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   ApiBadRequestResponse,
+  ApiBody,
+  ApiConsumes,
   ApiHeader,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -31,6 +36,7 @@ import { PasswordUpdateDto } from './dto/password-update';
 import { PatchUserDto } from './dto/patch-all';
 import { Request } from 'express';
 import { InPasswordDto } from './dto/inPassword';
+import { googleCloud } from 'src/utils/google-cloud';
 
 @Controller('user')
 @ApiTags('Users')
@@ -148,7 +154,7 @@ export class UsersController {
     return await this.usersService.patch(req.user_id, body);
   }
 
-  @Put('/in/password')
+  @Put('/update/password')
   @ApiNoContentResponse()
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -163,9 +169,51 @@ export class UsersController {
     return await this.usersService.passwordIN(req.user_id, body);
   }
 
-  @Get()
-  findAll() {
-    return this.usersService.findAll();
+  @Put('/update/image')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['image'],
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: true,
+  })
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Req() req: Request,
+  ) {
+    try {
+      const bool = googleCloud(file);
+      if (bool) {
+        await this.usersService.updateFile(bool, req.user_id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @Get('/:course')
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  findAll(@Param('course') course: string, @Req() req: Request) {
+    return this.usersService.findAll(course, req.user_id);
   }
 
   @Get(':id')
