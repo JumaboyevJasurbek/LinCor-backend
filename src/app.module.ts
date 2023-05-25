@@ -16,6 +16,7 @@ import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import * as dotenv from 'dotenv';
+import { TakeModule } from './module/take/take.module';
 dotenv.config();
 
 @Module({
@@ -35,6 +36,7 @@ dotenv.config();
     UsersModule,
     CoursesModule,
     TestsModule,
+    TakeModule
   ],
 })
 export class AppModule implements NestModule {
@@ -60,6 +62,8 @@ export class AppModule implements NestModule {
         { path: '/user/password', method: RequestMethod.POST },
         { path: '/user/password/:code', method: RequestMethod.GET },
         { path: '/user/password/update', method: RequestMethod.PUT },
+        { path: '/take/add', method: RequestMethod.POST },
+
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -84,6 +88,8 @@ export class AppModule implements NestModule {
         { path: '/user/password/update', method: RequestMethod.PUT },
         { path: '/user/update', method: RequestMethod.PATCH },
         { path: '/user/in/password', method: RequestMethod.PATCH },
+        { path: '/take/add', method: RequestMethod.POST },
+
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
