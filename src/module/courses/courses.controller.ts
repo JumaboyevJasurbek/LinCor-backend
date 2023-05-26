@@ -11,6 +11,7 @@ import {
   UploadedFile,
   UseInterceptors,
   Request,
+  Headers,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -31,11 +32,16 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
+import { TokenUserMiddleWare } from 'src/middleware/token.user.middleware';
+import JwtStrategy from "../../utils/jwt"
 
 @Controller('courses')
 @ApiTags('Courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService) {}
+  constructor(
+    private readonly coursesService: CoursesService, 
+    private readonly userVerify: TokenUserMiddleWare
+    ) {}
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
@@ -102,11 +108,11 @@ export class CoursesController {
   @ApiHeader({
     name: 'autharization',
     description: 'token',
-    required: true,
+    required: false,
   })
-  findOne(@Param('id') id: string, @Request() req: any) {
-    const {user_id} = req
-
+  async findOne(@Param('id') id: string, @Request() req: any, @Headers() header: any) {
+    const user_id = JwtStrategy.verify(header.autharization)
+    
     return this.coursesService.findOne(id, user_id);
   }
 
@@ -135,7 +141,7 @@ export class CoursesController {
         },
         file: {
           type: 'string' || undefined,
-          format: 'binary'
+          format: 'binary',
         },
       },
     },
@@ -145,17 +151,18 @@ export class CoursesController {
   @ApiBadRequestResponse()
   @ApiNoContentResponse()
   @ApiNotFoundResponse()
-  @UseInterceptors(FileInterceptor('file')) 
+  @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
     description: 'token',
     required: true,
   })
-  async update (
-    @Param('id') id: string, @Body() dto: UpdateCourseDto,
-    @UploadedFile() file: Express.Multer.File
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateCourseDto,
+    @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: any = googleCloud(file) as any
+    const img_link: any = googleCloud(file) as any;
     if (img_link) {
       return this.coursesService.update(id, dto, img_link);
     }
@@ -173,7 +180,7 @@ export class CoursesController {
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @ApiForbiddenResponse()
-  remove(@Param('id') id: string,) {
+  remove(@Param('id') id: string) {
     return this.coursesService.remove(id);
   }
 }
