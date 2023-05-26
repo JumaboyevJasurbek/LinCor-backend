@@ -1,6 +1,7 @@
 import { TokenUserMiddleWare } from './../../middleware/token.user.middleware';
 import { TokenAdminMiddleWare } from './../../middleware/token.admin.middleware';
 import { CreateVedioDto } from './dto/create-vedio.dto';
+import { CreateTopikDto } from './dto/create-topik.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
 import { googleCloud } from 'src/utils/google-cloud';
 import {
@@ -34,11 +35,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('vedio')
 @ApiTags('Video')
 export class VedioController {
-  constructor(
-    private readonly vedioService: VedioService,
-    private readonly userToken: TokenUserMiddleWare,
-    private readonly adminToken: TokenAdminMiddleWare,
-  ) {}
+  constructor(private readonly vedioService: VedioService) {}
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
@@ -90,13 +87,73 @@ export class VedioController {
     required: true,
   })
   @UseInterceptors(FileInterceptor('link'))
-  create(
+  createCourseVedio(
     @Body() createVedioDto: CreateVedioDto,
     @UploadedFile() link: Express.Multer.File,
   ) {
     const vedio: string = googleCloud(link);
     if (vedio) {
-      return this.vedioService.create(createVedioDto, vedio);
+      return this.vedioService.createCourseVedio(createVedioDto, vedio);
+    }
+  }
+
+  @Post('/topik/create')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: [
+        'link',
+        'title',
+        'sequence',
+        'description',
+        'duration',
+        'topik_id',
+      ],
+      properties: {
+        link: {
+          type: 'string',
+          format: 'binary',
+        },
+        title: {
+          type: 'string',
+          default: '1-dars',
+        },
+        sequence: {
+          type: 'number',
+          default: 1,
+        },
+        description: {
+          type: 'string',
+          default: 'Bugungi dars anaxasio',
+        },
+        duration: {
+          type: 'string',
+          default: '10:10',
+        },
+        topik_id: {
+          type: 'string',
+          default: '92b708ed-afed-484a-b7e4-15ffc5c1e288',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiNotFoundResponse()
+  @ApiCreatedResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: true,
+  })
+  @UseInterceptors(FileInterceptor('link'))
+  createTopikVedio(
+    @Body() body: CreateTopikDto,
+    @UploadedFile() link: Express.Multer.File,
+  ) {
+    const topikVedio: string = googleCloud(link);
+    if (topikVedio) {
+      return this.vedioService.createTopikVedio(body, topikVedio);
     }
   }
 
@@ -125,7 +182,7 @@ export class VedioController {
     required: false,
   })
   findOne(@Param('id') id: string) {
-    return this.vedioService.findOne(+id);
+    return this.vedioService.findOne(id);
   }
 
   @Patch(':id')

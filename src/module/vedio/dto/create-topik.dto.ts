@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 
-export class CreateVedioDto {
+export class CreateTopikDto {
   @IsString()
   @Length(0, 100)
   @IsNotEmpty()
@@ -20,6 +20,5 @@ export class CreateVedioDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
-  course_id: string;
+  topik_id: string;
 }
