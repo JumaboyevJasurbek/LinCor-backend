@@ -17,6 +17,10 @@ export const googleCloud = (file: any | any[]) => {
   const blob = bucket.file(imageLink);
   const blobStream = blob.createWriteStream();
 
+  blobStream.on('error', (err) => {
+    console.log(err);
+  });
+
   blobStream.end(a[0]?.buffer);
   return imageLink;
 };

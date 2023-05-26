@@ -49,12 +49,12 @@ Parol update {
             code page
             parol newParol code page
         }
-    }
+    }                       ✅
     Ichkarida {
         token keladi shundan update qilib qoyaman 
         parol,
-    }
-}
+    }                       ✅
+}                           ✅
 
 One {
     token keladi shu token egasini hamma malumotlarini qaytaraman {
@@ -96,28 +96,28 @@ PATCH {
     ism,
     area,
     phone,
-}
+}                           ✅
 
 PUT {
     nodemailer {
         email
-    }
+    }                       ✅
     code {
         kod keladi togri bolsa baza update qilinib
         yengi token qaytadi
-    }
-}
+    }                       ✅
+}                           ✅
 
 PUT {
     image
-}
+}                           ✅
 
 statistika + {
     daromat {
-        haftaga,
         oyiga,
         yiliga,
         userlar soni
+        nechta sertifikat olingan jami
     }
     Users: {
         passworddan tashqari hamma malumotlari        
@@ -155,7 +155,7 @@ statistika + {
 
 admin/delete {
     Userni tolliq ochirib yuboradi bazadan
-}
+}                           ✅
 
 adminLogin {
     nodemailer {

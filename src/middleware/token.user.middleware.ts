@@ -17,7 +17,8 @@ export class TokenUserMiddleWare implements NestMiddleware {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const idAndEmail = jwt.verify(headers.autharization);
-    if (!idAndEmail) {
+
+    if (!idAndEmail || !idAndEmail?.id) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const user = await UsersEntity.findOneBy({

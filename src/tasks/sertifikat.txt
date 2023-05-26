@@ -1,0 +1,6 @@
+GET {
+    create sertifikat ~ course title va description, user
+
+    insert 
+}
+3 ta sertifikat yasashiz kerak!!!
