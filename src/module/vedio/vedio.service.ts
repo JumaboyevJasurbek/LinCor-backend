@@ -123,7 +123,7 @@ export class VedioService {
     if (!findVedio) {
       throw new HttpException('Vedio Not Found', HttpStatus.NOT_FOUND);
     }
-    return findVedio
+    return findVedio;
   }
 
   update(id: number, updateVedioDto: UpdateVedioDto) {

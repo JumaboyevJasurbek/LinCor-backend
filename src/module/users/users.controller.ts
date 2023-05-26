@@ -206,6 +206,33 @@ export class UsersController {
     }
   }
 
+  @Put('/email')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async email(@Body() body: PasswordDto, @Req() req: Request) {
+    return await this.usersService.email(body, req.user_id);
+  }
+
+  @Put('/email/:code')
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async emailCode(@Param('code') params: string) {
+    return await this.usersService.emailCode(params);
+  }
+
   @Get('/:course')
   @ApiHeader({
     name: 'autharization',
@@ -221,8 +248,17 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }
