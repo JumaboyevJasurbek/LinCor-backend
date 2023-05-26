@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateVedioDto } from './dto/create-vedio.dto';
+import { CreateTopikDto } from './dto/create-topik.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
 import { VideoEntity } from 'src/entities/video.entity';
 import { CourseEntity } from 'src/entities/course.entity';
@@ -7,8 +8,8 @@ import { TopikEntity } from 'src/entities/topik.entity';
 
 @Injectable()
 export class VedioService {
-  async create(createVedioDto: CreateVedioDto, link: any) {
-    const course = await CourseEntity.findOneBy({
+  async createCourseVedio(createVedioDto: CreateVedioDto, link: any) {
+    const course: CourseEntity = await CourseEntity.findOneBy({
       id: createVedioDto.course_id,
     }).catch(() => {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
@@ -17,16 +18,6 @@ export class VedioService {
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
-
-    // const topik = await TopikEntity.findOneBy({
-    //   id: createVedioDto.topik_id,
-    // }).catch(() => {
-    //   throw new HttpException('Topik Not Found', HttpStatus.NOT_FOUND);
-    // });
-
-    // if (!topik) {
-    //   throw new HttpException('Topik Not Found', HttpStatus.NOT_FOUND);
-    // }
 
     if (!Number(createVedioDto.sequence)) {
       throw new HttpException('Sequence a number', HttpStatus.NOT_FOUND);
@@ -50,7 +41,52 @@ export class VedioService {
         sequence: Number(createVedioDto.sequence),
         description: createVedioDto.description,
         duration: createVedioDto.duration,
-        course: course,
+        course: createVedioDto.course_id as any,
+      })
+      .returning('*')
+      .execute()
+      .catch(() => {
+        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      });
+  }
+
+  async createTopikVedio(body: CreateTopikDto, link: any) {
+    const topik: TopikEntity[] = await TopikEntity.find({
+      where: {
+        id: body.topik_id,
+      },
+    }).catch(() => {
+      throw new HttpException('Topik Not Found', HttpStatus.NOT_FOUND);
+    });
+    console.log(topik);
+
+    if (!topik) {
+      throw new HttpException('Topik Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    if (!Number(body.sequence)) {
+      throw new HttpException('Sequence a number', HttpStatus.NOT_FOUND);
+    }
+
+    const findVedio: VideoEntity[] = await VideoEntity.find();
+
+    if (findVedio.find((e) => e.sequence == Number(body.sequence))) {
+      throw new HttpException(
+        'There is a video of this sequence',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    return await VideoEntity.createQueryBuilder()
+      .insert()
+      .into(VideoEntity)
+      .values({
+        link: link,
+        title: body.title,
+        sequence: Number(body.sequence),
+        description: body.description,
+        duration: body.duration,
+        topik: body.topik_id as any,
       })
       .returning('*')
       .execute()
@@ -78,8 +114,16 @@ export class VedioService {
     });
   }
 
-  findOne(id: number) {
-    return;
+  async findOne(id: string) {
+    const findVedio: VideoEntity = await VideoEntity.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!findVedio) {
+      throw new HttpException('Vedio Not Found', HttpStatus.NOT_FOUND);
+    }
+    return findVedio;
   }
 
   update(id: number, updateVedioDto: UpdateVedioDto) {

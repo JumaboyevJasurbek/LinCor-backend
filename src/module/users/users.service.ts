@@ -7,7 +7,7 @@ import { RegistrDto } from './dto/registr';
 import { random } from 'src/utils/random';
 import { UsersEntity } from 'src/entities/users.entity';
 import { RedisService } from '@liaoliaots/nestjs-redis';
-import { InsertResult } from 'typeorm';
+import { InsertResult, UpdateResult } from 'typeorm';
 import { LoginDto } from './dto/login';
 import { Auth_socials } from 'src/types';
 import { FirebaseRegistrDto } from './dto/firebase.registr';
@@ -429,14 +429,6 @@ export class UsersService {
       .execute();
   }
 
-  findAll(course: string, user_id: string) {
-    return takeUtils(course, user_id);
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
   async patch(userId: string, body: PatchUserDto) {
     const findUser: any = await UsersEntity.findOne({
       where: {
@@ -485,7 +477,101 @@ export class UsersService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async email(body: PasswordDto, id: string) {
+    const randomSon = random();
+    const findUser = await UsersEntity.findOne({
+      where: {
+        email: body.email,
+      },
+    }).catch(() => []);
+    if (findUser) {
+      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+    }
+
+    await senMail(body.email, randomSon);
+
+    const newObj = {
+      email: body.email,
+      id,
+      random: randomSon,
+    };
+
+    await this.redis.set(randomSon, JSON.stringify(newObj));
+
+    return {
+      message: 'Code send Email',
+      status: 200,
+    };
+  }
+
+  async emailCode(random: string) {
+    const result: any = await this.redis.get(random);
+    const redis = JSON.parse(result);
+
+    if (!redis || redis.random != random) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    const findUser: any = await UsersEntity.findOne({
+      where: {
+        email: redis.email,
+      },
+    }).catch(() => []);
+    if (findUser) {
+      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+    }
+
+    const newUser: UpdateResult = await UsersEntity.createQueryBuilder()
+      .update()
+      .set({
+        email: redis.email,
+      })
+      .where({
+        id: redis.id,
+      })
+      .returning('*')
+      .execute()
+      .catch(() => {
+        throw new HttpException(
+          'UNPROCESSABLE_ENTITY',
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      });
+    const token = jwt.sign({
+      id: newUser?.raw[0]?.id,
+      email: newUser?.raw[0]?.email,
+    });
+
+    this.redis.del(random);
+    return {
+      status: 201,
+      token,
+    };
+  }
+
+  findAll(course: string, user_id: string) {
+    return takeUtils(course, user_id);
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} user`;
+  }
+
+  async remove(id: string) {
+    const findUser: any = await UsersEntity.findOne({
+      where: {
+        id,
+      },
+    }).catch(() => []);
+    if (!findUser) {
+      throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    await UsersEntity.createQueryBuilder()
+      .delete()
+      .where({
+        id,
+      })
+      .execute();
   }
 }

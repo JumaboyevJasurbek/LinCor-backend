@@ -101,16 +101,16 @@ PATCH {
 PUT {
     nodemailer {
         email
-    }
+    }                       ✅
     code {
         kod keladi togri bolsa baza update qilinib
         yengi token qaytadi
-    }
-}
+    }                       ✅
+}                           ✅
 
 PUT {
     image
-}
+}                           ✅
 
 statistika + {
     daromat {
@@ -155,7 +155,7 @@ statistika + {
 
 admin/delete {
     Userni tolliq ochirib yuboradi bazadan
-}
+}                           ✅
 
 adminLogin {
     nodemailer {

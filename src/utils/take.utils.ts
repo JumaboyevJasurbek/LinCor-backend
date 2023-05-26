@@ -45,7 +45,6 @@ export const takeUtils = async (courseID: string, userID: string) => {
         message: 'Sotib olgan',
         status: 200,
         data: take,
-        course: 'topik',
       };
     } else {
       return {
@@ -70,7 +69,6 @@ export const takeUtils = async (courseID: string, userID: string) => {
         message: 'Sotib olgan',
         status: 200,
         data: take,
-        course: 'course',
       };
     } else {
       return {
