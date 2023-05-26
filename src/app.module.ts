@@ -60,6 +60,7 @@ export class AppModule implements NestModule {
         { path: '/user/admin/login/:id', method: RequestMethod.GET },
         { path: '/vedio/all', method: RequestMethod.GET },
         { path: '/vedio/create', method: RequestMethod.POST },
+        { path: '/vedio/topik/create', method: RequestMethod.POST },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -77,9 +78,9 @@ export class AppModule implements NestModule {
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
         { path: '/user/firebase/registr', method: RequestMethod.POST },
-        { path: '/user/firebase/login', method: RequestMethod.POST },
+        { path: '/user/firebase/login', method: RequestMethod.POST }, 
         { path: '/user/admin/login', method: RequestMethod.POST },
-        { path: '/user/admin/login/:id', method: RequestMethod.GET },
+        { path: '/vedio/:id', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
