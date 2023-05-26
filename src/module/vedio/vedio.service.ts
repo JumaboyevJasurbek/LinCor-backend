@@ -5,6 +5,7 @@ import { UpdateVedioDto } from './dto/update-vedio.dto';
 import { VideoEntity } from 'src/entities/video.entity';
 import { CourseEntity } from 'src/entities/course.entity';
 import { TopikEntity } from 'src/entities/topik.entity';
+import { takeUtils } from 'src/utils/take.utils';
 
 @Injectable()
 export class VedioService {
@@ -114,16 +115,32 @@ export class VedioService {
     });
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, user_id: any): Promise<VideoEntity> {
     const findVedio: VideoEntity = await VideoEntity.findOne({
+      relations: {
+        course: true,
+        topik: true,
+        workbook: true,
+      },
       where: {
-        id,
+        id: id,
       },
     });
     if (!findVedio) {
       throw new HttpException('Vedio Not Found', HttpStatus.NOT_FOUND);
     }
-    return findVedio
+    const byTake = await takeUtils(
+      findVedio.course ? findVedio.course?.id : findVedio.topik?.id,
+      user_id,
+    );
+    if (byTake.status === 200) {
+      return findVedio;
+    } else {
+      throw new HttpException(
+        'Siz hali courseni sotib olmagansiz',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   update(id: number, updateVedioDto: UpdateVedioDto) {

@@ -17,6 +17,8 @@ import {
   Patch,
   Delete,
   UploadedFile,
+  Req,
+  Request,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -181,8 +183,10 @@ export class VedioController {
     description: 'optional',
     required: false,
   })
-  findOne(@Param('id') id: string) {
-    return this.vedioService.findOne(id);
+  findOne(@Param('id') id: string, @Request() req: any) {
+    const { user_id } = req
+    console.log(id)
+    return this.vedioService.findOne(id, user_id);
   }
 
   @Patch(':id')
