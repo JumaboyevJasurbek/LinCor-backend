@@ -141,6 +141,7 @@ export class VedioService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    return findVedio;
   }
 
   update(id: number, updateVedioDto: UpdateVedioDto) {
