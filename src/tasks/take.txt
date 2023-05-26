@@ -1,0 +1,44 @@
+GET {
+    {Admin}
+    Take.find({
+        course:true
+        user: true
+    })
+    const by = discount.findOne{
+        course_id: course.id
+    }
+
+    if(!by) {
+        Take.find({
+            course:true
+            user: true
+        })
+    } else {
+        if(by.taken.user === user.id && by.taken.win) {
+            Take.find({
+                course:true
+                user: true
+            })
+            chegirma = true
+            chegirmaFoiz = nechi foiz
+            chegirmaPrice = course.price  %  chegirmaFoiz
+        } else {
+            Take.find({
+                course:true
+                user: true
+            })
+        }
+    }
+}
+
+POST {
+    {Admin}
+    user_id
+    course | topik
+}
+
+Delete/:id {
+    {Admin}
+    !id = 404
+    delete | active = false
+}
