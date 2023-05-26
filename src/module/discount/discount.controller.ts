@@ -10,7 +10,7 @@ import {
 import { DiscountService } from './discount.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { ApiHeader } from '@nestjs/swagger';
+import { ApiBody, ApiHeader } from '@nestjs/swagger';
 
 @Controller('discount')
 export class DiscountController {
@@ -22,21 +22,26 @@ export class DiscountController {
     description: 'token',
     required: true,
   })
-  @ApiHeader({
-    name: 'autharization',
-    description: 'token',
-    required: true,
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        percentage: {
+          type: 'number',
+          default: 20,
+        },
+        course_id: {
+          type: 'string',
+          default: '3b90396f-1761-472c-836f-f3a1d6095494',
+        },
+      },
+    },
   })
   create(@Body() createDiscountDto: CreateDiscountDto) {
     return this.discountService.create(createDiscountDto);
   }
 
   @Get()
-  @ApiHeader({
-    name: 'autharization',
-    description: 'token',
-    required: true,
-  })
   @ApiHeader({
     name: 'autharization',
     description: 'token',
@@ -61,6 +66,21 @@ export class DiscountController {
     name: 'autharization',
     description: 'token',
     required: true,
+  })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        percentage: {
+          type: 'number',
+          default: 20,
+        },
+        course_id: {
+          type: 'string',
+          default: '3b90396f-1761-472c-836f-f3a1d6095494',
+        },
+      },
+    },
   })
   update(
     @Param('id') id: string,

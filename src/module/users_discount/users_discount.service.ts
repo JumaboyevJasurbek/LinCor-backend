@@ -11,7 +11,7 @@ export class UsersDiscountService {
     @InjectRepository(TakenDiscount)
     private readonly user_discount: Repository<TakenDiscount>,
   ) {}
-  create(createUsersDiscountDto: CreateUsersDiscountDto) {
+  create(createUsersDiscountDto: any) {
     return this.user_discount.save(createUsersDiscountDto)
   }
 
@@ -23,7 +23,7 @@ export class UsersDiscountService {
     return this.user_discount.findAndCountBy({ id });
   }
 
-  update(id: string, updateUsersDiscountDto: UpdateUsersDiscountDto) {
+  update(id: string, updateUsersDiscountDto: any) {
     return this.user_discount.update(id, updateUsersDiscountDto);
   }
 
