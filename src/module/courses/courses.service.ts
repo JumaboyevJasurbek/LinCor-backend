@@ -29,12 +29,11 @@ export class CoursesService {
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
-    const sequency = await CourseEntity.findOne({
-      where: { sequence: dto.sequence },
-    });
-    console.log(sequency);
-
-    if (sequency) {
+    const sequency = dto.sequence
+    const foundSequency = CourseEntity.findOne({where: {sequence: sequency}})
+    console.log(foundSequency);
+    
+    if (foundSequency) {
       throw new HttpException(
         'Courses` sequency is already has',
         HttpStatus.NOT_ACCEPTABLE,
@@ -62,7 +61,9 @@ export class CoursesService {
   async findOne(id: string, user_id: any): Promise<CourseEntity> {
     const course = await CourseEntity.findOne({
       where: { id },
-      relations: { course_videos: true, open_user: true },
+      relations: { course_videos: {
+        open_book: true
+      }, open_user: true, sertifikat: true, discount: true },
     }).catch(() => {
       throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
     });
@@ -70,13 +71,27 @@ export class CoursesService {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
     const videos = course.course_videos;
-
+    const openBook = course.course_videos.forEach(e => {
+      return e.open_book
+    });
+    // console.log(openBook);
+    
     const courseTaken = await takeUtils(id, user_id);
 
+    let lengthOfVideos = []
+    for (let i = 0; i < videos.length; i++) {
+      const element = videos[i];
+      lengthOfVideos.push(element.duration)
+      
+      // lengthOfVideos.push(element.duration)
+    }
+
     if ((courseTaken.message && courseTaken.status === 200)) {
-      return course;
+      
+      return course
     } else {
       for (let i = 0; i < videos.length; i++) {
+        
         if (videos[i].sequence <= 2) {
           videos[i].link = videos[i].link;
         } else {

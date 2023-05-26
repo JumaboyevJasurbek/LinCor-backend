@@ -42,7 +42,7 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['title', 'description', 'price', 'sequency', 'file'],
+      required: ['title', 'description', 'price', 'sequence', 'file'],
       properties: {
         title: {
           type: 'string',
@@ -56,7 +56,7 @@ export class CoursesController {
           type: 'string',
           default: '120 000',
         },
-        sequency: {
+        sequence: {
           type: 'number',
           default: 1,
         },
@@ -129,7 +129,7 @@ export class CoursesController {
           type: 'string',
           default: '120 000',
         },
-        sequency: {
+        sequence: {
           type: 'number',
           default: 1,
         },
