@@ -96,6 +96,7 @@ export class AppModule implements NestModule {
         { path: '/user/:course', method: RequestMethod.GET },
         { path: '/user/email', method: RequestMethod.PUT },
         { path: '/user/email/:id', method: RequestMethod.PUT },
+        { path: '/sertificate/get/:course', method: RequestMethod.GET }
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
