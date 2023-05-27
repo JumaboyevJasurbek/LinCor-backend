@@ -190,9 +190,7 @@ export class SertificateService {
         doc.roundedRect(-250, 250, 300, 240, 160).fill();
 
         doc.end();
-
     }
-
 
     async getSertificate(
         courseId: string,
@@ -267,7 +265,6 @@ export class SertificateService {
             default:
                 break;
         }
-
 
     }
 }
