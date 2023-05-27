@@ -7,10 +7,11 @@ import {
 } from 'typeorm';
 import { TakeEntity } from './take.entity';
 import { VideoEntity } from './video.entity';
-import { Sertifikat } from './sertifikat.entity';
 import { Discount } from './discount.entity';
+import { Sequence } from 'src/types';
+import { TakenSertifikat } from './taken.sertifikat';
 
-@Entity()
+@Entity({ name: 'courses' })
 export class CourseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -41,11 +42,13 @@ export class CourseEntity extends BaseEntity {
   image: string;
 
   @Column({
-    type: 'integer',
+    type: 'enum',
     nullable: false,
+    default: Sequence.A,
+    enum: Sequence,
     unique: true,
   })
-  sequence: number;
+  sequence: Sequence;
 
   @OneToMany(() => VideoEntity, (video) => video.course)
   course_videos: VideoEntity[];
@@ -53,8 +56,8 @@ export class CourseEntity extends BaseEntity {
   @OneToMany(() => TakeEntity, (course) => course.course_id)
   open_user: TakeEntity[];
 
-  @OneToMany(() => Sertifikat, (sertifikat) => sertifikat.course_id)
-  sertifikat: Sertifikat[];
+  @OneToMany(() => TakenSertifikat, (sertifikat) => sertifikat.course)
+  sertifikat: TakenSertifikat[];
 
   @OneToMany(() => Discount, (discount) => discount.course_id)
   discount: Discount[];

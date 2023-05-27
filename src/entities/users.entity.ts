@@ -1,4 +1,4 @@
-import { UserArea } from 'src/types';
+import { Auth_socials, UserArea } from 'src/types';
 import {
   BaseEntity,
   Entity,
@@ -9,7 +9,7 @@ import {
 import { TakeEntity } from './take.entity';
 import { TakenDiscount } from './taken_discount';
 
-@Entity()
+@Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -37,7 +37,6 @@ export class UsersEntity extends BaseEntity {
   @Column({
     type: 'enum',
     enum: UserArea,
-    length: 100,
     default: UserArea.Toshkent,
     nullable: true,
   })
@@ -60,10 +59,17 @@ export class UsersEntity extends BaseEntity {
 
   @Column({
     type: 'integer',
-    length: 100,
     nullable: true,
   })
   phone: number;
+
+  @Column({
+    type: 'enum',
+    enum: Auth_socials,
+    default: Auth_socials.NODEMAILER,
+    nullable: false,
+  })
+  auth_socials: Auth_socials;
 
   @OneToMany(() => TakeEntity, (course) => course.user_id)
   open_course: TakeEntity[];

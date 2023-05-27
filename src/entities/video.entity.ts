@@ -12,7 +12,7 @@ import { WorkbookEntity } from './workbook.entity';
 import { WorkbookOpen } from './open_book';
 import { TopikEntity } from './topik.entity';
 
-@Entity()
+@Entity({ name: 'video' })
 export class VideoEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;

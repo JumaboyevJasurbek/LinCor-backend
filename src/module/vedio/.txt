@@ -1,0 +1,40 @@
+GetAll: {
+    {Admin}
+    vedio get all buladi Admin uchun
+    await Course.find {
+        relation: {
+            video: {
+                workbook: true,
+                open_book: true
+            }
+        }
+    }
+    hammma videolarni admin kora olishi uchun har bir videoni ozini workbookini ham adminga korsatishimiz kerak.
+} 
+
+GetOne: {
+    {User}
+    Agar 
+        videoni ketma ketligi 1 va 2 ga teng bolsa tekshirib otirmasdan videoni chiqarib berasiz va open_book table dan shu videoni linkini ochirgan holatda id sini va boshqa malumotlarini berasiz
+    Aks Holda
+        Videoni id va Course id si keladi shu id lik video bormi va shu id lik Course bormi tekshirasiz. Token ichidan user id olasiz va shu user shu Course ni sotib olganmi yoqmi tekshirasiz. Agar sotib olgan bolsa videoni linki va shu videoga tegishlik workbookni linki ochirgan holatda workbookni id si va qolgan malumotlarini berasiz. 
+        Agar User shu course ni sotib olmagan bolsa siz sotib olmagansiz degan 404 hato chiqaradi
+        delete workbook.link
+}
+
+POST {
+    {Admin}
+    Hamma Malumotlar keladi shular ichidan Category bormi tekshirasiz va shu Course ichida shu ketma-ketlik conflig bolsa hato chiqarib berasiz agar conflig bolmasa bazaga malumot qoshasiz
+}
+
+PATCH {
+    {Admin}
+    Shu id lik video  bormi tekshirasiz bolmasa 404 hato chiqarib berasiz
+    Hamma Malumotlar keladi shular ichidan Category bormi tekshirasiz va shu Course ichida shu ketma-ketlik conflig bolsa hato chiqarib berasiz agar conflig bolmasa bazaga malumot qoshasiz
+}
+
+Delete {
+    {Admin}
+    Shu id lik video  bormi tekshirasiz bolmasa 404 hato chiqarib berasiz
+    Agar bor bolsa bazadan shu videoni ochirib tashlaysiz
+}
