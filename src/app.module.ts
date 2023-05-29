@@ -45,6 +45,11 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenUserMiddleWare)
       .exclude(
+        { path: '/course/list', method: RequestMethod.GET },
+        { path: '/course/create', method: RequestMethod.POST },
+        { path: '/course/update/:id', method: RequestMethod.PATCH },
+        { path: '/course/delete/:id', method: RequestMethod.DELETE },
+        { path: '/course/:id', method: RequestMethod.GET },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
@@ -74,8 +79,8 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(
-        { path: '/courses/list', method: RequestMethod.GET },
-        { path: '/courses/course/:id', method: RequestMethod.GET },
+        { path: '/course/list', method: RequestMethod.GET },
+        { path: '/course/:id', method: RequestMethod.GET },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
