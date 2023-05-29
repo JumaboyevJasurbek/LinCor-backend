@@ -66,6 +66,7 @@ export class AppModule implements NestModule {
         { path: '/vedio/create', method: RequestMethod.POST },
         { path: '/vedio/topik/create', method: RequestMethod.POST },
         { path: '/user/delete/:id', method: RequestMethod.DELETE },
+        { path: '/user/statistika/daromat', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -91,9 +92,10 @@ export class AppModule implements NestModule {
         { path: '/user/update', method: RequestMethod.PATCH },
         { path: '/user/update/password', method: RequestMethod.PUT },
         { path: '/user/update/image', method: RequestMethod.PUT },
-        { path: '/user/:course', method: RequestMethod.GET },
+        { path: '/user/one', method: RequestMethod.GET },
         { path: '/user/email', method: RequestMethod.PUT },
         { path: '/user/email/:id', method: RequestMethod.PUT },
+        { path: '/user/profile', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
