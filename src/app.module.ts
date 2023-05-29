@@ -40,11 +40,9 @@ dotenv.config();
     VedioModule,
     CoursesModule,
     TestsModule,
-    Mirxonjon
     TakeModule,
     DiscountModule,
     UsersDiscountModule,
-    main
   ],
 })
 export class AppModule implements NestModule {
@@ -106,7 +104,6 @@ export class AppModule implements NestModule {
         { path: '/user/update', method: RequestMethod.PATCH },
         { path: '/user/in/password', method: RequestMethod.PATCH },
         { path: '/take/add', method: RequestMethod.POST },
-
         { path: '/user/update/password', method: RequestMethod.PUT },
         { path: '/user/update/image', method: RequestMethod.PUT },
         { path: '/user/one', method: RequestMethod.GET },

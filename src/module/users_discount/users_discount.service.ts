@@ -12,7 +12,7 @@ export class UsersDiscountService {
     private readonly user_discount: Repository<TakenDiscount>,
   ) {}
   create(createUsersDiscountDto: any) {
-    return this.user_discount.save(createUsersDiscountDto)
+    return this.user_discount.save(createUsersDiscountDto);
   }
 
   findAll() {

@@ -30,7 +30,10 @@ export class CoursesService {
     }
 
     if (dto.sequence > 3) {
-      throw new HttpException('Course sequence must be 1 or 2 or 3 You cannot create another', HttpStatus.NOT_ACCEPTABLE)
+      throw new HttpException(
+        'Course sequence must be 1 or 2 or 3 You cannot create another',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
     }
 
     const sequency = dto.sequence;
@@ -57,7 +60,7 @@ export class CoursesService {
 
   async findAll(): Promise<CourseEntity[]> {
     return await CourseEntity.find({
-      order: {sequence: 'ASC'}
+      order: { sequence: 'ASC' },
     }).catch(() => {
       throw new HttpException('Courses Not Found', HttpStatus.NOT_FOUND);
     });
@@ -79,8 +82,8 @@ export class CoursesService {
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
-    const videos = course.course_videos.sort((a: CourseEntity, b: CourseEntity) =>
-      a.sequence > b.sequence ? 1 : -1,
+    const videos = course.course_videos.sort(
+      (a: CourseEntity, b: CourseEntity) => (a.sequence > b.sequence ? 1 : -1),
     );
     const courseTaken = await takeUtils(id, user_id);
 
@@ -115,9 +118,12 @@ export class CoursesService {
     }
 
     if (dto.sequence > 3) {
-      throw new HttpException('Sequnce must be 1 or 2 or 3', HttpStatus.NOT_ACCEPTABLE)
+      throw new HttpException(
+        'Sequnce must be 1 or 2 or 3',
+        HttpStatus.NOT_ACCEPTABLE,
+      );
     }
-    
+
     await CourseEntity.createQueryBuilder()
       .update(CourseEntity)
       .set({
