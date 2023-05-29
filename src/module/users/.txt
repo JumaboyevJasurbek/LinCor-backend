@@ -58,22 +58,22 @@ Parol update {
 
 One {
     token keladi shu token egasini hamma malumotlarini qaytaraman {
-        user paroldan tashqari hamma malumotlari,
+        user paroldan tashqari hamma malumotlari, ✅
         sotib olgan courselar: {
-            courseni ozini hamma malumotlari 
+            courseni ozini hamma malumotlari ✅
             va
-            qachon sotib olgani 
-            qachon tugashi
-            course ni chegirma blan olgan bolsa ( chegirma: boolean )
-            nechi foizlik chegirma: %
-            active: boolean (Kursni hozirgi holati)
-            sertifikat: courselar sertifikati olingan bolsa ? olingan sana : true
-            korilgan darslar: courselarni workbooklar olingan soni(korilgan darslar soni) 
-            jami darslar: Course jami darslar
-            qolgan darslar: jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi
+            qachon sotib olgani ✅
+            qachon tugashi  ✅
+            course ni chegirma blan olgan bolsa ( chegirma: boolean ) ✅
+            nechi foizlik chegirma: %   ✅
+            active: boolean (Kursni hozirgi holati) ✅
+            sertifikat: courselar sertifikati olingan bolsa ? olingan sana : true ✅
+            korilgan darslar: courselarni workbooklar olingan soni(korilgan darslar soni) ✅
+            jami darslar: Course jami darslar ✅
+            qolgan darslar: jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi ✅
         },
-        sotib olgan videolar soni,
-        sotib olgan sertifikatlar soni,
+        sotib olgan videolar soni, ✅
+        sotib olgan sertifikatlar soni, ✅
         courses: {
             course1: {
                 sotib olgan: true
@@ -87,9 +87,9 @@ One {
                 sotib olgan: true
                 active: true
             },
-        }
-    }
-}
+        }   ✅
+    }   ✅
+}                           ✅
 
 PATCH {
     surname,
@@ -101,16 +101,16 @@ PATCH {
 PUT {
     nodemailer {
         email
-    }
+    }                       ✅
     code {
         kod keladi togri bolsa baza update qilinib
         yengi token qaytadi
-    }
-}
+    }                       ✅
+}                           ✅
 
 PUT {
     image
-}
+}                           ✅
 
 statistika + {
     daromat {
@@ -124,10 +124,10 @@ statistika + {
     }
     user/one {
         sotib olgan courselar: {
-            courseni ozini hamma malumotlari 
+            courseni ozini hamma malumotlari
             va
-            qachon sotib olgani 
-            qachon tugashi
+            qachon sotib olgani
+            qachon tugashi 
             course ni chegirma blan olgan bolsa ( chegirma: boolean )
             nechi foizlik chegirma: %
             active: boolean (Kursni hozirgi holati)
@@ -155,7 +155,7 @@ statistika + {
 
 admin/delete {
     Userni tolliq ochirib yuboradi bazadan
-}
+}                           ✅
 
 adminLogin {
     nodemailer {

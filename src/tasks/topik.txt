@@ -1,0 +1,54 @@
+GetAll {
+    {Hech kim}
+    return await topik.find()
+}
+
+GetOne {
+    {Hech kim}
+    if(await tokenUtils(headers)) {
+        if (await takeUtils(topik_id, req.user_id)) {
+            sotib olgan {
+                ...topik
+                topik.active = true
+                1 - 2 linki
+                ...open_book
+                3 <= linki = ''
+            }
+        } else {
+            sotib olmagan {
+                ...topik
+                topik.active = false
+                topik.videoSoni = topik.videos.length
+                1 - 2 = linki
+                ...open_book
+                3 <= linki = ''
+            }
+        }
+    } else {
+        return {
+            ...topik
+            topik.active = false
+            topik.videoSoni = topik.videos.length
+            1 - 2 = linki
+            ...open_book
+            3 <= linki = ''
+        }
+    }
+}
+
+POST {
+    {Admin}
+    3 < error
+    2 = 2 error
+}
+
+PATCH/:id {
+    {Admin}
+    !id = 404
+    2 = 2
+}
+
+DELETE/:id {
+    {Admin}
+    !id = 404
+}

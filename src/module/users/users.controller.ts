@@ -206,23 +206,84 @@ export class UsersController {
     }
   }
 
-  @Get('/:course')
+  @Put('/email')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async email(@Body() body: PasswordDto, @Req() req: Request) {
+    return await this.usersService.email(body, req.user_id);
+  }
+
+  @Put('/email/:code')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: true,
+  })
+  @HttpCode(HttpStatus.OK)
+  async emailCode(@Param('code') params: string) {
+    return await this.usersService.emailCode(params);
+  }
+
+  @Get('/one')
   @ApiHeader({
     name: 'autharization',
     description: 'User token',
     required: false,
   })
-  findAll(@Param('course') course: string, @Req() req: Request) {
-    return this.usersService.findAll(course, req.user_id);
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  findOne(@Req() req: Request) {
+    return this.usersService.findOne(req.user_id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('/profile')
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  profile(@Req() req: Request) {
+    return this.usersService.profile(req.user_id);
   }
 
-  @Delete(':id')
+  @Get('/statistika/daromat')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  daromat() {
+    return this.usersService.daromat();
+  }
+
+  @Delete('/delete/:id')
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 }

@@ -1,0 +1,61 @@
+chegirma () {
+    const discount = await discount.findOne({
+        where: {
+            course_id: course.id,
+        }
+    })
+
+    if(discont) {
+        if (discount.taken.user !== user.id) {
+            chegirma: discount.id
+        } else {
+            chegirma: false
+        }
+    } else {
+        chegirma: false
+    }
+}
+
+GetAll {
+    {Hech Kim}
+    Hamma course larni shunde bervorasiz. 
+}
+
+get/one/:course_id {
+    {Hech kim}
+    if(await tokenUtils(heaers)) {
+        sotib olganmi 
+            course.active = true
+            1-2 linki berasiz
+                opek_book: true
+            3 <= linki = ""
+        sotib olmagan bolsa
+            course.active = false
+            course.chegirma = false
+            course.length = course.videos.length
+            1-2 linki berasiz
+            3 <= linki = ""
+    } else {
+        sotib olmagan boladi
+            course.active = false
+            1-2 linki berasiz
+            3 <= linki = ""
+    }
+}
+
+Post {
+    {Admin}
+    3 < error
+    2 = 2 error
+}
+
+Patch/:id {
+    {Admin}
+    !id = 404
+    2 = 2 error
+}
+
+Delete/:id {
+    {Admin}
+    !id = 404
+}

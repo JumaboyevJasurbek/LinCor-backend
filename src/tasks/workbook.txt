@@ -1,0 +1,64 @@
+Open_Book
+
+GET/:id {
+    {Hech kim}
+    download
+}
+
+POST {
+    {Admin}
+    insert {
+        video_id
+        pdf
+    }
+}
+
+PATCH/:id {
+    {Admin}
+    !id = 404
+    pdf
+    videoni 
+}
+
+DELETE/:id {
+    {Admin}
+    !id = 404
+    delete
+}
+
+
+
+
+
+Pullik workbook
+
+GET/:id {
+    {User}
+    takeUtils workbook.video.course.id, req.user_id
+    if(status.status === 200) {
+        download
+    } else {
+        sotib olmagansiz 400
+    }
+}
+
+POST {
+    {Admin}
+    insert {
+        video_id
+        pdf
+    }
+}
+
+PATCH/:id {
+    {Admin}
+    !id = 404
+    pdf
+    videoni 
+}
+
+DELETE/:id {
+    {Admin}
+    !id = 404
+    delete
+}
