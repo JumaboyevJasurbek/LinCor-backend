@@ -66,6 +66,7 @@ export class SertificateService {
             })
 
         doc.moveDown(1)
+
         doc
             .fontSize(16)
             .fillColor('#9370DB')
@@ -117,10 +118,10 @@ export class SertificateService {
         // ### content section
 
         doc.moveDown(1)
-        doc.fontSize(16)
+        doc.fontSize(18)
         doc.fillColor('blue')
         doc.font('Courier-Bold')
-            .text('Congratulations for graduating our course and taking your sertificate :D', {
+            .text('Congratulations for graduating our course and taking your sertificate.', {
                 align: "center",
             })
 
@@ -131,7 +132,13 @@ export class SertificateService {
         doc.fillColor('#333335')
 
         doc.font('Courier-Oblique')
-        doc.text('Description: lorem ipsum balo battar yana nimadurla karochi hammasi zor gazi bosish kere fsyo mingga qoyib ...', { align: "left", width: 400 })
+        doc.text(`${data.description}`)
+
+        doc.moveDown(0.3)
+        doc
+            .fillColor('#09597c')
+            .fontSize(16)
+            .text(`For: ${data.fullname}`)
 
         doc.fontSize(18);
 
@@ -169,7 +176,7 @@ export class SertificateService {
 
         doc.image(
             this.imageURL + '/gold.png',
-            250,
+            350,
             250,
             {
                 width: 100,
@@ -188,6 +195,32 @@ export class SertificateService {
         doc.roundedRect(500, -120, 300, 240, 200,).fill();
 
         doc.roundedRect(-250, 250, 300, 240, 160).fill();
+
+        doc.end();
+    }
+
+    async createS3(dataCb: any, endCb: any, data: ISertificate): Promise<void> {
+        const doc = new PDFKit({ size: [700, 400] });
+
+        doc.on('data', dataCb);
+        doc.on('end', endCb);
+
+        doc.moveDown(2);
+
+        doc
+            .font('Helvetica-BoldOblique')
+            .text('Attendance Certificate')
+
+        doc.fillColor('yellow')
+        doc
+            .rotate(15)
+            .rect(-20, -30, 140, 420)
+            .fill();
+
+        doc
+            .rotate(5)
+            .rect(650, -270, 200, 420)
+            .fill();
 
         doc.end();
     }
@@ -231,11 +264,11 @@ export class SertificateService {
             throw new HttpException('You can download certificate only once', HttpStatus.FORBIDDEN)
         }
 
-        const newTakenSert: unknown = await TakenSertifikat.createQueryBuilder()
-            .insert()
-            .into(TakenSertifikat)
-            .values({ user_id: userId as any, course: courseId as any })
-            .execute()
+        // const newTakenSert: unknown = await TakenSertifikat.createQueryBuilder()
+        //     .insert()
+        //     .into(TakenSertifikat)
+        //     .values({ user_id: userId as any, course: courseId as any })
+        //     .execute()
 
         const stream = res.set({
             "Content-Type": "application/pdf",
@@ -249,7 +282,7 @@ export class SertificateService {
 
         switch (getCourse.sequence) {
             case 1:
-                await this.createS1(
+                await this.createS3(
                     (chunk: unknown) => stream.write(chunk),
                     () => stream.end(),
                     SertificateData
