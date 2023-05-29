@@ -34,7 +34,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
 import { tokenUtils } from 'src/utils/token.utils';
 
-@Controller('courses')
+@Controller('course')
 @ApiTags('Courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
@@ -98,7 +98,7 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
-  @Get('/course/:id')
+  @Get('/:id')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiHeader({

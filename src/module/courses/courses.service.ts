@@ -28,13 +28,18 @@ export class CoursesService {
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
+
+    if (dto.sequence > 3) {
+      throw new HttpException('Course sequence must be 1 or 2 or 3 You cannot create another', HttpStatus.NOT_ACCEPTABLE)
+    }
+
     const sequency = dto.sequence;
     const foundSequency = courses.find((e) => e.sequence === Number(sequency));
 
     if (foundSequency) {
       throw new HttpException(
         'Courses` sequency is already has',
-        HttpStatus.NOT_ACCEPTABLE,
+        HttpStatus.CONFLICT,
       );
     }
     await CourseEntity.createQueryBuilder()
@@ -51,7 +56,9 @@ export class CoursesService {
   }
 
   async findAll(): Promise<CourseEntity[]> {
-    return await CourseEntity.find().catch(() => {
+    return await CourseEntity.find({
+      order: {sequence: 'ASC'}
+    }).catch(() => {
       throw new HttpException('Courses Not Found', HttpStatus.NOT_FOUND);
     });
   }
@@ -72,11 +79,10 @@ export class CoursesService {
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
-    const videos = course.course_videos.sort((a, b) =>
+    const videos = course.course_videos.sort((a: CourseEntity, b: CourseEntity) =>
       a.sequence > b.sequence ? 1 : -1,
     );
     const courseTaken = await takeUtils(id, user_id);
-    console.log(courseTaken);
 
     if (courseTaken.message && courseTaken.status === 200) {
       for (let i = 0; i < videos.length; i++) {
@@ -101,6 +107,17 @@ export class CoursesService {
 
   async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
     const course = await this.oneFoundCourse(id);
+    if (course.sequence !== Number(dto.sequence) && dto.sequence < 3) {
+      throw new HttpException(
+        'You cannot change this course sequence',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    if (dto.sequence > 3) {
+      throw new HttpException('Sequnce must be 1 or 2 or 3', HttpStatus.NOT_ACCEPTABLE)
+    }
+    
     await CourseEntity.createQueryBuilder()
       .update(CourseEntity)
       .set({
