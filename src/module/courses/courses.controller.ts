@@ -32,16 +32,12 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
-import { TokenUserMiddleWare } from 'src/middleware/token.user.middleware';
-import JwtStrategy from "../../utils/jwt"
+import { tokenUtils } from 'src/utils/token.utils';
 
 @Controller('courses')
 @ApiTags('Courses')
 export class CoursesController {
-  constructor(
-    private readonly coursesService: CoursesService, 
-    private readonly userVerify: TokenUserMiddleWare
-    ) {}
+  constructor(private readonly coursesService: CoursesService) {}
 
   @Post('/create')
   @HttpCode(HttpStatus.CREATED)
@@ -110,9 +106,13 @@ export class CoursesController {
     description: 'token',
     required: false,
   })
-  async findOne(@Param('id') id: string, @Request() req: any, @Headers() header: any) {
-    const user_id = JwtStrategy.verify(header.autharization)
-    
+  async findOne(
+    @Param('id') id: string,
+    @Request() req: any,
+    @Headers() header: any,
+  ) {
+    const user_id = tokenUtils(header);
+
     return this.coursesService.findOne(id, user_id);
   }
 
@@ -121,7 +121,6 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['file'],
       properties: {
         title: {
           type: 'string',
@@ -162,11 +161,14 @@ export class CoursesController {
     @Body() dto: UpdateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: any = googleCloud(file) as any;
-    if (img_link) {
-      return this.coursesService.update(id, dto, img_link);
+    if (file) {
+      const img_link: any = googleCloud(file) as any;
+      if (img_link) {
+        return this.coursesService.update(id, dto, img_link);
+      }
+    } else {
+      return this.coursesService.update(id, dto, undefined);
     }
-    return this.coursesService.update(id, dto, undefined);
   }
 
   @Delete('/delete/:id')
