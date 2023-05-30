@@ -8,6 +8,8 @@ import {
 } from 'typeorm';
 import { TakeEntity } from './take.entity';
 import { TakenDiscount } from './taken_discount';
+import { TakenSertifikat } from './taken.sertifikat';
+import { TakenWorkbook } from './take_workbook';
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity {
@@ -73,6 +75,12 @@ export class UsersEntity extends BaseEntity {
 
   @OneToMany(() => TakeEntity, (course) => course.user_id)
   open_course: TakeEntity[];
+
+  @OneToMany(() => TakenWorkbook, (workbook) => workbook.user_id)
+  take_workbook: TakenWorkbook[];
+
+  @OneToMany(() => TakenSertifikat, (sertfikat) => sertfikat.user_id)
+  sertfikat: TakenSertifikat[];
 
   @OneToMany(() => TakenDiscount, (taken) => taken.user)
   taken_discount: TakenDiscount[];

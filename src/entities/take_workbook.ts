@@ -8,13 +8,14 @@ import {
 } from 'typeorm';
 import { UsersEntity } from './users.entity';
 import { CourseEntity } from './course.entity';
+import { WorkbookEntity } from './workbook.entity';
 
-@Entity({ name: 'take_certificate' })
-export class TakenSertifikat extends BaseEntity {
+@Entity({ name: 'take_workbook' })
+export class TakenWorkbook extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => UsersEntity, (user) => user.sertfikat, {
+  @ManyToOne(() => UsersEntity, (user) => user.take_workbook, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
@@ -23,9 +24,9 @@ export class TakenSertifikat extends BaseEntity {
   @CreateDateColumn({ name: 'created_at' })
   create_data: Date;
 
-  @ManyToOne(() => CourseEntity, (course) => course.sertifikat, {
+  @ManyToOne(() => WorkbookEntity, (workbook) => workbook.take_user, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'course' })
-  course: CourseEntity;
+  @JoinColumn({ name: 'workbook' })
+  workbook: WorkbookEntity;
 }
