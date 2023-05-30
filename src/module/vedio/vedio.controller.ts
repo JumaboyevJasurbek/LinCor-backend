@@ -13,12 +13,11 @@ import {
   Body,
   Get,
   Param,
-  Headers,
   Patch,
   Delete,
   UploadedFile,
-  Req,
   Request,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -33,13 +32,14 @@ import {
 } from '@nestjs/swagger';
 import { VedioService } from './vedio.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
 
 @Controller('vedio')
 @ApiTags('Video')
 export class VedioController {
   constructor(private readonly vedioService: VedioService) {}
 
-  @Post('/create')
+  @Post('/course/create')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -95,7 +95,15 @@ export class VedioController {
   ) {
     const vedio: string = googleCloud(link);
     if (vedio) {
-      return this.vedioService.createCourseVedio(createVedioDto, vedio);
+      const ext = extname(vedio);
+      if (ext == '.mp4') {
+        return this.vedioService.createCourseVedio(createVedioDto, vedio);
+      } else {
+        throw new HttpException(
+          'The file type is not correct',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
   }
 
@@ -155,11 +163,19 @@ export class VedioController {
   ) {
     const topikVedio: string = googleCloud(link);
     if (topikVedio) {
-      return this.vedioService.createTopikVedio(body, topikVedio);
+      const ext = extname(topikVedio);
+      if (ext == '.mp4') {
+        return this.vedioService.createTopikVedio(body, topikVedio);
+      } else {
+        throw new HttpException(
+          'The file type is not correct',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
   }
 
-  @Get('/:id')
+  @Get('/byCourse/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -172,7 +188,7 @@ export class VedioController {
     return this.vedioService.findCourseVedio(id);
   }
 
-  @Get(':id')
+  @Get('/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()

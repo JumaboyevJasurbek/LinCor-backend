@@ -10,8 +10,13 @@ import { takeUtils } from 'src/utils/take.utils';
 @Injectable()
 export class VedioService {
   async createCourseVedio(createVedioDto: CreateVedioDto, link: any) {
-    const course: CourseEntity = await CourseEntity.findOneBy({
-      id: createVedioDto.course_id,
+    const course: CourseEntity = await CourseEntity.findOne({
+      where: {
+        id: createVedioDto.course_id,
+      },
+      relations: {
+        course_videos: true,
+      },
     }).catch(() => {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     });
@@ -24,16 +29,18 @@ export class VedioService {
       throw new HttpException('Sequence a number', HttpStatus.NOT_FOUND);
     }
 
-    const findCourse = await CourseEntity.find();
+    const findCourse = course.course_videos?.find(
+      (e) => e.sequence === Number(createVedioDto.sequence),
+    );
 
-    if (findCourse.find((e) => e.sequence == Number(createVedioDto.sequence))) {
+    if (findCourse) {
       throw new HttpException(
         'There is a video of this sequence',
         HttpStatus.CONFLICT,
       );
     }
 
-    return await VideoEntity.createQueryBuilder()
+    await VideoEntity.createQueryBuilder()
       .insert()
       .into(VideoEntity)
       .values({
@@ -52,9 +59,12 @@ export class VedioService {
   }
 
   async createTopikVedio(body: CreateTopikDto, link: any) {
-    const topik: TopikEntity[] = await TopikEntity.find({
+    const topik: TopikEntity = await TopikEntity.findOne({
       where: {
         id: body.topik_id,
+      },
+      relations: {
+        topik_videos: true,
       },
     }).catch(() => {
       throw new HttpException('Topik Not Found', HttpStatus.NOT_FOUND);
@@ -68,9 +78,11 @@ export class VedioService {
       throw new HttpException('Sequence a number', HttpStatus.NOT_FOUND);
     }
 
-    const findVedio: VideoEntity[] = await VideoEntity.find();
+    const findTopik = topik.topik_videos?.find(
+      (e) => e.sequence === Number(body.sequence),
+    );
 
-    if (findVedio.find((e) => e.sequence == Number(body.sequence))) {
+    if (findTopik) {
       throw new HttpException(
         'There is a video of this sequence',
         HttpStatus.CONFLICT,
@@ -88,7 +100,7 @@ export class VedioService {
         duration: body.duration,
         topik: body.topik_id as any,
       })
-      .returning('*')
+      .returning(['*'])
       .execute()
       .catch(() => {
         throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
@@ -108,7 +120,7 @@ export class VedioService {
           sequence: 'ASC',
         },
       },
-    }).catch(() => []);
+    });
 
     if (!course) {
       const topik = await TopikEntity.findOne({

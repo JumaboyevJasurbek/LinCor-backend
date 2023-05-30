@@ -19,7 +19,7 @@ export const takeUtils = async (courseID: string, userID: string) => {
   if (!course) {
     const topik: TopikEntity = await TopikEntity.findOne({
       where: {
-        id: courseID,
+        id: courseID, 
       },
     }).catch(() => undefined);
     if (!topik) {
