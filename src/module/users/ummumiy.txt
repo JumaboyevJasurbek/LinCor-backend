@@ -1,0 +1,30 @@
+video one ga zapros jonatganda tekshiriladi va malumotlarni qaytaradi 
+
+agar sotib olgan bola togri link aks holda sotib olin degan hato chiqadi
+
+byCategory da faqat 1 chi va 2chi videoni linki va workbookni id beriladi va active true keladi qolganlarda link kelmaydi active false keladi 
+
+keyingi video larga faqat one ga get jonatadi shunda 3 chi videoni linki 3chi workbook id si ham keladi.
+
+Workbook ni id si boyicha zapros jonatganda download qiladi va qayta download qila olmaydi
+
+
+
+
+1ta courseni sotib olmoqchi bolganda. 1 ta chegirma chiqadi shuni bossa shu chegirmaga tegishli testlar chiqib keladi 1 dan 10 gacha boladi 
+
+testlar toplami shu chegirmaga yegiladi shu yegilgan toplam chiqib keladi va u chegirma yo oladi yoki olmaydi
+
+workbookni faqat 1 marta yuklab olinadigan bolsa deme userga nechta dars korgansan qayerlarida qolgansan deyishda shuni ketma-ketligidan foydalansa va shundan nechta dars qilganlarni bilsa boladi
+
+user malumotlari uchun sotib olgan course larni length qoshiladi va nechta sertifikat olgan bolsa shular ham chiqib keladi. Course larni olingan sana tugash sana beriladi
+
+{
+    sotib olgan courselar: {
+        olingan sana:
+        tugash sana:
+        active:
+    }
+    nechta course olgan nechtasi olmagan: active{true, false}
+
+}

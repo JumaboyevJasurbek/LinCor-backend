@@ -11,16 +11,16 @@ import { CourseEntity } from './course.entity';
 import { TakenDiscount } from './taken_discount';
 import { TestsEntity } from './tests.entity';
 
-@Entity()
+@Entity({ name: 'discount' })
 export class Discount extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({
-    type: 'text',
+    type: 'int',
     nullable: false,
   })
-  percentage: string;
+  percentage: number;
 
   @ManyToOne(() => CourseEntity, (course) => course.discount, {
     onDelete: 'CASCADE',
