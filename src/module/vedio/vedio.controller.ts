@@ -159,7 +159,7 @@ export class VedioController {
     }
   }
 
-  @Get('/all')
+  @Get('/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -168,10 +168,8 @@ export class VedioController {
     description: 'optional',
     required: false,
   })
-  findAll(@Headers() header: any) {
-    if (header.autharization) {
-      return this.vedioService.findAll(header);
-    }
+  find(@Param('id') id: string) {
+    return this.vedioService.findCourseVedio(id);
   }
 
   @Get(':id')
@@ -184,13 +182,13 @@ export class VedioController {
     required: false,
   })
   findOne(@Param('id') id: string, @Request() req: any) {
-    const { user_id } = req
-    console.log(id)
+    const { user_id } = req;
     return this.vedioService.findOne(id, user_id);
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiConsumes('multipart/form-data')
   @ApiNoContentResponse()
   @ApiBody({
     schema: {
@@ -218,12 +216,16 @@ export class VedioController {
         },
         course_id: {
           type: 'string',
-          default: 'uuid',
+          default: '35bf2a3c-e931-4f81-9567-9a34bbeaf7fg',
+        },
+        topik_id: {
+          type: 'string',
+          default: '35bf2a3c-e931-4f81-9567-9a34bbeaf7fg',
         },
       },
     },
   })
-  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('link'))
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
@@ -231,12 +233,20 @@ export class VedioController {
     description: 'Admin token',
     required: false,
   })
-  @UseInterceptors(FileInterceptor('file'))
-  update(@Param('id') id: string, @Body() updateVedioDto: UpdateVedioDto) {
-    return this.vedioService.update(+id, updateVedioDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateVedioDto: UpdateVedioDto,
+    @UploadedFile() link: Express.Multer.File,
+  ) {
+    if (link) {
+      const Vediolink: string = googleCloud(link);
+      return this.vedioService.update(id, updateVedioDto, Vediolink);
+    } else {
+      return this.vedioService.update(id, updateVedioDto, false);
+    }
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -247,6 +257,6 @@ export class VedioController {
     required: true,
   })
   remove(@Param('id') id: string) {
-    return this.vedioService.remove(+id);
+    return this.vedioService.remove(id);
   }
 }

@@ -65,6 +65,9 @@ export class AppModule implements NestModule {
         { path: '/vedio/all', method: RequestMethod.GET },
         { path: '/vedio/create', method: RequestMethod.POST },
         { path: '/vedio/topik/create', method: RequestMethod.POST },
+        { path: '/vedio/:id', method: RequestMethod.GET },
+        { path: '/vedio/update/:id', method: RequestMethod.PATCH },
+        { path: '/vedio/delete/:id', method: RequestMethod.DELETE },
         { path: '/user/delete/:id', method: RequestMethod.DELETE },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
