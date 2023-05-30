@@ -55,7 +55,6 @@ export class AppModule implements NestModule {
         { path: '/course/create', method: RequestMethod.POST },
         { path: '/course/update/:id', method: RequestMethod.PATCH },
         { path: '/course/delete/:id', method: RequestMethod.DELETE },
-        { path: '/course/:id', method: RequestMethod.GET },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
@@ -106,7 +105,6 @@ export class AppModule implements NestModule {
         { path: '/user/firebase/registr', method: RequestMethod.POST },
         { path: '/user/firebase/login', method: RequestMethod.POST },
         { path: '/user/admin/login', method: RequestMethod.POST },
-        { path: '/vedio/:id', method: RequestMethod.GET },
         { path: '/user/admin/login/:id', method: RequestMethod.GET },
         { path: '/user/password', method: RequestMethod.POST },
         { path: '/user/password/:code', method: RequestMethod.GET },
@@ -120,7 +118,9 @@ export class AppModule implements NestModule {
         { path: '/user/email', method: RequestMethod.PUT },
         { path: '/user/email/:id', method: RequestMethod.PUT },
         { path: '/user/profile', method: RequestMethod.GET },
-      )
+        { path: '/vedio/:id', method: RequestMethod.GET },
+
+        )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
 }
