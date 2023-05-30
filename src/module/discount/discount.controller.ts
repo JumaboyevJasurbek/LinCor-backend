@@ -10,12 +10,14 @@ import {
 import { DiscountService } from './discount.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { ApiBody, ApiHeader } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
 
 @Controller('discount')
+@ApiTags('Discount')
 export class DiscountController {
   constructor(private readonly discountService: DiscountService) {}
 
+  // ? CREATE
   @Post()
   @ApiHeader({
     name: 'autharization',
@@ -37,10 +39,11 @@ export class DiscountController {
       },
     },
   })
-  create(@Body() createDiscountDto: CreateDiscountDto) {
-    return this.discountService.create(createDiscountDto);
+  async create(@Body() createDiscountDto: CreateDiscountDto) {
+    return await this.discountService.create(createDiscountDto);
   }
 
+  // ? FIND ALL
   @Get()
   @ApiHeader({
     name: 'autharization',
@@ -51,6 +54,7 @@ export class DiscountController {
     return this.discountService.findAll();
   }
 
+  // ? FIND ONE
   @Get(':id')
   @ApiHeader({
     name: 'autharization',
@@ -61,6 +65,7 @@ export class DiscountController {
     return this.discountService.findOne(id);
   }
 
+  // ? UPDATE
   @Patch(':id')
   @ApiHeader({
     name: 'autharization',
@@ -89,6 +94,7 @@ export class DiscountController {
     return this.discountService.update(id, updateDiscountDto);
   }
 
+  // ? DELETE
   @Delete(':id')
   @ApiHeader({
     name: 'autharization',
