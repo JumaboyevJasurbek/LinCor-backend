@@ -4,11 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { VideoEntity } from './video.entity';
+import { TakenWorkbook } from './take_workbook';
 
-@Entity()
+@Entity({ name: 'workbook' })
 export class WorkbookEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -24,4 +26,7 @@ export class WorkbookEntity extends BaseEntity {
   })
   @JoinColumn()
   video_id: VideoEntity;
+
+  @OneToMany(() => TakenWorkbook, (workbook) => workbook.user_id)
+  take_user: TakenWorkbook[];
 }

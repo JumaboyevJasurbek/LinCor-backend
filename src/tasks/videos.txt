@@ -1,0 +1,38 @@
+GetOne/:id {
+    {User}
+    const video = video.findOne {
+        relation: {
+            course: true
+            workbook: true
+        }
+    }
+    !bazada video:id bormi = 404
+    const byTake = await takeUtils(video.course.id, req.user_id) // 200, 400, 404
+    if (byTake.status === 200) {
+        return video
+    } else {
+        Bad Request sotib olin
+    }
+}
+
+Post {
+    {Admin}
+    !baza course_id bormi = ,
+    !baza topik_id bormi = 404
+    course.videos.ketma_ketlik !== frontend.ketma_ketlik : 400
+    insert
+}
+
+Patch/:id {
+    {Admin}
+    !baza video bormi = 404
+    mobodo !baza course bormi = 404
+    mobodo !baza course.videos.ketma_ketlik !== frontend.ketma_ketlik : 400
+    update
+}
+
+Delete/:id {
+    {Admin}
+    !baza video bormi = 404
+    delete
+}

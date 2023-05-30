@@ -1,0 +1,8 @@
+AbduJabbor => Workbook, OpenWorkbook
+Jasur => Discount, Tests, Taken_discount
+Abbosxon => Sertifikat, taken_sertifikat
+Akmaljon => Users
+Mirxonjon => Take
+Ogabek aka => Topik
+Nodir aka => Course
+Sherzod aka => Video
