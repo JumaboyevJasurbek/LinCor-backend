@@ -73,17 +73,25 @@ export class AppModule implements NestModule {
         { path: '/tests', method: RequestMethod.POST },
         { path: '/tests/:id', method: RequestMethod.PATCH },
         { path: '/tests/:id', method: RequestMethod.DELETE },
-        { path: '/vedio/course/create', method: RequestMethod.POST },
-        { path: '/vedio/topik/create', method: RequestMethod.POST },  
-        { path: '/vedio/byCourse/:id', method: RequestMethod.GET },
-        { path: '/vedio/update/:id', method: RequestMethod.PATCH },
-        { path: '/vedio/delete/:id', method: RequestMethod.DELETE },
+        { path: '/vedio/all', method: RequestMethod.GET },
+        { path: '/vedio/create', method: RequestMethod.POST },
+        { path: '/discount', method: RequestMethod.GET },
+        { path: '/discount', method: RequestMethod.POST },
+        { path: '/discount/:id', method: RequestMethod.PATCH },
+        { path: '/discount/:id', method: RequestMethod.DELETE },
+        { path: '/users-discount', method: RequestMethod.GET },
+        { path: '/users-discount', method: RequestMethod.POST },
+        { path: '/users-discount/:id', method: RequestMethod.PATCH },
+        { path: '/users-discount/:id', method: RequestMethod.DELETE },
+        { path: '/vedio/topik/create', method: RequestMethod.POST },
         { path: '/user/delete/:id', method: RequestMethod.DELETE },
         { path: '/user/statistika/daromat', method: RequestMethod.GET },
-        )
-        .forRoutes({ path: '/**', method: RequestMethod.ALL });
-        
-        // Admin
+        { path: '/user/statistika/users', method: RequestMethod.GET },
+        { path: '/user/statistika/:id', method: RequestMethod.GET },
+      )
+      .forRoutes({ path: '/**', method: RequestMethod.ALL });
+
+    // Admin
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(

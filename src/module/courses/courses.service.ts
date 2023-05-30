@@ -22,7 +22,7 @@ export class CoursesService {
 
   async create(dto: CreateCourseDto, file: string): Promise<void> {
     const courses = await CourseEntity.find();
-    if (courses.length >= 3) {
+    if ((courses.length >= 3 && Number(dto.sequence) === 0) || '') {
       throw new HttpException(
         'Courses count is must not more than 3',
         HttpStatus.NOT_ACCEPTABLE,
@@ -110,7 +110,7 @@ export class CoursesService {
 
   async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
     const course = await this.oneFoundCourse(id);
-    if (course.sequence !== Number(dto.sequence) && dto.sequence < 3) {
+    if (course.sequence !== Number(dto.sequence) && dto.sequence > 3) {
       throw new HttpException(
         'You cannot change this course sequence',
         HttpStatus.CONFLICT,
