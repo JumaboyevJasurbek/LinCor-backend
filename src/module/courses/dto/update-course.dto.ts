@@ -18,5 +18,5 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
 
   @IsString()
   @IsOptional()
-  sequency: number;
+  sequence: number;
 }
