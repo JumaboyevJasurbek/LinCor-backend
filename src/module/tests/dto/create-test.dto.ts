@@ -25,5 +25,5 @@ export class CreateTestDto {
 
   @IsNotEmpty()
   @IsString()
-  discount: string;
+  discount: any;
 }

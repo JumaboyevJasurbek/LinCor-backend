@@ -6,13 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { UsersDiscountService } from './users_discount.service';
 import { CreateUsersDiscountDto } from './dto/create-users_discount.dto';
 import { UpdateUsersDiscountDto } from './dto/update-users_discount.dto';
-import { ApiBody, ApiHeader } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 
 @Controller('users-discount')
+@ApiTags('User discount')
 export class UsersDiscountController {
   constructor(private readonly usersDiscountService: UsersDiscountService) {}
 
@@ -38,11 +41,21 @@ export class UsersDiscountController {
           type: 'string',
           default: '3b90396f-1761-472c-836f-f3a1d6095494',
         },
+        // answer: {
+        //   type: 'string',
+        //   default: 'b',
+        // },
       },
     },
   })
-  create(@Body() createUsersDiscountDto: CreateUsersDiscountDto) {
-    return this.usersDiscountService.create(createUsersDiscountDto);
+  create(
+    @Body() createUsersDiscountDto: CreateUsersDiscountDto,
+    @Req() req: Request,
+  ) {
+    return this.usersDiscountService.create(
+      createUsersDiscountDto,
+      // req.user_id,
+    );
   }
 
   @Get()

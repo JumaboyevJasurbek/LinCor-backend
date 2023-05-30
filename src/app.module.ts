@@ -68,6 +68,14 @@ export class AppModule implements NestModule {
         { path: '/tests/:id', method: RequestMethod.DELETE },
         { path: '/vedio/all', method: RequestMethod.GET },
         { path: '/vedio/create', method: RequestMethod.POST },
+        { path: '/discount', method: RequestMethod.GET },
+        { path: '/discount', method: RequestMethod.POST },
+        { path: '/discount/:id', method: RequestMethod.PATCH },
+        { path: '/discount/:id', method: RequestMethod.DELETE },
+        { path: '/users-discount', method: RequestMethod.GET },
+        { path: '/users-discount', method: RequestMethod.POST },
+        { path: '/users-discount/:id', method: RequestMethod.PATCH },
+        { path: '/users-discount/:id', method: RequestMethod.DELETE },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
