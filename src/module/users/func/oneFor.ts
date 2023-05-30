@@ -30,6 +30,7 @@ export const oneFor = async (user: any) => {
     byCourse[i].purchaseDate = utilsDate(user.open_course[i].create_data);
     byCourse[i].completionDate = completionDate(
       user.open_course[i].create_data,
+      6,
     );
     if (user.open_course[i].course_id) {
       for (let j = 0; j < takeWorkbook.length; j++) {
