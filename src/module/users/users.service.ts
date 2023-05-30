@@ -39,7 +39,7 @@ export class UsersService {
       where: {
         email: body.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
 
     if (findUser) {
       throw new HttpException(
@@ -80,7 +80,7 @@ export class UsersService {
       where: {
         email: redis.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (findUser) {
       throw new HttpException(
         `User already exists with ${findUser?.auth_socials}`,
@@ -125,7 +125,7 @@ export class UsersService {
       where: {
         email: body.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
@@ -168,7 +168,7 @@ export class UsersService {
       where: {
         email: redis.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
     }
@@ -190,7 +190,7 @@ export class UsersService {
       where: {
         email: body.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
 
     if (findUser) {
       throw new HttpException(
@@ -236,7 +236,7 @@ export class UsersService {
       where: {
         email: body.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
@@ -319,7 +319,7 @@ export class UsersService {
       where: {
         email: body.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
@@ -350,7 +350,7 @@ export class UsersService {
       where: {
         email: redis.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
@@ -373,7 +373,7 @@ export class UsersService {
       where: {
         email: redis.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
@@ -401,7 +401,7 @@ export class UsersService {
       where: {
         id,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
     }
@@ -440,7 +440,7 @@ export class UsersService {
       where: {
         id: userId,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
@@ -489,7 +489,7 @@ export class UsersService {
       where: {
         email: body.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (findUser) {
       throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     }
@@ -522,7 +522,7 @@ export class UsersService {
       where: {
         email: redis.email,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (findUser) {
       throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     }
@@ -573,7 +573,7 @@ export class UsersService {
           },
         },
       },
-    }).catch(() => []);
+    }).catch(() => null);
 
     user.allVideos = 0;
     user.takeSertifikat = 0;
@@ -592,7 +592,7 @@ export class UsersService {
       where: {
         id,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     delete user.parol;
     delete user.auth_socials;
     return user;
@@ -604,7 +604,7 @@ export class UsersService {
         course_id: true,
         topik_id: true,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     const allUsers = (await UsersEntity.find()).length;
     const takeSertifikat = (await TakenSertifikat.find()).length;
 
@@ -614,7 +614,7 @@ export class UsersService {
       if (takes[i].course_id) {
         if (
           taqqoslash(
-            utilsDate(takes[i].create_data).split(' '),
+            completionDate(takes[i].create_data, 1).split(' '),
             utilsDate(new Date()).split(' '),
           )
         ) {
@@ -624,7 +624,7 @@ export class UsersService {
       } else {
         if (
           taqqoslash(
-            utilsDate(takes[i].create_data).split(' '),
+            completionDate(takes[i].create_data, 1).split(' '),
             utilsDate(new Date()).split(' '),
           )
         ) {
@@ -642,16 +642,24 @@ export class UsersService {
     };
   }
 
-  findStatistika() {
-    //
+  async allUsers() {
+    const allUsers = await UsersEntity.find();
+    for (let i = 0; i < allUsers.length; i++) {
+      delete allUsers[i].parol;
+    }
+    return allUsers;
+  }
+
+  async statistika(id: string) {
+    return await this.profile(id);
   }
 
   async remove(id: string) {
-    const findUser: any = await UsersEntity.findOne({
+    const findUser = await UsersEntity.findOne({
       where: {
         id,
       },
-    }).catch(() => []);
+    }).catch(() => null);
     if (!findUser) {
       throw new HttpException('User Not Found', HttpStatus.NOT_FOUND);
     }
