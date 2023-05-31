@@ -23,6 +23,7 @@
   "dependencies": {
     "@google-cloud/storage": "^6.10.1",
     "@liaoliaots/nestjs-redis": "^9.0.5",
+    "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.0.0",

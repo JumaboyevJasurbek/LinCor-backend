@@ -20,6 +20,7 @@ import { UsersDiscountModule } from './module/users_discount/users_discount.modu
 import * as dotenv from 'dotenv';
 import { TakeModule } from './module/take/take.module';
 import { JwtModule } from '@nestjs/jwt';
+import { OpenWorkbookModule } from './module/open_workbook/open_workbook.module';
 dotenv.config();
 
 @Module({
@@ -40,6 +41,7 @@ dotenv.config();
     VedioModule,
     CoursesModule,
     TestsModule,
+    OpenWorkbookModule,
     TakeModule,
     DiscountModule,
     UsersDiscountModule,
@@ -88,6 +90,14 @@ export class AppModule implements NestModule {
         { path: '/discount', method: RequestMethod.POST },
         { path: '/discount/:id', method: RequestMethod.PATCH },
         { path: '/take/add', method: RequestMethod.POST },
+        { path: '/vedio/topik/create', method: RequestMethod.POST },
+        { path: '/user/delete/:id', method: RequestMethod.DELETE },
+        { path: '/open_workbook/create', method: RequestMethod.POST },
+        { path: '/open_workbook/update/:id', method: RequestMethod.PATCH },
+        { path: '/open_workbook/delete/:id', method: RequestMethod.DELETE },
+        { path: '/user/statistika/daromat', method: RequestMethod.GET },
+        { path: '/user/statistika/users', method: RequestMethod.GET },
+        { path: '/user/statistika/:id', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -112,6 +122,8 @@ export class AppModule implements NestModule {
         { path: '/user/email', method: RequestMethod.PUT },
         { path: '/user/email/:code', method: RequestMethod.PUT },
         { path: '/user/one', method: RequestMethod.GET },
+        { path: '/user/email/:id', method: RequestMethod.PUT },
+        { path: '/open_workbook/:id', method: RequestMethod.GET },
         { path: '/user/profile', method: RequestMethod.GET },
         { path: '/vedio/one/:id', method: RequestMethod.GET },
         { path: '/tests/user', method: RequestMethod.GET },
