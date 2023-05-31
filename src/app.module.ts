@@ -17,6 +17,7 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import * as dotenv from 'dotenv';
 import { JwtModule } from '@nestjs/jwt';
+import { OpenWorkbookModule } from './module/open_workbook/open_workbook.module';
 dotenv.config();
 
 @Module({
@@ -37,6 +38,7 @@ dotenv.config();
     VedioModule,
     CoursesModule,
     TestsModule,
+    OpenWorkbookModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -66,6 +68,9 @@ export class AppModule implements NestModule {
         { path: '/vedio/create', method: RequestMethod.POST },
         { path: '/vedio/topik/create', method: RequestMethod.POST },
         { path: '/user/delete/:id', method: RequestMethod.DELETE },
+        { path: '/open_workbook/create', method: RequestMethod.POST },
+        { path: '/open_workbook/update/:id', method: RequestMethod.PATCH },
+        { path: '/open_workbook/delete/:id', method: RequestMethod.DELETE },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -94,6 +99,7 @@ export class AppModule implements NestModule {
         { path: '/user/:course', method: RequestMethod.GET },
         { path: '/user/email', method: RequestMethod.PUT },
         { path: '/user/email/:id', method: RequestMethod.PUT },
+        { path: '/open_workbook/:id', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
