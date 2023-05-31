@@ -36,3 +36,40 @@ Delete/:id {
     !baza video bormi = 404
     delete
 }
+
+Get/:id {
+    {Admin}
+    const course = await Course.findOne({
+        where: {
+            id
+        }
+        relation: {
+            videos: true
+        }
+        order: {
+            videos.ketma-ketlik: ''
+        }
+    })
+
+    if(!course) {
+        const topik = await Topik.findOne({
+            where: {
+                id
+            }
+            relation: {
+                videos: true
+            }
+            order: {
+                videos.ketma-ketlik: ''
+            }
+        })
+
+        if(!topik) {
+            404
+        }
+
+        return topik
+    } else {
+        return course
+    }
+}

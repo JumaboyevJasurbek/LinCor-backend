@@ -14,7 +14,7 @@ export class TakenSertifikat extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => UsersEntity, (user) => user.open_course, {
+  @ManyToOne(() => UsersEntity, (user) => user.sertfikat, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
