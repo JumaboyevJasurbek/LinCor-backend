@@ -273,7 +273,7 @@ export class UsersController {
     return await this.usersService.daromat();
   }
 
-  @Get('/statistika/users')
+  @Get('/statistika/all')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -286,7 +286,7 @@ export class UsersController {
     return await this.usersService.allUsers();
   }
 
-  @Get('/statistika/:id')
+  @Get('/statistika/one/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()

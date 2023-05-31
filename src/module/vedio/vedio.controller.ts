@@ -1,5 +1,3 @@
-import { TokenUserMiddleWare } from './../../middleware/token.user.middleware';
-import { TokenAdminMiddleWare } from './../../middleware/token.admin.middleware';
 import { CreateVedioDto } from './dto/create-vedio.dto';
 import { CreateTopikDto } from './dto/create-topik.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
@@ -39,7 +37,7 @@ import { extname } from 'path';
 export class VedioController {
   constructor(private readonly vedioService: VedioService) {}
 
-  @Post('/course/create')
+  @Post('/course')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -107,7 +105,7 @@ export class VedioController {
     }
   }
 
-  @Post('/topik/create')
+  @Post('/topik')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -175,20 +173,20 @@ export class VedioController {
     }
   }
 
-  @Get('/byCourse/:id')
+  @Get('/admin/:course')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'optional',
+    description: 'Admin token',
     required: false,
   })
   find(@Param('id') id: string) {
     return this.vedioService.findCourseVedio(id);
   }
 
-  @Get('/:id')
+  @Get('/one/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
