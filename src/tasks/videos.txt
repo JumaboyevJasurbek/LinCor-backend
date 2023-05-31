@@ -38,6 +38,7 @@ Delete/:id {
 }
 
 Get/:id {
+    {Admin}
     const course = await Course.findOne({
         where: {
             id
