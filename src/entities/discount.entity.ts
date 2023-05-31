@@ -18,7 +18,7 @@ export class Discount extends BaseEntity {
 
   @Column({
     type: 'int',
-    nullable: false,
+    nullable: true,
   })
   percentage: number;
 
