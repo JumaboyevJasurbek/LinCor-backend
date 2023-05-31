@@ -20,7 +20,7 @@ export class TakenDiscount extends BaseEntity {
   })
   win: boolean;
 
-  @ManyToOne(() => Discount, (discount) => discount.taken, {
+  @ManyToOne(() => Discount, (discount) => discount.take_user, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()

@@ -34,9 +34,9 @@ export class UsersDiscountService {
         (e) => e.id == createUsersDiscountDto.discount,
       );
 
-      console.log(equalDiscount);
+      // console.log(equalDiscount);
 
-      return this.user_discount.save(createUsersDiscountDto);
+      this.user_discount.save(createUsersDiscountDto);
     } else {
       throw new HttpException(
         'User or discount not found',
@@ -71,7 +71,7 @@ export class UsersDiscountService {
     });
 
     if (findDiscount | findUser) {
-      return this.user_discount.update(id, updateUsersDiscountDto);
+      this.user_discount.update(id, updateUsersDiscountDto);
     } else {
       throw new HttpException(
         'User or discount not found',

@@ -55,7 +55,7 @@ export class DiscountController {
   }
 
   // ? FIND ONE
-  @Get(':id')
+  @Get()
   @ApiHeader({
     name: 'autharization',
     description: 'token',
