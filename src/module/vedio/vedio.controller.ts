@@ -13,10 +13,11 @@ import {
   Body,
   Get,
   Param,
-  Headers,
   Patch,
   Delete,
   UploadedFile,
+  Request,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -31,13 +32,14 @@ import {
 } from '@nestjs/swagger';
 import { VedioService } from './vedio.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
 
 @Controller('vedio')
 @ApiTags('Video')
 export class VedioController {
   constructor(private readonly vedioService: VedioService) {}
 
-  @Post('/create')
+  @Post('/course/create')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -93,7 +95,15 @@ export class VedioController {
   ) {
     const vedio: string = googleCloud(link);
     if (vedio) {
-      return this.vedioService.createCourseVedio(createVedioDto, vedio);
+      const ext = extname(vedio);
+      if (ext == '.mp4') {
+        return this.vedioService.createCourseVedio(createVedioDto, vedio);
+      } else {
+        throw new HttpException(
+          'The file type is not correct',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
   }
 
@@ -153,11 +163,19 @@ export class VedioController {
   ) {
     const topikVedio: string = googleCloud(link);
     if (topikVedio) {
-      return this.vedioService.createTopikVedio(body, topikVedio);
+      const ext = extname(topikVedio);
+      if (ext == '.mp4') {
+        return this.vedioService.createTopikVedio(body, topikVedio);
+      } else {
+        throw new HttpException(
+          'The file type is not correct',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
     }
   }
 
-  @Get('/all')
+  @Get('/byCourse/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -166,13 +184,11 @@ export class VedioController {
     description: 'optional',
     required: false,
   })
-  findAll(@Headers() header: any) {
-    if (header.autharization) {
-      return this.vedioService.findAll(header);
-    }
+  find(@Param('id') id: string) {
+    return this.vedioService.findCourseVedio(id);
   }
 
-  @Get(':id')
+  @Get('/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -181,12 +197,14 @@ export class VedioController {
     description: 'optional',
     required: false,
   })
-  findOne(@Param('id') id: string) {
-    return this.vedioService.findOne(id);
+  findOne(@Param('id') id: string, @Request() req: any) {
+    const { user_id } = req;
+    return this.vedioService.findOne(id, user_id);
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiConsumes('multipart/form-data')
   @ApiNoContentResponse()
   @ApiBody({
     schema: {
@@ -214,12 +232,16 @@ export class VedioController {
         },
         course_id: {
           type: 'string',
-          default: 'uuid',
+          default: '35bf2a3c-e931-4f81-9567-9a34bbeaf7fg',
+        },
+        topik_id: {
+          type: 'string',
+          default: '35bf2a3c-e931-4f81-9567-9a34bbeaf7fg',
         },
       },
     },
   })
-  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('link'))
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
@@ -227,12 +249,20 @@ export class VedioController {
     description: 'Admin token',
     required: false,
   })
-  @UseInterceptors(FileInterceptor('file'))
-  update(@Param('id') id: string, @Body() updateVedioDto: UpdateVedioDto) {
-    return this.vedioService.update(+id, updateVedioDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateVedioDto: UpdateVedioDto,
+    @UploadedFile() link: Express.Multer.File,
+  ) {
+    if (link) {
+      const Vediolink: string = googleCloud(link);
+      return this.vedioService.update(id, updateVedioDto, Vediolink);
+    } else {
+      return this.vedioService.update(id, updateVedioDto, false);
+    }
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -243,6 +273,6 @@ export class VedioController {
     required: true,
   })
   remove(@Param('id') id: string) {
-    return this.vedioService.remove(+id);
+    return this.vedioService.remove(id);
   }
 }

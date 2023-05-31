@@ -221,6 +221,7 @@ export class UsersController {
   }
 
   @Put('/email/:code')
+  @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @ApiHeader({
@@ -233,19 +234,69 @@ export class UsersController {
     return await this.usersService.emailCode(params);
   }
 
-  @Get('/:course')
+  @Get('/one')
   @ApiHeader({
     name: 'autharization',
     description: 'User token',
     required: false,
   })
-  findAll(@Param('course') course: string, @Req() req: Request) {
-    return this.usersService.findAll(course, req.user_id);
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  async findOne(@Req() req: Request) {
+    return await this.usersService.findOne(req.user_id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  @Get('/profile')
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  async profile(@Req() req: Request) {
+    return await this.usersService.profile(req.user_id);
+  }
+
+  @Get('/statistika/daromat')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async daromat() {
+    return await this.usersService.daromat();
+  }
+
+  @Get('/statistika/users')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async allUsers() {
+    return await this.usersService.allUsers();
+  }
+
+  @Get('/statistika/:id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async statistika(@Param('id') id: string) {
+    return await this.usersService.statistika(id);
   }
 
   @Delete('/delete/:id')
@@ -258,7 +309,7 @@ export class UsersController {
     description: 'Admin token',
     required: false,
   })
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.usersService.remove(id);
   }
 }
