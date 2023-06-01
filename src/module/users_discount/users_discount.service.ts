@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUsersDiscountDto } from './dto/create-users_discount.dto';
+import {
+  CreateUsersDiscountDto,
+  CreateUsersDiscountDto1,
+} from './dto/create-users_discount.dto';
 import { UpdateUsersDiscountDto } from './dto/update-users_discount.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TakenDiscount } from 'src/entities/taken_discount';
@@ -44,6 +47,13 @@ export class UsersDiscountService {
       );
     }
   }
+
+  // async createUserDiscount(
+  //   createDiscountDto: CreateUsersDiscountDto1,
+  //   user_id: string,
+  // ) {
+  //   const test = await TestsEntity.find();
+  // }
 
   findAll() {
     return this.user_discount.find({
