@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import jwt from './jwt';
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { UsersEntity } from 'src/entities/users.entity';
 
 export const tokenUtils = async (headers: any) => {
@@ -11,9 +11,11 @@ export const tokenUtils = async (headers: any) => {
   if (!idAndEmail || !idAndEmail?.id) {
     throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
   }
-  const user = await UsersEntity.findOneBy({
-    id: idAndEmail?.id,
-    email: idAndEmail?.email,
+  const user = await UsersEntity.findOne({
+    where: {
+      id: idAndEmail?.id,
+      email: idAndEmail?.email,
+    },
   });
 
   if (!user?.email) {

@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTestDto } from './dto/create-test.dto';
 import { UpdateTestDto } from './dto/update-test.dto';
-import { Repository } from 'typeorm';
+import { Repository, Unique } from 'typeorm';
 import { TestsEntity } from 'src/entities/tests.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Discount } from 'src/entities/discount.entity';
@@ -13,43 +13,50 @@ export class TestsService {
     private readonly test: Repository<TestsEntity>,
   ) {}
 
-  create(createTestDto: any): Promise<CreateTestDto> {
-    try {
-      const test = this.test.save(createTestDto);
+  async create(createTestDto: CreateTestDto) {
+    const findDiscount: any = await Discount.findOne({
+      where: { id: createTestDto.discount },
+      relations: {
+        test: true,
+      },
+    }).catch(() => []);
 
-      // if (this.test) {
-      //   throw new HttpException(
-      //     'this test has been added before',
-      //     HttpStatus.BAD_REQUEST,
-      //   );
-      // }
-      return test;
-    } catch (error) {
-      throw new HttpException('error in tests', HttpStatus.BAD_REQUEST);
+    if (!findDiscount) {
+      throw new HttpException('Discount not found', HttpStatus.NOT_FOUND);
     }
+
+    const unique = findDiscount?.test?.find(
+      (e) => e.sequence == createTestDto.sequence,
+    );
+
+    if (unique) {
+      throw new HttpException('Returned sequence', HttpStatus.NOT_FOUND);
+    }
+
+    await this.test.save(createTestDto);
   }
 
-  findAdmin(user: any) {
-    return this.test.findOneBy({
+  async findAdmin(user: any) {
+    return await this.test.findOneBy({
       discount: user,
     });
   }
 
-  findUser(user: any) {
-    return this.test.findOneBy({
+  async findUser(user: any) {
+    return await this.test.findOneBy({
       discount: user,
     });
   }
 
-  findOne(id: string) {
-    return this.test.findAndCountBy({ id });
+  async findOne(id: string) {
+    return await this.test.findAndCountBy({ id });
   }
 
-  update(id: string, updateTestDto: any) {
-    return this.test.update(id, updateTestDto);
+  async update(id: string, updateTestDto: any) {
+    await this.test.update(id, updateTestDto);
   }
 
-  remove(id: string) {
-    return this.test.delete(id);
+  async remove(id: string) {
+    await this.test.delete(id);
   }
 }

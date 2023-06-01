@@ -1,4 +1,4 @@
-const oy_qaytishi = {
+const month_return = {
   1: 31,
   2: 28,
   3: 31,
@@ -13,37 +13,26 @@ const oy_qaytishi = {
   12: 31,
 };
 
-export const completionDate = (time: Date): string => {
-  const date = JSON.stringify(time)
+export const completionDate = (startDate: Date, monthLimit: number): string => {
+  const date = JSON.stringify(startDate)
     .split('T')[0]
     .split('"')[1]
     .split('-')
     .reverse()
     .map((e) => Number(e));
-  let count = 0;
-  for (let j = 0; j < 6; j++) {
-    if (j == 0) {
-      count += oy_qaytishi[date[1]] - date[0];
-    } else {
-      if (date[1] + j > 12) {
-        const oy = 1;
-        count += oy_qaytishi[oy + j];
-      } else {
-        count += oy_qaytishi[date[1] + j];
-      }
-    }
+
+  date[1] += monthLimit;
+  if (date[1] > 12) {
+    date[1] -= 12;
+    date[2] += 1;
   }
-  for (let i = 0; i < count; i++) {
-    date[0]++;
-    if (date[1] >= 12 && oy_qaytishi[date[1]] < date[0]) {
-      date[2]++;
-      date[1] = 1;
-      date[0] = 1;
-    }
-    if (oy_qaytishi[date[1]] < date[0]) {
-      date[0] = 1;
-      date[1]++;
-    }
+  if (month_return[date[1]] < date[0]) {
+    date[0] -= month_return[date[1]];
+    date[1] += 1;
+  }
+  if (date[1] > 12) {
+    date[1] -= 12;
+    date[2] += 1;
   }
   return date
     .map((e: number) => (`${e}`.length === 1 ? `0${e}` : String(e)))

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateVedioDto {
   @IsString()
@@ -20,6 +20,5 @@ export class CreateVedioDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsOptional()
   course_id: string;
 }
