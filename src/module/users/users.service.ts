@@ -564,7 +564,7 @@ export class UsersService {
         open_course: {
           course_id: {
             discount: {
-              taken: true,
+              take_user: true,
             },
             course_videos: true,
           },

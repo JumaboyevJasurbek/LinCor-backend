@@ -21,7 +21,7 @@ export class DiscountController {
   @Post()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
   @ApiBody({
@@ -47,7 +47,7 @@ export class DiscountController {
   @Get()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
   findAll() {
@@ -55,10 +55,10 @@ export class DiscountController {
   }
 
   // ? FIND ONE
-  @Get(':id')
+  @Get()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
   findOne(@Param('id') id: string) {
@@ -69,7 +69,7 @@ export class DiscountController {
   @Patch(':id')
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
   @ApiBody({
@@ -98,7 +98,7 @@ export class DiscountController {
   @Delete(':id')
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
   remove(@Param('id') id: string) {

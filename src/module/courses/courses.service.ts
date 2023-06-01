@@ -2,7 +2,6 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { CourseEntity } from 'src/entities/course.entity';
-import { TakeEntity } from 'src/entities/take.entity';
 import { takeUtils } from 'src/utils/take.utils';
 
 @Injectable()
@@ -10,9 +9,7 @@ export class CoursesService {
   async oneFoundCourse(id: string): Promise<CourseEntity> {
     const course = await CourseEntity.findOne({
       where: { id },
-    }).catch(() => {
-      throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
-    });
+    }).catch(() => undefined);
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
@@ -22,16 +19,9 @@ export class CoursesService {
 
   async create(dto: CreateCourseDto, file: string): Promise<void> {
     const courses = await CourseEntity.find();
-    if ((courses.length >= 3 && Number(dto.sequence) === 0) || '') {
+    if (courses.length >= 3) {
       throw new HttpException(
         'Courses count is must not more than 3',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
-    }
-
-    if (dto.sequence > 3) {
-      throw new HttpException(
-        'Course sequence must be 1 or 2 or 3 You cannot create another',
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
@@ -61,9 +51,7 @@ export class CoursesService {
   async findAll(): Promise<CourseEntity[]> {
     return await CourseEntity.find({
       order: { sequence: 'ASC' },
-    }).catch(() => {
-      throw new HttpException('Courses Not Found', HttpStatus.NOT_FOUND);
-    });
+    }).catch(() => []);
   }
 
   async findOne(id: string, user_id: any): Promise<CourseEntity> {
@@ -76,9 +64,7 @@ export class CoursesService {
         sertifikat: true,
         discount: true,
       },
-    }).catch(() => {
-      throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
-    });
+    }).catch(() => undefined);
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
@@ -110,17 +96,11 @@ export class CoursesService {
 
   async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
     const course = await this.oneFoundCourse(id);
-    if (course.sequence !== Number(dto.sequence) && dto.sequence > 3) {
+    
+    if (course.sequence !== Number(dto.sequence)) {
       throw new HttpException(
         'You cannot change this course sequence',
         HttpStatus.CONFLICT,
-      );
-    }
-
-    if (dto.sequence > 3) {
-      throw new HttpException(
-        'Sequnce must be 1 or 2 or 3',
-        HttpStatus.NOT_ACCEPTABLE,
       );
     }
 
