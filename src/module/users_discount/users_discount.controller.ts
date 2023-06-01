@@ -83,45 +83,45 @@ export class UsersDiscountController {
     return this.usersDiscountService.findOne(id);
   }
 
-  @Patch(':id')
-  @ApiHeader({
-    name: 'autharization',
-    description: 'token',
-    required: true,
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        win: {
-          type: 'boolean',
-          default: false,
-        },
-        discount: {
-          type: 'string',
-          default: '3b90396f-1761-472c-836f-f3a1d6095494',
-        },
-        user: {
-          type: 'string',
-          default: '3b90396f-1761-472c-836f-f3a1d6095494',
-        },
-      },
-    },
-  })
-  update(
-    @Param('id') id: string,
-    @Body() updateUsersDiscountDto: UpdateUsersDiscountDto,
-  ) {
-    return this.usersDiscountService.update(id, updateUsersDiscountDto);
-  }
+  // @Patch(':id')
+  // @ApiHeader({
+  //   name: 'autharization',
+  //   description: 'token',
+  //   required: true,
+  // })
+  // @ApiBody({
+  //   schema: {
+  //     type: 'object',
+  //     properties: {
+  //       win: {
+  //         type: 'boolean',
+  //         default: false,
+  //       },
+  //       discount: {
+  //         type: 'string',
+  //         default: '3b90396f-1761-472c-836f-f3a1d6095494',
+  //       },
+  //       user: {
+  //         type: 'string',
+  //         default: '3b90396f-1761-472c-836f-f3a1d6095494',
+  //       },
+  //     },
+  //   },
+  // })
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateUsersDiscountDto: UpdateUsersDiscountDto,
+  // ) {
+  //   return this.usersDiscountService.update(id, updateUsersDiscountDto);
+  // }
 
-  @Delete(':id')
-  @ApiHeader({
-    name: 'autharization',
-    description: 'token',
-    required: true,
-  })
-  remove(@Param('id') id: string) {
-    return this.usersDiscountService.remove(id);
-  }
+  // @Delete(':id')
+  // @ApiHeader({
+  //   name: 'autharization',
+  //   description: 'token',
+  //   required: true,
+  // })
+  // remove(@Param('id') id: string) {
+  //   return this.usersDiscountService.remove(id);
+  // }
 }

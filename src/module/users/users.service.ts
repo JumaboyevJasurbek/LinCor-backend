@@ -564,7 +564,7 @@ export class UsersService {
         open_course: {
           course_id: {
             discount: {
-              taken: true,
+              take_user: true,
             },
             course_videos: true,
           },
@@ -643,11 +643,21 @@ export class UsersService {
   }
 
   async allUsers() {
-    const allUsers = await UsersEntity.find();
+    const allUsers = await UsersEntity.find({
+      order: {
+        email: 'ASC',
+      },
+    });
     for (let i = 0; i < allUsers.length; i++) {
       delete allUsers[i].parol;
     }
     return allUsers;
+  }
+
+  async allSearch(search: string) {
+    const allUsers = await UsersEntity.find();
+    const findSearch = allUsers.filter((e) => e.email.includes(search));
+    return findSearch;
   }
 
   async statistika(id: string) {

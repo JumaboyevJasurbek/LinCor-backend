@@ -273,7 +273,7 @@ export class UsersController {
     return await this.usersService.daromat();
   }
 
-  @Get('/statistika/users')
+  @Get('/statistika/all')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -286,7 +286,20 @@ export class UsersController {
     return await this.usersService.allUsers();
   }
 
-  @Get('/statistika/:id')
+  @Get('/statistika/search/:search')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async allSearch(@Param('search') search: string) {
+    return await this.usersService.allSearch(search);
+  }
+
+  @Get('/statistika/one/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()

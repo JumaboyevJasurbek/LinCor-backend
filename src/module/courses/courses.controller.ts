@@ -33,6 +33,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
 import { tokenUtils } from 'src/utils/token.utils';
+import { Sequence } from 'src/types';
 
 @Controller('course')
 @ApiTags('Courses')
@@ -59,7 +60,6 @@ export class CoursesController {
           default: '120 000',
         },
         sequence: {
-          type: 'number',
           default: 1,
         },
 
@@ -78,7 +78,7 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   async create(
@@ -87,15 +87,15 @@ export class CoursesController {
   ) {
     const img_link: string = googleCloud(file);
     if (img_link) {
-      return this.coursesService.create(createCourseDto, img_link);
+      await this.coursesService.create(createCourseDto, img_link);
     }
   }
 
   @Get('/list')
   @ApiOkResponse()
   @ApiNotFoundResponse()
-  findAll() {
-    return this.coursesService.findAll();
+  async findAll() {
+    return await this.coursesService.findAll();
   }
 
   @Get('/:id')
@@ -103,17 +103,13 @@ export class CoursesController {
   @ApiNotFoundResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'User Token',
     required: false,
   })
-  async findOne(
-    @Param('id') id: string,
-    @Request() req: any,
-    @Headers() header: any,
-  ) {
+  async findOne(@Param('id') id: string, @Headers() header: any) {
     const user_id = tokenUtils(header);
 
-    return this.coursesService.findOne(id, user_id);
+    return await this.coursesService.findOne(id, user_id);
   }
 
   @Patch('/update/:id')
@@ -135,7 +131,7 @@ export class CoursesController {
           default: '120 000',
         },
         sequence: {
-          type: 'number',
+          type: 'Sequence',
           default: 1,
         },
         file: {
@@ -153,7 +149,7 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   async update(
@@ -164,10 +160,10 @@ export class CoursesController {
     if (file) {
       const img_link: any = googleCloud(file) as any;
       if (img_link) {
-        return this.coursesService.update(id, dto, img_link);
+        await this.coursesService.update(id, dto, img_link);
       }
     } else {
-      return this.coursesService.update(id, dto, undefined);
+      await this.coursesService.update(id, dto, undefined);
     }
   }
 
@@ -175,14 +171,14 @@ export class CoursesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   @ApiNoContentResponse()
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @ApiForbiddenResponse()
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.coursesService.remove(id);
   }
 }

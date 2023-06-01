@@ -1,7 +1,6 @@
 import { CreateVedioDto } from './dto/create-vedio.dto';
 import { CreateTopikDto } from './dto/create-topik.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
-import { googleCloud } from 'src/utils/google-cloud';
 import {
   Controller,
   Post,
@@ -30,14 +29,13 @@ import {
 } from '@nestjs/swagger';
 import { VedioService } from './vedio.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { extname } from 'path';
 
 @Controller('vedio')
 @ApiTags('Video')
 export class VedioController {
   constructor(private readonly vedioService: VedioService) {}
 
-  @Post('/course/create')
+  @Post('/course')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -94,7 +92,7 @@ export class VedioController {
     await this.vedioService.createCourseVedio(createVedioDto, link);
   }
 
-  @Post('/topik/create')
+  @Post('/topik')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -151,7 +149,7 @@ export class VedioController {
     await this.vedioService.createTopikVedio(body, link);
   }
 
-  @Get('/byCourse/:id')
+  @Get('/admin/:course')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
@@ -164,7 +162,7 @@ export class VedioController {
     return await this.vedioService.findCourseVedio(id);
   }
 
-  @Get('/:id')
+  @Get('/one/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
