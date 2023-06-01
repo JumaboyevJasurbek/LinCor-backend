@@ -73,8 +73,11 @@ export class AppModule implements NestModule {
         { path: '/tests', method: RequestMethod.POST },
         { path: '/tests/:id', method: RequestMethod.PATCH },
         { path: '/tests/:id', method: RequestMethod.DELETE },
-        { path: '/vedio/all', method: RequestMethod.GET },
-        { path: '/vedio/create', method: RequestMethod.POST },
+        { path: '/vedio/course/create', method: RequestMethod.POST },
+        { path: '/vedio/topik/create', method: RequestMethod.POST },
+        { path: '/vedio/byCourse/:id', method: RequestMethod.GET },
+        { path: '/vedio/delete/:id', method: RequestMethod.DELETE },
+        { path: '/vedio/update/:id', method: RequestMethod.PATCH },
         { path: '/discount', method: RequestMethod.GET },
         { path: '/discount', method: RequestMethod.POST },
         { path: '/discount/:id', method: RequestMethod.PATCH },
@@ -83,7 +86,6 @@ export class AppModule implements NestModule {
         { path: '/users-discount', method: RequestMethod.POST },
         { path: '/users-discount/:id', method: RequestMethod.PATCH },
         { path: '/users-discount/:id', method: RequestMethod.DELETE },
-        { path: '/vedio/topik/create', method: RequestMethod.POST },
         { path: '/user/delete/:id', method: RequestMethod.DELETE },
         { path: '/user/statistika/daromat', method: RequestMethod.GET },
         { path: '/user/statistika/users', method: RequestMethod.GET },
@@ -119,8 +121,7 @@ export class AppModule implements NestModule {
         { path: '/user/email/:id', method: RequestMethod.PUT },
         { path: '/user/profile', method: RequestMethod.GET },
         { path: '/vedio/:id', method: RequestMethod.GET },
-
-        )
+      )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
 }
