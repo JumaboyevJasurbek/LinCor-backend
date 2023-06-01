@@ -96,7 +96,7 @@ export class CoursesService {
 
   async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
     const course = await this.oneFoundCourse(id);
-    
+
     if (course.sequence !== Number(dto.sequence)) {
       throw new HttpException(
         'You cannot change this course sequence',

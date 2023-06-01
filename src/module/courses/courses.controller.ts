@@ -87,7 +87,7 @@ export class CoursesController {
   ) {
     const img_link: string = googleCloud(file);
     if (img_link) {
-       await this.coursesService.create(createCourseDto, img_link);
+      await this.coursesService.create(createCourseDto, img_link);
     }
   }
 
@@ -106,10 +106,7 @@ export class CoursesController {
     description: 'User Token',
     required: false,
   })
-  async findOne(
-    @Param('id') id: string,
-    @Headers() header: any,
-  ) {
+  async findOne(@Param('id') id: string, @Headers() header: any) {
     const user_id = tokenUtils(header);
 
     return await this.coursesService.findOne(id, user_id);
