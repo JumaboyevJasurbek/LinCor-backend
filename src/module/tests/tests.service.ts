@@ -13,7 +13,7 @@ export class TestsService {
     private readonly test: Repository<TestsEntity>,
   ) {}
 
-  async create(createTestDto: CreateTestDto): Promise<CreateTestDto> {
+  async create(createTestDto: CreateTestDto) {
     const findDiscount: any = await Discount.findOne({
       where: { id: createTestDto.discount },
       relations: {
@@ -33,30 +33,30 @@ export class TestsService {
       throw new HttpException('Returned sequence', HttpStatus.NOT_FOUND);
     }
 
-    return this.test.save(createTestDto);
+    await this.test.save(createTestDto);
   }
 
-  findAdmin(user: any) {
-    return this.test.findOneBy({
+  async findAdmin(user: any) {
+    return await this.test.findOneBy({
       discount: user,
     });
   }
 
-  findUser(user: any) {
-    return this.test.findOneBy({
+  async findUser(user: any) {
+    return await this.test.findOneBy({
       discount: user,
     });
   }
 
-  findOne(id: string) {
-    return this.test.findAndCountBy({ id });
+  async findOne(id: string) {
+    return await this.test.findAndCountBy({ id });
   }
 
-  update(id: string, updateTestDto: any) {
-    return this.test.update(id, updateTestDto);
+  async update(id: string, updateTestDto: any) {
+    await this.test.update(id, updateTestDto);
   }
 
-  remove(id: string) {
-    return this.test.delete(id);
+  async remove(id: string) {
+    await this.test.delete(id);
   }
 }

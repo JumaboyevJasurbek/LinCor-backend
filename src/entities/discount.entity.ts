@@ -18,7 +18,7 @@ export class Discount extends BaseEntity {
 
   @Column({
     type: 'int',
-    nullable: false,
+    nullable: true,
   })
   percentage: number;
 
@@ -29,7 +29,7 @@ export class Discount extends BaseEntity {
   course_id: CourseEntity;
 
   @OneToMany(() => TakenDiscount, (taken) => taken.discount)
-  taken: TakenDiscount[];
+  take_user: TakenDiscount[];
 
   @OneToMany(() => TestsEntity, (test) => test.discount)
   test: TestsEntity[];
