@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 
-const senMail = async (adres: string, content: string) => {
+const sendMail = async (addres: string, content: string): Promise<void> => {
   try {
     const transport = nodemailer.createTransport({
       service: 'gmail',
@@ -18,13 +18,16 @@ const senMail = async (adres: string, content: string) => {
 
     await transport.sendMail({
       from: 'lincorteamnt@gmail.com',
-      to: adres,
+      to: addres,
       subject: content,
       text: content,
     });
   } catch (error) {
-    throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    throw new HttpException(
+      'Failed to send email.',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 };
 
-export default senMail;
+export default sendMail;

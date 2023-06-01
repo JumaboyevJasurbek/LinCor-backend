@@ -1,4 +1,4 @@
-const oy_qaytishi = {
+const month_return = {
   1: 31,
   2: 28,
   3: 31,
@@ -13,21 +13,21 @@ const oy_qaytishi = {
   12: 31,
 };
 
-export const completionDate = (time: Date, month: number): string => {
-  const date = JSON.stringify(time)
+export const completionDate = (startDate: Date, monthLimit: number): string => {
+  const date = JSON.stringify(startDate)
     .split('T')[0]
     .split('"')[1]
     .split('-')
     .reverse()
     .map((e) => Number(e));
 
-  date[1] += month;
+  date[1] += monthLimit;
   if (date[1] > 12) {
     date[1] -= 12;
     date[2] += 1;
   }
-  if (oy_qaytishi[date[1]] < date[0]) {
-    date[0] -= oy_qaytishi[date[1]];
+  if (month_return[date[1]] < date[0]) {
+    date[0] -= month_return[date[1]];
     date[1] += 1;
   }
   if (date[1] > 12) {

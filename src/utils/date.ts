@@ -1,5 +1,5 @@
-export const utilsDate = (time: Date): string => {
-  const date = JSON.stringify(time)
+export const utilsDate = (startDate: Date): string => {
+  const date = JSON.stringify(startDate)
     .split('T')[0]
     .split('"')[1]
     .split('-')

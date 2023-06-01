@@ -17,10 +17,10 @@ import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import { DiscountModule } from './module/discount/discount.module';
 import { UsersDiscountModule } from './module/users_discount/users_discount.module';
-import * as dotenv from 'dotenv';
 import { TakeModule } from './module/take/take.module';
 import { JwtModule } from '@nestjs/jwt';
 import { OpenWorkbookModule } from './module/open_workbook/open_workbook.module';
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 @Module({
@@ -53,11 +53,11 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenUserMiddleWare)
       .exclude(
-        { path: '/user/registr', method: RequestMethod.POST },
-        { path: '/user/registr/:code', method: RequestMethod.POST },
+        { path: '/user/register', method: RequestMethod.POST },
+        { path: '/user/register/:code', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
-        { path: '/user/firebase/registr', method: RequestMethod.POST },
+        { path: '/user/firebase/register', method: RequestMethod.POST },
         { path: '/user/firebase/login', method: RequestMethod.POST },
         { path: '/user/admin/login', method: RequestMethod.POST },
         { path: '/user/admin/login/:code', method: RequestMethod.GET },
@@ -99,6 +99,7 @@ export class AppModule implements NestModule {
         { path: '/open_workbook/delete/:id', method: RequestMethod.DELETE },
         { path: '/user/statistika/daromat', method: RequestMethod.GET },
         { path: '/user/statistika/users', method: RequestMethod.GET },
+        { path: '/user/statistika/search/:search', method: RequestMethod.GET },
         { path: '/user/statistika/:id', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
@@ -107,11 +108,11 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(
-        { path: '/user/registr', method: RequestMethod.POST },
-        { path: '/user/registr/:id', method: RequestMethod.POST },
+        { path: '/user/register', method: RequestMethod.POST },
+        { path: '/user/register/:id', method: RequestMethod.POST },
         { path: '/user/login', method: RequestMethod.POST },
         { path: '/user/login/email/:code', method: RequestMethod.GET },
-        { path: '/user/firebase/registr', method: RequestMethod.POST },
+        { path: '/user/firebase/register', method: RequestMethod.POST },
         { path: '/user/firebase/login', method: RequestMethod.POST },
         { path: '/user/admin/login', method: RequestMethod.POST },
         { path: '/user/admin/login/:id', method: RequestMethod.GET },
