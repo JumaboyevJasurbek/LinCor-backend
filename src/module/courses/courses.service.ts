@@ -3,6 +3,9 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { CourseEntity } from 'src/entities/course.entity';
 import { takeUtils } from 'src/utils/take.utils';
+import { tokenUtils } from 'src/utils/token.utils';
+import { formatPrice } from 'src/utils/priceFormat';
+import { googleCloud } from 'src/utils/google-cloud';
 
 @Injectable()
 export class CoursesService {
@@ -18,7 +21,9 @@ export class CoursesService {
   }
 
   async create(dto: CreateCourseDto, file: string): Promise<void> {
+    const img_link: string = googleCloud(file);
     const courses = await CourseEntity.find();
+
     if (courses.length >= 3) {
       throw new HttpException(
         'Courses count is must not more than 3',
@@ -41,8 +46,8 @@ export class CoursesService {
       .values({
         title: dto.title,
         description: dto.description,
-        price: dto.price,
-        image: file,
+        price: formatPrice(dto.price),
+        image: img_link,
         sequence: dto.sequence,
       })
       .execute();
@@ -54,7 +59,9 @@ export class CoursesService {
     }).catch(() => []);
   }
 
-  async findOne(id: string, user_id: any): Promise<CourseEntity> {
+  async findOne(id: string, header: any): Promise<CourseEntity> {
+    const user_id: string | boolean = await tokenUtils(header);
+
     const course: any = await CourseEntity.findOne({
       where: { id },
       relations: {
@@ -69,20 +76,30 @@ export class CoursesService {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
     const videos = course.course_videos.sort(
-      (a: CourseEntity, b: CourseEntity) => (a.sequence > b.sequence ? 1 : -1),
+      (a: CourseEntity, b: CourseEntity) => a.sequence - b.sequence,
     );
-    const courseTaken = await takeUtils(id, user_id);
+    if (user_id) {
+      const courseTaken = await takeUtils(id, user_id);
 
-    if (courseTaken.message && courseTaken.status === 200) {
-      for (let i = 0; i < videos.length; i++) {
-        if (videos[i].sequence > 2) {
-          console.log(videos[i].sequence > 2);
+      if (courseTaken.message && courseTaken.status === 200) {
+        for (let i = 0; i < videos.length; i++) {
+          if (videos[i].sequence > 2) {
+            console.log(videos[i].sequence > 2);
 
-          videos[i].link = '';
-          course.active = true;
+            videos[i].link = '';
+            course.active = true;
+          }
         }
+        return course;
+      } else {
+        for (let i = 0; i < videos.length; i++) {
+          if (videos[i].sequence > 2) {
+            videos[i].link = '';
+            course.active = false;
+          }
+        }
+        return course;
       }
-      return course;
     } else {
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].sequence > 2) {
@@ -94,7 +111,7 @@ export class CoursesService {
     }
   }
 
-  async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
+  async update(id: string, dto: UpdateCourseDto, file: any): Promise<void> {
     const course = await this.oneFoundCourse(id);
 
     if (course.sequence !== Number(dto.sequence)) {
@@ -103,19 +120,24 @@ export class CoursesService {
         HttpStatus.CONFLICT,
       );
     }
+    let img_link: any = false;
+
+    if (file) {
+      img_link = googleCloud(file);
+    }
 
     await CourseEntity.createQueryBuilder()
       .update(CourseEntity)
       .set({
         title: dto.title || course.title,
         description: dto.description || course.description,
-        price: dto.price || course.price,
+        price: formatPrice(dto.price) || course.price,
         sequence: dto.sequence || course.sequence,
-        image: img_link ? img_link : course.image,
+        image: img_link || course.image,
       })
       .where({ id })
       .execute()
-      .catch((e) => {
+      .catch(() => {
         throw new HttpException(
           'Internal server error',
           HttpStatus.INTERNAL_SERVER_ERROR,
@@ -125,7 +147,7 @@ export class CoursesService {
 
   async remove(id: string): Promise<void> {
     await this.oneFoundCourse(id);
-    await CourseEntity.delete(id).catch((e) => {
+    await CourseEntity.delete(id).catch(() => {
       throw new HttpException(
         'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,
