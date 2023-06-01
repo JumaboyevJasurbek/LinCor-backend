@@ -32,8 +32,6 @@ import {
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { googleCloud } from 'src/utils/google-cloud';
-import { tokenUtils } from 'src/utils/token.utils';
-import { Sequence } from 'src/types';
 
 @Controller('course')
 @ApiTags('Courses')
@@ -87,18 +85,18 @@ export class CoursesController {
   ) {
     const img_link: string = googleCloud(file);
     if (img_link) {
-       await this.coursesService.create(createCourseDto, img_link);
+      await this.coursesService.create(createCourseDto, img_link);
     }
   }
 
-  @Get('/list')
+  @Get('/all')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   async findAll() {
     return await this.coursesService.findAll();
   }
 
-  @Get('/:id')
+  @Get('one/:id')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
@@ -106,13 +104,8 @@ export class CoursesController {
     description: 'User Token',
     required: false,
   })
-  async findOne(
-    @Param('id') id: string,
-    @Headers() header: any,
-  ) {
-    const user_id = tokenUtils(header);
-
-    return await this.coursesService.findOne(id, user_id);
+  async findOne(@Param('id') id: string, @Headers() header: any) {
+    return await this.coursesService.findOne(id, header);
   }
 
   @Patch('/update/:id')
