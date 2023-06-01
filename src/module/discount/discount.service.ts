@@ -28,7 +28,7 @@ export class DiscountService {
   }
 
   async findAll() {
-    const discount: any = await this.discount.find({
+    const discount: any = await Discount.find({
       relations: {
         take_user: true,
       },
@@ -43,7 +43,7 @@ export class DiscountService {
   }
 
   async findOne(id: string) {
-    const discount = await this.discount.find({
+    const discount = await Discount.find({
       relations: { course_id: true, take_user: true, test: true },
       where: { id },
     });
@@ -59,18 +59,20 @@ export class DiscountService {
     });
 
     if (findCourse) {
-      this.discount.update(id, updateDiscountDto);
+      Discount.update(id, updateDiscountDto);
     } else {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
   }
 
   async remove(id: string) {
-    const findCourse: any = await this.discount.findOne({
+    const findCourse: any = await Discount.findOne({
       where: { id },
     });
     if (findCourse) {
-      this.discount.delete(id);
+      Discount.delete(id);
+    } else {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
   }
 }

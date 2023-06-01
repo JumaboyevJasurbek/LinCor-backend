@@ -50,13 +50,23 @@ export class UsersDiscountController {
   })
   create(
     @Body() createUsersDiscountDto: CreateUsersDiscountDto,
-    @Req() req: Request,
+    // @Req() req: Request,
   ) {
     return this.usersDiscountService.create(
       createUsersDiscountDto,
       // req.user_id,
     );
   }
+
+  // async create1(
+  //   @Body() createUsersDiscountDto: CreateUsersDiscountDto,
+  //   @Req() req: Request,
+  // ) {
+  //   return await this.usersDiscountService.createUserDiscount(
+  //     createUsersDiscountDto,
+  //     req.user_id,
+  //   );
+  // }
 
   @Get()
   @ApiHeader({

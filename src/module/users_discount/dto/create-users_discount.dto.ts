@@ -12,3 +12,16 @@ export class CreateUsersDiscountDto {
 
   // answer: any;
 }
+
+export class CreateUsersDiscountDto1 {
+  @IsBoolean()
+  win: boolean;
+
+  // @IsString()
+  discount: any;
+
+  // @IsString()
+  user: any;
+
+  // answer: any;
+}
