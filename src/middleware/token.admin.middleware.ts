@@ -9,8 +9,7 @@ import jwt from 'src/utils/jwt';
 
 @Injectable()
 export class TokenAdminMiddleWare implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
-    // console.log(req.headers);
+  use(req: Request, _: Response, next: NextFunction) {
     const { headers }: any = req;
 
     if (!headers.autharization) {

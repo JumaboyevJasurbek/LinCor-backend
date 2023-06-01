@@ -3,6 +3,10 @@ Admin login qilishda Shahboz akani email va passwordlarini qoshib qoyish kerak
 
 Token ichiga email, id yashiriladi, adminda email va parol yashiriladi
 
+user {
+    email: Search
+}
+
 Reg {
     Nodemailer {
         familiya,
@@ -87,8 +91,8 @@ One {
                 sotib olgan: true
                 active: true
             },
-        }   ✅
-    }   ✅
+        }                   ✅
+    }                       ✅
 }                           ✅
 
 PATCH {
@@ -118,10 +122,10 @@ statistika + {
         yiliga,
         userlar soni
         nechta sertifikat olingan jami
-    }
+    }                       ✅
     Users: {
         passworddan tashqari hamma malumotlari        
-    }
+    }                       ✅
     user/one {
         sotib olgan courselar: {
             courseni ozini hamma malumotlari
@@ -135,7 +139,7 @@ statistika + {
             korilgan darslar: courselarni workbooklar olingan soni(korilgan darslar soni) 
             jami darslar: Course jami darslar
             qolgan darslar: jami workbooklar sonidan ayiriladi qolgan darslar soni chiqib keladi
-        },
+        },                  ✅
         courses: {
             course1: {
                 sotib olgan: true
@@ -150,8 +154,8 @@ statistika + {
                 active: true
             },
         }
-    }
-}
+    }                       ✅
+}                           ✅
 
 admin/delete {
     Userni tolliq ochirib yuboradi bazadan

@@ -243,8 +243,8 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  findOne(@Req() req: Request) {
-    return this.usersService.findOne(req.user_id);
+  async findOne(@Req() req: Request) {
+    return await this.usersService.findOne(req.user_id);
   }
 
   @Get('/profile')
@@ -256,8 +256,8 @@ export class UsersController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  profile(@Req() req: Request) {
-    return this.usersService.profile(req.user_id);
+  async profile(@Req() req: Request) {
+    return await this.usersService.profile(req.user_id);
   }
 
   @Get('/statistika/daromat')
@@ -269,8 +269,47 @@ export class UsersController {
     description: 'Admin token',
     required: false,
   })
-  daromat() {
-    return this.usersService.daromat();
+  async daromat() {
+    return await this.usersService.daromat();
+  }
+
+  @Get('/statistika/all')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async allUsers() {
+    return await this.usersService.allUsers();
+  }
+
+  @Get('/statistika/search/:search')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async allSearch(@Param('search') search: string) {
+    return await this.usersService.allSearch(search);
+  }
+
+  @Get('/statistika/one/:id')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async statistika(@Param('id') id: string) {
+    return await this.usersService.statistika(id);
   }
 
   @Delete('/delete/:id')
@@ -283,7 +322,7 @@ export class UsersController {
     description: 'Admin token',
     required: false,
   })
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+  async remove(@Param('id') id: string) {
+    return await this.usersService.remove(id);
   }
 }
