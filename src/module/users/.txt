@@ -3,6 +3,10 @@ Admin login qilishda Shahboz akani email va passwordlarini qoshib qoyish kerak
 
 Token ichiga email, id yashiriladi, adminda email va parol yashiriladi
 
+user {
+    email: Search
+}
+
 Reg {
     Nodemailer {
         familiya,
