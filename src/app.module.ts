@@ -86,7 +86,7 @@ export class AppModule implements NestModule {
     consumer
       .apply(TokenAdminMiddleWare)
       .exclude(
-        { path: '/course/list', method: RequestMethod.GET },
+        { path: '/course/all', method: RequestMethod.GET },
         { path: '/course/one/:id', method: RequestMethod.GET },
         { path: '/user/registr', method: RequestMethod.POST },
         { path: '/user/registr/:id', method: RequestMethod.POST },

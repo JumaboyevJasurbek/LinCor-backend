@@ -10,7 +10,6 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
-  Request,
   Headers,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
@@ -31,7 +30,6 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { googleCloud } from 'src/utils/google-cloud';
 
 @Controller('course')
 @ApiTags('Courses')
@@ -83,9 +81,8 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: string = googleCloud(file);
-    if (img_link) {
-      await this.coursesService.create(createCourseDto, img_link);
+    if (file) {
+      await this.coursesService.create(createCourseDto, file as any);
     }
   }
 
@@ -153,14 +150,7 @@ export class CoursesController {
     @Body() dto: UpdateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (file) {
-      const img_link: any = googleCloud(file) as any;
-      if (img_link) {
-        await this.coursesService.update(id, dto, img_link);
-      }
-    } else {
-      await this.coursesService.update(id, dto, undefined);
-    }
+    await this.coursesService.update(id, dto, file);
   }
 
   @Delete('/delete/:id')
