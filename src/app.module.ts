@@ -125,7 +125,7 @@ export class AppModule implements NestModule {
         { path: '/user/email/:code', method: RequestMethod.PUT },
         { path: '/user/one', method: RequestMethod.GET },
         { path: '/user/email/:id', method: RequestMethod.PUT },
-        { path: '/sertificate/get/:course', method: RequestMethod.GET }
+        { path: '/sertificate/get/:course', method: RequestMethod.GET },
         { path: '/open_workbook/:id', method: RequestMethod.GET },
         { path: '/user/profile', method: RequestMethod.GET },
         { path: '/vedio/one/:id', method: RequestMethod.GET },
