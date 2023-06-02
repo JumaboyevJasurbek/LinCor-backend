@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, Length } from 'class-validator';
-import { UserArea } from 'src/types';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class PatchUserDto {
   @IsString()
@@ -25,16 +24,15 @@ export class PatchUserDto {
   })
   last_name: string;
 
-  @IsEnum(UserArea)
+  @IsString()
   @IsOptional()
   @ApiProperty({
     name: 'area',
-    type: 'enum',
-    enum: UserArea,
+    type: 'string',
     default: 'Toshkent',
     required: false,
   })
-  area: UserArea;
+  area: string;
 
   @IsString()
   @Length(0, 65)

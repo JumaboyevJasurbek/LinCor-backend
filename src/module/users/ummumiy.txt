@@ -33,6 +33,8 @@ Workbook {
     man hoz qoshimcha table qoshaman u oziga user_id va workbook_id oladi. user workbookni bir marta yuklab olgach qoshimcha table ga malumotlar qoshiladi. keyinchalik active qoshilishi kerak. Bu User keyinchalik shu kursni yana qayta sotib olsa unga ham shu active boyicha yana qayta tashlab berishi uchun.
 }
 
+autarization to=> autorization
+
 Chegirma active qoshiladi default true delete bolganda active: false boladi. Chiqarib berishda active ga qaraladi.
 
 create_data qilib qoygan ekanman. Hammasini createDate qilib chiqish kerak
