@@ -1,6 +1,5 @@
 export const formatPrice = (price: any) => {
   let arr1 = price
-    .trim()
     .split('')
     .filter((e) => e != ' ' && e != '.' && e != ',')
     .reverse()
