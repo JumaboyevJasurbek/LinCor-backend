@@ -205,11 +205,79 @@ export class SertificateService {
         doc.on('data', dataCb);
         doc.on('end', endCb);
 
+
         doc.moveDown(2);
+
+        doc.font('Helvetica-BoldOblique')
+
+        doc
+            .fontSize(30)
+            .fillColor('brown')
+            .text('Attendance Certificate', { align: 'center' })
+
+        doc.fillColor('#333338')
+
+        doc
+            .fontSize(16)
+            .text('is presented to', { align: 'center' })
+
+        doc.moveDown(0.5)
+
+        doc
+            .font('Times-Italic')
+            .fontSize(25)
+            .text(data.fullname, {
+                align: 'center',
+                underline: true,
+            })
+
+        doc.moveDown(0.5)
 
         doc
             .font('Helvetica-BoldOblique')
-            .text('Attendance Certificate')
+            .fillColor('#333338')
+            .fontSize(16)
+            .text(`Description: ${data.description}`, {
+                align: "center",
+                underline: true
+            })
+
+        doc
+            .fillColor('blue')
+            .fontSize(16).text(new Date().toLocaleDateString(), 490, 300, {
+                underline: true
+            })
+
+        doc.image(
+            this.imageURL + '/logo.jpg',
+            330,
+            20,
+            {
+                width: 40,
+                height: 45,
+            }
+        )
+
+        doc.image(
+            this.imageURL + '/gold.png',
+            300,
+            280,
+            {
+                width: 100,
+                height: 100
+            }
+        )
+
+        doc.image(
+            this.imageURL + '/screen.jpg',
+            60,
+            300,
+            {
+                width: 50,
+                height: 50
+            }
+        );
+
 
         doc.fillColor('yellow')
         doc
@@ -222,6 +290,7 @@ export class SertificateService {
             .rect(650, -270, 200, 420)
             .fill();
 
+
         doc.end();
     }
 
@@ -230,13 +299,15 @@ export class SertificateService {
         userId: string,
         res: Response
     ): Promise<void> {
-        const getCourse: CourseEntity = await CourseEntity.findOneBy({ id: courseId })
+        const getCourse: CourseEntity = await CourseEntity.findOne({ where: { id: courseId } })
         const getUser: UsersEntity = await UsersEntity.findOneBy({ id: userId })
+
+        console.log(getCourse);
+
 
         if (!getCourse) {
             throw new HttpException("Course Not Found", HttpStatus.NOT_FOUND)
         }
-
 
         const getTake = await TakeEntity.findOneBy({
             user_id: {
@@ -247,9 +318,9 @@ export class SertificateService {
             }
         })
 
-        if (!getTake) {
-            throw new HttpException("You haven't bought this course", HttpStatus.BAD_REQUEST)
-        }
+        // if (!getTake) {
+        //     throw new HttpException("You haven't bought this course", HttpStatus.BAD_REQUEST)
+        // }
 
         const getSertificate: TakenSertifikat = await TakenSertifikat.findOneBy({
             user_id: {
@@ -282,7 +353,7 @@ export class SertificateService {
 
         switch (getCourse.sequence) {
             case 1:
-                await this.createS3(
+                await this.createS1(
                     (chunk: unknown) => stream.write(chunk),
                     () => stream.end(),
                     SertificateData
@@ -297,7 +368,14 @@ export class SertificateService {
                 )
             default:
                 break;
+
+            case 3:
+                await this.createS3(
+                    (chunk: unknown) => stream.write(chunk),
+                    () => stream.end(),
+                    SertificateData
+                )
         }
-        
+
     }
 }
