@@ -21,23 +21,8 @@ export class DiscountController {
   @Post()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin token',
     required: true,
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        percentage: {
-          type: 'number',
-          default: 20,
-        },
-        course_id: {
-          type: 'string',
-          default: '3b90396f-1761-472c-836f-f3a1d6095494',
-        },
-      },
-    },
   })
   async create(@Body() createDiscountDto: CreateDiscountDto) {
     return await this.discountService.create(createDiscountDto);
@@ -47,7 +32,7 @@ export class DiscountController {
   @Get()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin token',
     required: true,
   })
   findAll() {
@@ -55,10 +40,10 @@ export class DiscountController {
   }
 
   // ? FIND ONE
-  @Get(':id')
+  @Get()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin token',
     required: true,
   })
   findOne(@Param('id') id: string) {
@@ -69,23 +54,8 @@ export class DiscountController {
   @Patch(':id')
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin token',
     required: true,
-  })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        percentage: {
-          type: 'number',
-          default: 20,
-        },
-        course_id: {
-          type: 'string',
-          default: '3b90396f-1761-472c-836f-f3a1d6095494',
-        },
-      },
-    },
   })
   update(
     @Param('id') id: string,
@@ -98,7 +68,7 @@ export class DiscountController {
   @Delete(':id')
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin token',
     required: true,
   })
   remove(@Param('id') id: string) {

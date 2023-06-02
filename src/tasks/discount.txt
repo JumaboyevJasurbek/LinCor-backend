@@ -7,7 +7,7 @@ Get/user/:discount {
         tests
     }
     return discount
-}
+} 👌✅
 
 Post {
     count = 0
@@ -20,7 +20,7 @@ Post {
     } else {
         taken_discount insert win false
     }
-}
+} 👌❌
 
 Admin
 GET {
@@ -39,24 +39,24 @@ GET {
         yutganlar = discount.taken_discount.filter(e => e.win).length
         yuta olmaganlar = yutganlar = discount.taken_discount.filter(e => !e.win).length
     }
-}
+} 👌✅
 
 Post {
     !course_id = 404
     course_id = 400
     Insert
-}
+} 👌✅
 
 Put/:id {
     !id = 404 chegirma not found
     !course_id = 404 course not found
     update
-}
+} 👌✅
 
 Delete/:id {
     !id = 404 chegirma not found
     Delete | active false
-}
+} 👌✅
 
 
 tests 
@@ -65,17 +65,17 @@ Post {
     {Admin}
     !discount.id = 404
     insert
-}
+} 👌✅
 
 Put {
     {Admin}
     !test.id = 404 tests 
     !discount.id = 404
     update
-}
+} 👌✅
 
 Delete {
     {Admin}
     !test.id = 404 tests 
     delete
-}
+} 👌✅

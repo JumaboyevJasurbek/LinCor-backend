@@ -1,5 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUsersDiscountDto } from './dto/create-users_discount.dto';
+import {
+  CreateUsersDiscountDto,
+  CreateUsersDiscountDto1,
+} from './dto/create-users_discount.dto';
 import { UpdateUsersDiscountDto } from './dto/update-users_discount.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TakenDiscount } from 'src/entities/taken_discount';
@@ -34,9 +37,9 @@ export class UsersDiscountService {
         (e) => e.id == createUsersDiscountDto.discount,
       );
 
-      console.log(equalDiscount);
+      // console.log(equalDiscount);
 
-      return this.user_discount.save(createUsersDiscountDto);
+      this.user_discount.save(createUsersDiscountDto);
     } else {
       throw new HttpException(
         'User or discount not found',
@@ -44,6 +47,13 @@ export class UsersDiscountService {
       );
     }
   }
+
+  // async createUserDiscount(
+  //   createDiscountDto: CreateUsersDiscountDto1,
+  //   user_id: string,
+  // ) {
+  //   const test = await TestsEntity.find();
+  // }
 
   findAll() {
     return this.user_discount.find({
@@ -61,35 +71,35 @@ export class UsersDiscountService {
     return this.user_discount.findAndCountBy({ user: user_id });
   }
 
-  update(id: string, updateUsersDiscountDto: any) {
-    const findUser: any = UsersEntity.findOne({
-      where: { id: updateUsersDiscountDto.user },
-    });
+  // update(id: string, updateUsersDiscountDto: any) {
+  //   const findUser: any = UsersEntity.findOne({
+  //     where: { id: updateUsersDiscountDto.user },
+  //   });
 
-    const findDiscount: any = Discount.find({
-      where: { id: updateUsersDiscountDto.discount },
-    });
+  //   const findDiscount: any = Discount.find({
+  //     where: { id: updateUsersDiscountDto.discount },
+  //   });
 
-    if (findDiscount | findUser) {
-      return this.user_discount.update(id, updateUsersDiscountDto);
-    } else {
-      throw new HttpException(
-        'User or discount not found',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-  }
+  //   if (findDiscount | findUser) {
+  //     this.user_discount.update(id, updateUsersDiscountDto);
+  //   } else {
+  //     throw new HttpException(
+  //       'User or discount not found',
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   }
+  // }
 
-  remove(id: string) {
-    const findId: any = this.user_discount.findOne({ where: { id } });
+  // remove(id: string) {
+  //   const findId: any = this.user_discount.findOne({ where: { id } });
 
-    if (findId) {
-      return this.user_discount.delete(id);
-    } else {
-      throw new HttpException(
-        'User discount not removed',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-  }
+  //   if (findId) {
+  //     return this.user_discount.delete(id);
+  //   } else {
+  //     throw new HttpException(
+  //       'User discount not removed',
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   }
+  // }
 }

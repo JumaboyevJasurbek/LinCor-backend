@@ -8,12 +8,9 @@ import { Discount } from 'src/entities/discount.entity';
 
 @Injectable()
 export class TestsService {
-  constructor(
-    @InjectRepository(TestsEntity)
-    private readonly test: Repository<TestsEntity>,
-  ) {}
+  constructor() {}
 
-  async create(createTestDto: CreateTestDto): Promise<CreateTestDto> {
+  async create(createTestDto: CreateTestDto) {
     const findDiscount: any = await Discount.findOne({
       where: { id: createTestDto.discount },
       relations: {
@@ -33,30 +30,30 @@ export class TestsService {
       throw new HttpException('Returned sequence', HttpStatus.NOT_FOUND);
     }
 
-    return this.test.save(createTestDto);
+    await TestsEntity.save(createTestDto);
   }
 
-  findAdmin(user: any) {
-    return this.test.findOneBy({
-      discount: user,
+  async update(id: string, updateTestDto: UpdateTestDto) {
+    const findId = TestsEntity.findOne({
+      where: { id: id },
     });
+
+    if (findId) {
+      await TestsEntity.update(id, updateTestDto);
+    } else {
+      throw new HttpException('Tests id not found', HttpStatus.NOT_FOUND);
+    }
   }
 
-  findUser(user: any) {
-    return this.test.findOneBy({
-      discount: user,
+  async remove(id: string) {
+    const findId = TestsEntity.findOne({
+      where: { id: id },
     });
-  }
 
-  findOne(id: string) {
-    return this.test.findAndCountBy({ id });
-  }
-
-  update(id: string, updateTestDto: any) {
-    return this.test.update(id, updateTestDto);
-  }
-
-  remove(id: string) {
-    return this.test.delete(id);
+    if (findId) {
+      await TestsEntity.delete(id);
+    } else {
+      throw new HttpException('Tests id not found', HttpStatus.NOT_FOUND);
+    }
   }
 }

@@ -25,8 +25,8 @@ export class TokenAdminMiddleWare implements NestMiddleware {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
     }
     if (
-      admin?.email !== 'ahmadjonovakmal079@gmail.com' &&
-      admin?.password !== '12345678'
+      admin?.email !== process.env.ADMIN_EMAIL &&
+      admin?.password !== process.env.ADMIN_PASSWORD
     ) {
       throw new HttpException('Siz Admin emasiz', HttpStatus.BAD_REQUEST);
     }

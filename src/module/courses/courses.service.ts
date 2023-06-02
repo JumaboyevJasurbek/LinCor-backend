@@ -2,36 +2,38 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { CourseEntity } from 'src/entities/course.entity';
-import { TakeEntity } from 'src/entities/take.entity';
 import { takeUtils } from 'src/utils/take.utils';
+import { tokenUtils } from 'src/utils/token.utils';
+import { formatPrice } from 'src/utils/priceFormat';
+import { googleCloud } from 'src/utils/google-cloud';
+import { extname } from 'path';
 
 @Injectable()
 export class CoursesService {
   async oneFoundCourse(id: string): Promise<CourseEntity> {
     const course = await CourseEntity.findOne({
       where: { id },
-    }).catch(() => {
-      throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
-    });
+    }).catch(() => undefined);
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
 
     return course;
-  }
+  } 
 
-  async create(dto: CreateCourseDto, file: string): Promise<void> {
-    const courses = await CourseEntity.find();
-    if ((courses.length >= 3 && Number(dto.sequence) === 0) || '') {
-      throw new HttpException(
-        'Courses count is must not more than 3',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
+  async create(dto: CreateCourseDto, file: Express.Multer.File): Promise<void> {
+    const img_link: string = googleCloud(file);
+    const typeOfFile = extname(file.originalname) 
+
+    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
+      throw new HttpException('The type of file is incorrect', HttpStatus.BAD_REQUEST)
     }
 
-    if (dto.sequence > 3) {
+    const courses = await CourseEntity.find();
+
+    if (courses.length >= 3) {
       throw new HttpException(
-        'Course sequence must be 1 or 2 or 3 You cannot create another',
+        'Courses count is must not more than 3',
         HttpStatus.NOT_ACCEPTABLE,
       );
     }
@@ -51,8 +53,8 @@ export class CoursesService {
       .values({
         title: dto.title,
         description: dto.description,
-        price: dto.price,
-        image: file,
+        price: formatPrice(dto.price),
+        image: img_link,
         sequence: dto.sequence,
       })
       .execute();
@@ -61,12 +63,12 @@ export class CoursesService {
   async findAll(): Promise<CourseEntity[]> {
     return await CourseEntity.find({
       order: { sequence: 'ASC' },
-    }).catch(() => {
-      throw new HttpException('Courses Not Found', HttpStatus.NOT_FOUND);
-    });
+    }).catch(() => []);
   }
 
-  async findOne(id: string, user_id: any): Promise<CourseEntity> {
+  async findOne(id: string, header: any): Promise<CourseEntity> {
+    const user_id: string | boolean = await tokenUtils(header);
+
     const course: any = await CourseEntity.findOne({
       where: { id },
       relations: {
@@ -76,27 +78,35 @@ export class CoursesService {
         sertifikat: true,
         discount: true,
       },
-    }).catch(() => {
-      throw new HttpException('Bad Request in catch', HttpStatus.NOT_FOUND);
-    });
+    }).catch(() => undefined);
     if (!course) {
       throw new HttpException('Course Not Found', HttpStatus.NOT_FOUND);
     }
     const videos = course.course_videos.sort(
-      (a: CourseEntity, b: CourseEntity) => (a.sequence > b.sequence ? 1 : -1),
+      (a: CourseEntity, b: CourseEntity) => a.sequence - b.sequence,
     );
-    const courseTaken = await takeUtils(id, user_id);
+    if (user_id) {
+      const courseTaken = await takeUtils(id, user_id);
 
-    if (courseTaken.message && courseTaken.status === 200) {
-      for (let i = 0; i < videos.length; i++) {
-        if (videos[i].sequence > 2) {
-          console.log(videos[i].sequence > 2);
+      if (courseTaken.message && courseTaken.status === 200) {
+        for (let i = 0; i < videos.length; i++) {
+          if (videos[i].sequence > 2) {
+            console.log(videos[i].sequence > 2);
 
-          videos[i].link = '';
-          course.active = true;
+            videos[i].link = '';
+            course.active = true;
+          }
         }
+        return course;
+      } else {
+        for (let i = 0; i < videos.length; i++) {
+          if (videos[i].sequence > 2) {
+            videos[i].link = '';
+            course.active = false;
+          }
+        }
+        return course;
       }
-      return course;
     } else {
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].sequence > 2) {
@@ -108,20 +118,24 @@ export class CoursesService {
     }
   }
 
-  async update(id: string, dto: UpdateCourseDto, img_link: any): Promise<void> {
+  async update(id: string, dto: UpdateCourseDto, file: Express.Multer.File): Promise<void> {
     const course = await this.oneFoundCourse(id);
-    if (course.sequence !== Number(dto.sequence) && dto.sequence > 3) {
+    const typeOfFile = extname(file.originalname) 
+
+    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg' && typeOfFile != 'avif') {
+      throw new HttpException('The type of file is incorrect', HttpStatus.BAD_REQUEST)
+    }
+
+    if (course.sequence !== Number(dto.sequence)) {
       throw new HttpException(
         'You cannot change this course sequence',
         HttpStatus.CONFLICT,
       );
     }
+    let img_link: any = false;
 
-    if (dto.sequence > 3) {
-      throw new HttpException(
-        'Sequnce must be 1 or 2 or 3',
-        HttpStatus.NOT_ACCEPTABLE,
-      );
+    if (file) {
+      img_link = googleCloud(file);
     }
 
     await CourseEntity.createQueryBuilder()
@@ -129,13 +143,13 @@ export class CoursesService {
       .set({
         title: dto.title || course.title,
         description: dto.description || course.description,
-        price: dto.price || course.price,
+        price: formatPrice(dto.price) || course.price,
         sequence: dto.sequence || course.sequence,
-        image: img_link ? img_link : course.image,
+        image: img_link || course.image,
       })
       .where({ id })
       .execute()
-      .catch((e) => {
+      .catch(() => {
         throw new HttpException(
           'Internal server error',
           HttpStatus.INTERNAL_SERVER_ERROR,
@@ -145,7 +159,7 @@ export class CoursesService {
 
   async remove(id: string): Promise<void> {
     await this.oneFoundCourse(id);
-    await CourseEntity.delete(id).catch((e) => {
+    await CourseEntity.delete(id).catch(() => {
       throw new HttpException(
         'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,

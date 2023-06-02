@@ -1,7 +1,6 @@
 import { CreateVedioDto } from './dto/create-vedio.dto';
 import { CreateTopikDto } from './dto/create-topik.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
-import { googleCloud } from 'src/utils/google-cloud';
 import {
   Controller,
   Post,
@@ -30,7 +29,6 @@ import {
 } from '@nestjs/swagger';
 import { VedioService } from './vedio.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { extname } from 'path';
 
 @Controller('vedio')
 @ApiTags('Video')
@@ -87,22 +85,11 @@ export class VedioController {
     required: true,
   })
   @UseInterceptors(FileInterceptor('link'))
-  createCourseVedio(
+  async createCourseVedio(
     @Body() createVedioDto: CreateVedioDto,
     @UploadedFile() link: Express.Multer.File,
-  ) {
-    const vedio: string = googleCloud(link);
-    if (vedio) {
-      const ext = extname(vedio);
-      if (ext == '.mp4') {
-        return this.vedioService.createCourseVedio(createVedioDto, vedio);
-      } else {
-        throw new HttpException(
-          'The file type is not correct',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
+  ): Promise<void> {
+    await this.vedioService.createCourseVedio(createVedioDto, link);
   }
 
   @Post('/topik')
@@ -155,22 +142,11 @@ export class VedioController {
     required: true,
   })
   @UseInterceptors(FileInterceptor('link'))
-  createTopikVedio(
+  async createTopikVedio(
     @Body() body: CreateTopikDto,
     @UploadedFile() link: Express.Multer.File,
-  ) {
-    const topikVedio: string = googleCloud(link);
-    if (topikVedio) {
-      const ext = extname(topikVedio);
-      if (ext == '.mp4') {
-        return this.vedioService.createTopikVedio(body, topikVedio);
-      } else {
-        throw new HttpException(
-          'The file type is not correct',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    }
+  ): Promise<void> {
+    await this.vedioService.createTopikVedio(body, link);
   }
 
   @Get('/admin/:course')
@@ -180,10 +156,10 @@ export class VedioController {
   @ApiHeader({
     name: 'autharization',
     description: 'Admin token',
-    required: false,
+    required: true,
   })
-  find(@Param('id') id: string) {
-    return this.vedioService.findCourseVedio(id);
+  async find(@Param('id') id: string) {
+    return await this.vedioService.findCourseVedio(id);
   }
 
   @Get('/one/:id')
@@ -192,12 +168,11 @@ export class VedioController {
   @ApiOkResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'optional',
-    required: false,
+    description: 'User token',
+    required: true,
   })
-  findOne(@Param('id') id: string, @Request() req: any) {
-    const { user_id } = req;
-    return this.vedioService.findOne(id, user_id);
+  async findOne(@Param('id') id: string, @Request() req: any) {
+    return await this.vedioService.findOne(id, req);
   }
 
   @Patch('/update/:id')
@@ -230,11 +205,11 @@ export class VedioController {
         },
         course_id: {
           type: 'string',
-          default: '35bf2a3c-e931-4f81-9567-9a34bbeaf7fg',
+          default: '',
         },
         topik_id: {
           type: 'string',
-          default: '35bf2a3c-e931-4f81-9567-9a34bbeaf7fg',
+          default: '',
         },
       },
     },
@@ -245,19 +220,14 @@ export class VedioController {
   @ApiHeader({
     name: 'autharization',
     description: 'Admin token',
-    required: false,
+    required: true,
   })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateVedioDto: UpdateVedioDto,
     @UploadedFile() link: Express.Multer.File,
   ) {
-    if (link) {
-      const Vediolink: string = googleCloud(link);
-      return this.vedioService.update(id, updateVedioDto, Vediolink);
-    } else {
-      return this.vedioService.update(id, updateVedioDto, false);
-    }
+    await this.vedioService.update(id, updateVedioDto, link);
   }
 
   @Delete('/delete/:id')
@@ -270,7 +240,7 @@ export class VedioController {
     description: 'Admin token',
     required: true,
   })
-  remove(@Param('id') id: string) {
-    return this.vedioService.remove(id);
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.vedioService.remove(id);
   }
 }

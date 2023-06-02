@@ -4,7 +4,7 @@ import { TakenSertifikat } from 'src/entities/taken.sertifikat';
 import { TakenWorkbook } from 'src/entities/take_workbook';
 
 export const oneFor = async (user: any) => {
-  const byCourse: any = [...user.open_course];
+  const byCourses: any = [...user.open_course];
   const sertifikat = await TakenSertifikat.find({
     relations: {
       user_id: true,
@@ -26,9 +26,9 @@ export const oneFor = async (user: any) => {
 
   const result = [];
 
-  for (let i = 0; i < byCourse.length; i++) {
-    byCourse[i].purchaseDate = utilsDate(user.open_course[i].create_data);
-    byCourse[i].completionDate = completionDate(
+  for (let i = 0; i < byCourses.length; i++) {
+    byCourses[i].purchaseDate = utilsDate(user.open_course[i].create_data);
+    byCourses[i].completionDate = completionDate(
       user.open_course[i].create_data,
       6,
     );
@@ -42,46 +42,46 @@ export const oneFor = async (user: any) => {
           );
         }
       }
-      byCourse[i].lesson_learned = 0;
+      byCourses[i].lesson_learned = 0;
       for (let k = 0; k < result.length; k++) {
-        if (result[k] == byCourse[i].course_id?.id) {
-          byCourse[i].lesson_learned += 1;
+        if (result[k] == byCourses[i].course_id?.id) {
+          byCourses[i].lesson_learned += 1;
         }
       }
-      byCourse[i].total_lessons =
+      byCourses[i].total_lessons =
         user.open_course[i].course_id.course_videos.length;
-      byCourse[i].remaining_lessons =
+      byCourses[i].remaining_lessons =
         user.open_course[i].course_id.course_videos.length -
-        byCourse[i].lesson_learned;
+        byCourses[i].lesson_learned;
 
-      byCourse[i].id = user.open_course[i].course_id.id;
-      byCourse[i].title = user.open_course[i].course_id.title;
-      byCourse[i].description = user.open_course[i].course_id.description;
-      byCourse[i].price = user.open_course[i].course_id.price;
-      byCourse[i].image = user.open_course[i].course_id.image;
-      byCourse[i].sequence = user.open_course[i].course_id.sequence;
-      if (byCourse[i].course_id.discount?.length) {
-        byCourse[i].chegirma = byCourse[i].course_id.discount[0]?.taken[0].win
-          ? byCourse[i].course_id.discount[0].percentage
+      byCourses[i].id = user.open_course[i].course_id.id;
+      byCourses[i].title = user.open_course[i].course_id.title;
+      byCourses[i].description = user.open_course[i].course_id.description;
+      byCourses[i].price = user.open_course[i].course_id.price;
+      byCourses[i].image = user.open_course[i].course_id.image;
+      byCourses[i].sequence = user.open_course[i].course_id.sequence;
+      if (byCourses[i].course_id.discount?.length) {
+        byCourses[i].discount = byCourses[i].course_id.discount[0]?.taken[0].win
+          ? byCourses[i].course_id.discount[0].percentage
           : false;
       } else {
-        byCourse[i].chegirma = false;
+        byCourses[i].discount = false;
       }
       if (sertifikat.length) {
         const bySertifikat = sertifikat.find(
           (e) =>
             e.user_id?.id == user.id &&
-            e.course.id == byCourse[i].course_id?.id,
+            e.course.id == byCourses[i].course_id?.id,
         );
-        byCourse[i].sertifikat = bySertifikat
+        byCourses[i].sertifikat = bySertifikat
           ? utilsDate(bySertifikat?.create_data)
           : true;
       } else {
-        byCourse[i].sertifikat = true;
+        byCourses[i].sertifikat = true;
       }
-      byCourse[i].category = 'course';
-      delete byCourse[i].topik_id;
-      delete byCourse[i].course_id;
+      byCourses[i].category = 'course';
+      delete byCourses[i].topik_id;
+      delete byCourses[i].course_id;
     } else {
       for (let j = 0; j < takeWorkbook.length; j++) {
         if (takeWorkbook[j].user_id?.id == user.id) {
@@ -92,27 +92,27 @@ export const oneFor = async (user: any) => {
           );
         }
       }
-      byCourse[i].lesson_learned = 0;
+      byCourses[i].lesson_learned = 0;
       for (let k = 0; k < result.length; k++) {
-        if (result[k] == byCourse[i].topik_id?.id) {
-          byCourse[i].lesson_learned += 1;
+        if (result[k] == byCourses[i].topik_id?.id) {
+          byCourses[i].lesson_learned += 1;
         }
       }
-      byCourse[i].total_lessons =
+      byCourses[i].total_lessons =
         user.open_course[i].topik_id.topik_videos.length;
-      byCourse[i].remaining_lessons =
+      byCourses[i].remaining_lessons =
         user.open_course[i].topik_id.topik_videos.length -
-        byCourse[i].lesson_learned;
+        byCourses[i].lesson_learned;
 
-      byCourse[i].id = user.open_course[i].topik_id.id;
-      byCourse[i].title = user.open_course[i].topik_id.title;
-      byCourse[i].description = user.open_course[i].topik_id.description;
-      byCourse[i].price = user.open_course[i].topik_id.price;
-      byCourse[i].image = user.open_course[i].topik_id.image;
-      byCourse[i].sequence = user.open_course[i].topik_id.sequence;
-      byCourse[i].category = 'topik';
-      delete byCourse[i].course_id;
-      delete byCourse[i].topik_id;
+      byCourses[i].id = user.open_course[i].topik_id.id;
+      byCourses[i].title = user.open_course[i].topik_id.title;
+      byCourses[i].description = user.open_course[i].topik_id.description;
+      byCourses[i].price = user.open_course[i].topik_id.price;
+      byCourses[i].image = user.open_course[i].topik_id.image;
+      byCourses[i].sequence = user.open_course[i].topik_id.sequence;
+      byCourses[i].category = 'topik';
+      delete byCourses[i].course_id;
+      delete byCourses[i].topik_id;
     }
     delete user.open_course[i].create_data;
   }
@@ -121,5 +121,5 @@ export const oneFor = async (user: any) => {
   delete user.open_course;
   delete user.auth_socials;
   delete user.take_discount;
-  return byCourse;
+  return byCourses;
 };

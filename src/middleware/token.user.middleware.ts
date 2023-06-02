@@ -21,9 +21,11 @@ export class TokenUserMiddleWare implements NestMiddleware {
     if (!idAndEmail || !idAndEmail?.id) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
-    const user = await UsersEntity.findOneBy({
-      id: idAndEmail?.id,
-      email: idAndEmail?.email,
+    const user = await UsersEntity.findOne({
+      where: {
+        id: idAndEmail?.id,
+        email: idAndEmail?.email,
+      },
     });
 
     if (!user?.email) {

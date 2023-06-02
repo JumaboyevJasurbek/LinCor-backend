@@ -36,30 +36,29 @@ import { PasswordUpdateDto } from './dto/password-update';
 import { PatchUserDto } from './dto/patch-all';
 import { Request } from 'express';
 import { InPasswordDto } from './dto/inPassword';
-import { googleCloud } from 'src/utils/google-cloud';
 
 @Controller('user')
 @ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('registr')
+  @Post('register')
   @ApiBadRequestResponse()
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.OK)
-  async registr(@Body() body: RegistrDto) {
-    return await this.usersService.registr(body);
+  async register(@Body() body: RegistrDto) {
+    return await this.usersService.register(body);
   }
 
-  @Post('/registr/:code')
+  @Post('/register/:code')
   @ApiBadRequestResponse()
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @HttpCode(HttpStatus.OK)
-  async registrEmail(@Param('code') param: string) {
-    return await this.usersService.registr_email(param);
+  async registerEmail(@Param('code') param: string) {
+    return await this.usersService.registerEmailCode(param);
   }
 
   @Post('/login')
@@ -77,17 +76,17 @@ export class UsersController {
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async loginEmail(@Param('code') params: string) {
-    return await this.usersService.login_email(params);
+    return await this.usersService.loginEmailCode(params);
   }
 
-  @Post('/firebase/registr')
+  @Post('/firebase/register')
   @ApiBadRequestResponse()
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @HttpCode(HttpStatus.OK)
   async FirebaseRegistr(@Body() body: FirebaseRegistrDto) {
-    return await this.usersService.firebase_registr(body);
+    return await this.usersService.firebaseRegistr(body);
   }
 
   @Post('/firebase/login')
@@ -96,7 +95,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.OK)
   async FirebaseLogin(@Body() body: FirebaseLoginDto) {
-    return await this.usersService.firebase_login(body);
+    return await this.usersService.firebaseLogin(body);
   }
 
   @Post('/admin/login')
@@ -104,7 +103,7 @@ export class UsersController {
   @ApiNotFoundResponse()
   @HttpCode(HttpStatus.OK)
   async adminLogin(@Body() body: AdminLoginDto) {
-    return await this.usersService.admin_login(body);
+    return await this.usersService.adminEmailRequest(body);
   }
 
   @Get('/admin/login/:code')
@@ -112,7 +111,7 @@ export class UsersController {
   @ApiOkResponse()
   @HttpCode(HttpStatus.OK)
   async adminLoginEmail(@Param('code') params: string) {
-    return await this.usersService.admin_login_email(params);
+    return await this.usersService.adminCodeRequest(params);
   }
 
   @Post('/password')
@@ -140,20 +139,6 @@ export class UsersController {
     return await this.usersService.passwordUpdate(body);
   }
 
-  @Patch('/update')
-  @ApiNoContentResponse()
-  @ApiBadRequestResponse()
-  @ApiNotFoundResponse()
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiHeader({
-    name: 'autharization',
-    description: 'User token',
-    required: false,
-  })
-  async patch(@Body() body: PatchUserDto, @Req() req: Request) {
-    return await this.usersService.patch(req.user_id, body);
-  }
-
   @Put('/update/password')
   @ApiNoContentResponse()
   @ApiBadRequestResponse()
@@ -165,8 +150,7 @@ export class UsersController {
     required: false,
   })
   async passwordIN(@Body() body: InPasswordDto, @Req() req: Request) {
-    console.log(req.user_id);
-    return await this.usersService.passwordIN(req.user_id, body);
+    await this.usersService.passwordIN(req.user_id, body);
   }
 
   @Put('/update/image')
@@ -186,6 +170,7 @@ export class UsersController {
   @ApiConsumes('multipart/form-data')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
+  @ApiNoContentResponse()
   @ApiHeader({
     name: 'autharization',
     description: 'User token',
@@ -196,14 +181,7 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
     @Req() req: Request,
   ) {
-    try {
-      const bool = googleCloud(file);
-      if (bool) {
-        await this.usersService.updateFile(bool, req.user_id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    await this.usersService.updateFile(file, req.user_id);
   }
 
   @Put('/email')
@@ -232,6 +210,20 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async emailCode(@Param('code') params: string) {
     return await this.usersService.emailCode(params);
+  }
+
+  @Patch('/update')
+  @ApiNoContentResponse()
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'User token',
+    required: false,
+  })
+  async patch(@Body() body: PatchUserDto, @Req() req: Request) {
+    await this.usersService.patch(req.user_id, body);
   }
 
   @Get('/one')
@@ -286,6 +278,19 @@ export class UsersController {
     return await this.usersService.allUsers();
   }
 
+  @Get('/statistika/search/:search')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin token',
+    required: false,
+  })
+  async allSearch(@Param('search') search: string) {
+    return await this.usersService.allSearch(search);
+  }
+
   @Get('/statistika/one/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -310,6 +315,6 @@ export class UsersController {
     required: false,
   })
   async remove(@Param('id') id: string) {
-    return await this.usersService.remove(id);
+    await this.usersService.remove(id);
   }
 }

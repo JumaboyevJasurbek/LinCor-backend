@@ -10,7 +10,6 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
-  Request,
   Headers,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
@@ -31,8 +30,6 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { googleCloud } from 'src/utils/google-cloud';
-import { tokenUtils } from 'src/utils/token.utils';
 
 @Controller('course')
 @ApiTags('Courses')
@@ -59,7 +56,6 @@ export class CoursesController {
           default: '120 000',
         },
         sequence: {
-          type: 'number',
           default: 1,
         },
 
@@ -78,42 +74,33 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   async create(
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: string = googleCloud(file);
-    if (img_link) {
-      return this.coursesService.create(createCourseDto, img_link);
-    }
+    await this.coursesService.create(createCourseDto, file as any);
   }
 
-  @Get('/list')
+  @Get('/all')
   @ApiOkResponse()
   @ApiNotFoundResponse()
-  findAll() {
-    return this.coursesService.findAll();
+  async findAll() {
+    return await this.coursesService.findAll();
   }
 
-  @Get('/:id')
+  @Get('one/:id')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'User Token',
     required: false,
   })
-  async findOne(
-    @Param('id') id: string,
-    @Request() req: any,
-    @Headers() header: any,
-  ) {
-    const user_id = tokenUtils(header);
-
-    return this.coursesService.findOne(id, user_id);
+  async findOne(@Param('id') id: string, @Headers() header: any) {
+    return await this.coursesService.findOne(id, header);
   }
 
   @Patch('/update/:id')
@@ -135,7 +122,7 @@ export class CoursesController {
           default: '120 000',
         },
         sequence: {
-          type: 'number',
+          type: 'Sequence',
           default: 1,
         },
         file: {
@@ -153,7 +140,7 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   async update(
@@ -161,28 +148,21 @@ export class CoursesController {
     @Body() dto: UpdateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (file) {
-      const img_link: any = googleCloud(file) as any;
-      if (img_link) {
-        return this.coursesService.update(id, dto, img_link);
-      }
-    } else {
-      return this.coursesService.update(id, dto, undefined);
-    }
+    await this.coursesService.update(id, dto, file);
   }
 
   @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   @ApiNoContentResponse()
   @ApiNotFoundResponse()
   @ApiUnprocessableEntityResponse()
   @ApiForbiddenResponse()
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.coursesService.remove(id);
   }
 }

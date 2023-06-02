@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UsersEntity } from './users.entity';
-import { CourseEntity } from './course.entity';
 import { WorkbookEntity } from './workbook.entity';
 
 @Entity({ name: 'take_workbook' })
