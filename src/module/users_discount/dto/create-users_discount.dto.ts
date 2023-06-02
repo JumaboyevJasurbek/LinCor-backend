@@ -4,9 +4,11 @@ export class CreateUsersDiscountDto {
   @IsBoolean()
   win: boolean;
 
-  @IsString()
-  discount: string;
+  // @IsString()
+  discount: any;
 
-  @IsString()
-  user: string;
+  // @IsString()
+  user: any;
+
+  // answer: any;
 }

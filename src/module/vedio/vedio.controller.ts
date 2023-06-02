@@ -1,9 +1,6 @@
-import { TokenUserMiddleWare } from './../../middleware/token.user.middleware';
-import { TokenAdminMiddleWare } from './../../middleware/token.admin.middleware';
 import { CreateVedioDto } from './dto/create-vedio.dto';
 import { CreateTopikDto } from './dto/create-topik.dto';
 import { UpdateVedioDto } from './dto/update-vedio.dto';
-import { googleCloud } from 'src/utils/google-cloud';
 import {
   Controller,
   Post,
@@ -13,10 +10,11 @@ import {
   Body,
   Get,
   Param,
-  Headers,
   Patch,
   Delete,
   UploadedFile,
+  Request,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -37,7 +35,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class VedioController {
   constructor(private readonly vedioService: VedioService) {}
 
-  @Post('/create')
+  @Post('/course')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -87,17 +85,14 @@ export class VedioController {
     required: true,
   })
   @UseInterceptors(FileInterceptor('link'))
-  createCourseVedio(
+  async createCourseVedio(
     @Body() createVedioDto: CreateVedioDto,
     @UploadedFile() link: Express.Multer.File,
-  ) {
-    const vedio: string = googleCloud(link);
-    if (vedio) {
-      return this.vedioService.createCourseVedio(createVedioDto, vedio);
-    }
+  ): Promise<void> {
+    await this.vedioService.createCourseVedio(createVedioDto, link);
   }
 
-  @Post('/topik/create')
+  @Post('/topik')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -147,46 +142,42 @@ export class VedioController {
     required: true,
   })
   @UseInterceptors(FileInterceptor('link'))
-  createTopikVedio(
+  async createTopikVedio(
     @Body() body: CreateTopikDto,
     @UploadedFile() link: Express.Multer.File,
-  ) {
-    const topikVedio: string = googleCloud(link);
-    if (topikVedio) {
-      return this.vedioService.createTopikVedio(body, topikVedio);
-    }
+  ): Promise<void> {
+    await this.vedioService.createTopikVedio(body, link);
   }
 
-  @Get('/all')
+  @Get('/admin/:course')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'optional',
-    required: false,
+    description: 'Admin token',
+    required: true,
   })
-  findAll(@Headers() header: any) {
-    if (header.autharization) {
-      return this.vedioService.findAll(header);
-    }
+  async find(@Param('id') id: string) {
+    return await this.vedioService.findCourseVedio(id);
   }
 
-  @Get(':id')
+  @Get('/one/:id')
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'optional',
-    required: false,
+    description: 'User token',
+    required: true,
   })
-  findOne(@Param('id') id: string) {
-    return this.vedioService.findOne(id);
+  async findOne(@Param('id') id: string, @Request() req: any) {
+    return await this.vedioService.findOne(id, req);
   }
 
-  @Patch(':id')
+  @Patch('/update/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiConsumes('multipart/form-data')
   @ApiNoContentResponse()
   @ApiBody({
     schema: {
@@ -214,25 +205,32 @@ export class VedioController {
         },
         course_id: {
           type: 'string',
-          default: 'uuid',
+          default: '',
+        },
+        topik_id: {
+          type: 'string',
+          default: '',
         },
       },
     },
   })
-  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('link'))
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
     name: 'autharization',
     description: 'Admin token',
-    required: false,
+    required: true,
   })
-  @UseInterceptors(FileInterceptor('file'))
-  update(@Param('id') id: string, @Body() updateVedioDto: UpdateVedioDto) {
-    return this.vedioService.update(+id, updateVedioDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateVedioDto: UpdateVedioDto,
+    @UploadedFile() link: Express.Multer.File,
+  ) {
+    await this.vedioService.update(id, updateVedioDto, link);
   }
 
-  @Delete(':id')
+  @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
@@ -242,7 +240,7 @@ export class VedioController {
     description: 'Admin token',
     required: true,
   })
-  remove(@Param('id') id: string) {
-    return this.vedioService.remove(+id);
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.vedioService.remove(id);
   }
 }

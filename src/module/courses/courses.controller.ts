@@ -81,9 +81,7 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (file) {
       await this.coursesService.create(createCourseDto, file as any);
-    }
   }
 
   @Get('/all')
