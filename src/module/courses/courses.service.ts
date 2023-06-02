@@ -6,6 +6,7 @@ import { takeUtils } from 'src/utils/take.utils';
 import { tokenUtils } from 'src/utils/token.utils';
 import { formatPrice } from 'src/utils/priceFormat';
 import { googleCloud } from 'src/utils/google-cloud';
+import { extname } from 'path';
 
 @Injectable()
 export class CoursesService {
@@ -18,10 +19,16 @@ export class CoursesService {
     }
 
     return course;
-  }
+  } 
 
-  async create(dto: CreateCourseDto, file: string): Promise<void> {
+  async create(dto: CreateCourseDto, file: Express.Multer.File): Promise<void> {
     const img_link: string = googleCloud(file);
+    const typeOfFile = extname(file.originalname) 
+
+    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
+      throw new HttpException('The type of file is incorrect', HttpStatus.BAD_REQUEST)
+    }
+
     const courses = await CourseEntity.find();
 
     if (courses.length >= 3) {
@@ -111,8 +118,13 @@ export class CoursesService {
     }
   }
 
-  async update(id: string, dto: UpdateCourseDto, file: any): Promise<void> {
+  async update(id: string, dto: UpdateCourseDto, file: Express.Multer.File): Promise<void> {
     const course = await this.oneFoundCourse(id);
+    const typeOfFile = extname(file.originalname) 
+
+    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg' && typeOfFile != 'avif') {
+      throw new HttpException('The type of file is incorrect', HttpStatus.BAD_REQUEST)
+    }
 
     if (course.sequence !== Number(dto.sequence)) {
       throw new HttpException(
