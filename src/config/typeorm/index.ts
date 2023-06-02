@@ -3,8 +3,8 @@ import * as dotenv from 'dotenv';
 import { CourseEntity } from 'src/entities/course.entity';
 import { Discount } from 'src/entities/discount.entity';
 import { WorkbookOpen } from 'src/entities/open_book';
-import { Sertifikat } from 'src/entities/sertifikat.entity';
 import { TakeEntity } from 'src/entities/take.entity';
+import { TakenWorkbook } from 'src/entities/take_workbook';
 import { TakenSertifikat } from 'src/entities/taken.sertifikat';
 import { TakenDiscount } from 'src/entities/taken_discount';
 import { TestsEntity } from 'src/entities/tests.entity';
@@ -25,7 +25,6 @@ export const connectDb: TypeOrmModuleOptions = {
     CourseEntity,
     Discount,
     WorkbookOpen,
-    Sertifikat,
     TakeEntity,
     TakenDiscount,
     TakenSertifikat,
@@ -34,6 +33,7 @@ export const connectDb: TypeOrmModuleOptions = {
     UsersEntity,
     VideoEntity,
     WorkbookEntity,
+    TakenWorkbook,
   ],
   autoLoadEntities: true,
   synchronize: true,

@@ -10,7 +10,7 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
-  Request,
+  Headers,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -20,16 +20,18 @@ import {
   ApiBody,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiHeader,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { googleCloud } from 'src/utils/google-cloud';
 
-@Controller('courses')
+@Controller('course')
 @ApiTags('Courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
@@ -39,7 +41,7 @@ export class CoursesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['title', 'description', 'price', 'sequency', 'file'],
+      required: ['title', 'description', 'price', 'sequence', 'file'],
       properties: {
         title: {
           type: 'string',
@@ -53,8 +55,7 @@ export class CoursesController {
           type: 'string',
           default: '120 000',
         },
-        sequency: {
-          type: 'number',
+        sequence: {
           default: 1,
         },
 
@@ -73,48 +74,95 @@ export class CoursesController {
   @UseInterceptors(FileInterceptor('file'))
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'Admin Token',
     required: true,
   })
   async create(
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: string = googleCloud(file);
-    if (img_link) {
-      return this.coursesService.create(createCourseDto, img_link);
-    }
+    await this.coursesService.create(createCourseDto, file as any);
   }
 
-  @Get('/list')
+  @Get('/all')
   @ApiOkResponse()
   @ApiNotFoundResponse()
-  findAll() {
-    return this.coursesService.findAll();
+  async findAll() {
+    return await this.coursesService.findAll();
   }
 
-  @Get('/course/:id')
+  @Get('one/:id')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'User Token',
+    required: false,
+  })
+  async findOne(@Param('id') id: string, @Headers() header: any) {
+    return await this.coursesService.findOne(id, header);
+  }
+
+  @Patch('/update/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        title: {
+          type: 'string',
+          default: 'Korees tili boshlang`ich kursi',
+        },
+        description: {
+          type: 'string',
+          default: 'Bu korees tilini o`rganishni boshlaganlar uchun',
+        },
+        price: {
+          type: 'string',
+          default: '120 000',
+        },
+        sequence: {
+          type: 'Sequence',
+          default: 1,
+        },
+        file: {
+          type: 'string' || undefined,
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'Attendance in Punch In' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBadRequestResponse()
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse()
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin Token',
     required: true,
   })
-  findOne(@Param('id') id: string, @Request() req: any) {
-    const { user_id } = req;
-    console.log(user_id);
-
-    return this.coursesService.findOne(id, user_id);
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateCourseDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    await this.coursesService.update(id, dto, file);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(id, updateCourseDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(id);
+  @Delete('/delete/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiHeader({
+    name: 'autharization',
+    description: 'Admin Token',
+    required: true,
+  })
+  @ApiNoContentResponse()
+  @ApiNotFoundResponse()
+  @ApiUnprocessableEntityResponse()
+  @ApiForbiddenResponse()
+  async remove(@Param('id') id: string) {
+    await this.coursesService.remove(id);
   }
 }

@@ -54,6 +54,11 @@ $ npm run test
 # e2e tests
 $ npm run test:e2e
 
+
+# compodoc
+$ npm run doc
+
+
 # test coverage
 $ npm run test:cov
 ```

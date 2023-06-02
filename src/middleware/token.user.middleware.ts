@@ -10,7 +10,7 @@ import jwt from 'src/utils/jwt';
 
 @Injectable()
 export class TokenUserMiddleWare implements NestMiddleware {
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _: Response, next: NextFunction) {
     const { headers }: any = req;
 
     if (!headers.autharization) {
@@ -21,9 +21,11 @@ export class TokenUserMiddleWare implements NestMiddleware {
     if (!idAndEmail || !idAndEmail?.id) {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
-    const user = await UsersEntity.findOneBy({
-      id: idAndEmail?.id,
-      email: idAndEmail?.email,
+    const user = await UsersEntity.findOne({
+      where: {
+        id: idAndEmail?.id,
+        email: idAndEmail?.email,
+      },
     });
 
     if (!user?.email) {

@@ -1,23 +1,24 @@
+import { HttpStatus } from '@nestjs/common';
 import { CourseEntity } from 'src/entities/course.entity';
 import { TakeEntity } from 'src/entities/take.entity';
 import { TopikEntity } from 'src/entities/topik.entity';
 import { UsersEntity } from 'src/entities/users.entity';
 
 export const takeUtils = async (courseID: string, userID: string) => {
-  const course: CourseEntity = await CourseEntity.findOne({
+  const course: CourseEntity | undefined = await CourseEntity.findOne({
     where: {
       id: courseID,
     },
   }).catch(() => undefined);
 
-  const user: UsersEntity = await UsersEntity.findOne({
+  const user: UsersEntity | undefined = await UsersEntity.findOne({
     where: {
       id: userID,
     },
   }).catch(() => undefined);
 
   if (!course) {
-    const topik: TopikEntity = await TopikEntity.findOne({
+    const topik: TopikEntity | undefined = await TopikEntity.findOne({
       where: {
         id: courseID,
       },
@@ -25,11 +26,11 @@ export const takeUtils = async (courseID: string, userID: string) => {
     if (!topik) {
       return {
         message: 'Bunday Course va Topik topilmadi',
-        status: 404,
+        status: HttpStatus.NOT_FOUND,
       };
     }
 
-    const take: TakeEntity = await TakeEntity.findOne({
+    const take: TakeEntity | undefined = await TakeEntity.findOne({
       relations: {
         user_id: true,
         topik_id: true,
@@ -43,18 +44,17 @@ export const takeUtils = async (courseID: string, userID: string) => {
     if (take) {
       return {
         message: 'Sotib olgan',
-        status: 200,
+        status: HttpStatus.OK,
         data: take,
-        course: 'topik',
       };
     } else {
       return {
         message: 'Sotib olmagan',
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
       };
     }
   } else {
-    const take: any = await TakeEntity.findOne({
+    const take: TakeEntity | undefined = await TakeEntity.findOne({
       relations: {
         user_id: true,
         course_id: true,
@@ -68,14 +68,13 @@ export const takeUtils = async (courseID: string, userID: string) => {
     if (take) {
       return {
         message: 'Sotib olgan',
-        status: 200,
+        status: HttpStatus.OK,
         data: take,
-        course: 'course',
       };
     } else {
       return {
         message: 'Sotib olmagan',
-        status: 400,
+        status: HttpStatus.BAD_REQUEST,
       };
     }
   }

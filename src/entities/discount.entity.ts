@@ -17,10 +17,10 @@ export class Discount extends BaseEntity {
   id: string;
 
   @Column({
-    type: 'text',
-    nullable: false,
+    type: 'int',
+    nullable: true,
   })
-  percentage: string;
+  percentage: number;
 
   @ManyToOne(() => CourseEntity, (course) => course.discount, {
     onDelete: 'CASCADE',
@@ -29,7 +29,7 @@ export class Discount extends BaseEntity {
   course_id: CourseEntity;
 
   @OneToMany(() => TakenDiscount, (taken) => taken.discount)
-  taken: TakenDiscount[];
+  take_user: TakenDiscount[];
 
   @OneToMany(() => TestsEntity, (test) => test.discount)
   test: TestsEntity[];

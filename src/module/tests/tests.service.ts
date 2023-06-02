@@ -1,55 +1,59 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTestDto } from './dto/create-test.dto';
 import { UpdateTestDto } from './dto/update-test.dto';
-import { Repository } from 'typeorm';
+import { Repository, Unique } from 'typeorm';
 import { TestsEntity } from 'src/entities/tests.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Discount } from 'src/entities/discount.entity';
 
 @Injectable()
 export class TestsService {
-  constructor(
-    @InjectRepository(TestsEntity)
-    private readonly test: Repository<TestsEntity>,
-  ) {}
+  constructor() {}
 
-  create(createTestDto: any): Promise<CreateTestDto> {
-    try {
-      const test = this.test.save(createTestDto);
+  async create(createTestDto: CreateTestDto) {
+    const findDiscount: any = await Discount.findOne({
+      where: { id: createTestDto.discount },
+      relations: {
+        test: true,
+      },
+    }).catch(() => []);
 
-      // if (this.test) {
-      //   throw new HttpException(
-      //     'this test has been added before',
-      //     HttpStatus.BAD_REQUEST,
-      //   );
-      // }
-      return test;
-    } catch (error) {
-      throw new HttpException('error in tests', HttpStatus.BAD_REQUEST);
+    if (!findDiscount) {
+      throw new HttpException('Discount not found', HttpStatus.NOT_FOUND);
+    }
+
+    const unique = findDiscount?.test?.find(
+      (e) => e.sequence == createTestDto.sequence,
+    );
+
+    if (unique) {
+      throw new HttpException('Returned sequence', HttpStatus.NOT_FOUND);
+    }
+
+    await TestsEntity.save(createTestDto);
+  }
+
+  async update(id: string, updateTestDto: UpdateTestDto) {
+    const findId = TestsEntity.findOne({
+      where: { id: id },
+    });
+
+    if (findId) {
+      await TestsEntity.update(id, updateTestDto);
+    } else {
+      throw new HttpException('Tests id not found', HttpStatus.NOT_FOUND);
     }
   }
 
-  findAdmin(user: any) {
-    return this.test.findOneBy({
-      discount: user,
+  async remove(id: string) {
+    const findId = TestsEntity.findOne({
+      where: { id: id },
     });
-  }
 
-  findUser(user: any) {
-    return this.test.findOneBy({
-      discount: user,
-    });
-  }
-
-  findOne(id: string) {
-    return this.test.findAndCountBy({ id });
-  }
-
-  update(id: string, updateTestDto: any) {
-    return this.test.update(id, updateTestDto);
-  }
-
-  remove(id: string) {
-    return this.test.delete(id);
+    if (findId) {
+      await TestsEntity.delete(id);
+    } else {
+      throw new HttpException('Tests id not found', HttpStatus.NOT_FOUND);
+    }
   }
 }

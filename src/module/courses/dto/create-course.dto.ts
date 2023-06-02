@@ -1,4 +1,6 @@
-import { IsString, Length, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsString, Length, IsNotEmpty, IsEnum } from 'class-validator';
+import { Sequence } from 'src/types';
 
 export class CreateCourseDto {
   @IsString()
@@ -14,7 +16,8 @@ export class CreateCourseDto {
   @IsNotEmpty()
   price: string;
 
-  @IsString()
+  @Type(() => Number)
+  @IsEnum(Sequence)
   @IsNotEmpty()
-  sequency: number;
+  sequence: Sequence;
 }

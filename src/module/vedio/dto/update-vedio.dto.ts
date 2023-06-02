@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 
 export class UpdateVedioDto {
   @IsString()
@@ -6,9 +6,9 @@ export class UpdateVedioDto {
   @IsOptional()
   title: string;
 
-  @IsNumber()
+  @IsString()
   @IsOptional()
-  sequence: number;
+  sequence: string;
 
   @IsString()
   @IsOptional()
@@ -21,4 +21,8 @@ export class UpdateVedioDto {
   @IsString()
   @IsOptional()
   course_id: string;
+
+  @IsString()
+  @IsOptional()
+  topik_id: string;
 }
