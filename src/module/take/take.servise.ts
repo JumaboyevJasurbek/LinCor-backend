@@ -7,6 +7,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { CourseEntity } from 'src/entities/course.entity';
 import { takeUtils } from 'src/utils/take.utils';
 import { TopikEntity } from 'src/entities/topik.entity';
+import { UpdateTakeDto } from './dto/update-take.dto';
 
 @Injectable()
 export class TakeServise {
@@ -20,7 +21,6 @@ export class TakeServise {
       createTakeDto.courseId,
       createTakeDto.userId,
     );
-
     if (alreadyBuy.status == 200) {
       return alreadyBuy;
     }
@@ -40,6 +40,8 @@ export class TakeServise {
       where: {
         id: createTakeDto.courseId,
       },
+    }).catch((e) => {
+      throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     });
 
     if (!findCourse) {
@@ -53,7 +55,7 @@ export class TakeServise {
           HttpStatus.NOT_FOUND,
         );
       });
-      if (findTopik) {
+      if (!findTopik) {
         return new HttpException(
           'Course or topic not found',
           HttpStatus.NOT_FOUND,
@@ -71,23 +73,75 @@ export class TakeServise {
         .catch((e) => {
           throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         });
+    } else {
+      await TakeEntity.createQueryBuilder()
+        .insert()
+        .into(TakeEntity)
+        .values({
+          user_id: findUser,
+          course_id: findCourse,
+        })
+        .execute()
+        .catch((e) => {
+          throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+        });
+    }
+  }
+
+  async findAll() {
+    const allTake = await TakeEntity.find({
+      relations: {
+        user_id: true,
+        course_id: true,
+        topik_id: true,
+      },
+    }).catch((e) => {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    });
+
+    return allTake;
+  }
+
+  async findOne(id: string) {
+    const findTake = await TakeEntity.findOne({
+      relations: {
+        user_id: true,
+        course_id: true,
+        topik_id: true,
+      },
+      where: {
+        id: id,
+      },
+    }).catch((e) => {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    });
+
+    if (!findTake) {
+      return new HttpException('Not found', HttpStatus.NOT_FOUND);
     }
 
-    const add = await TakeEntity.createQueryBuilder()
-      .insert()
-      .into(TakeEntity)
-      .values({
-        user_id: findUser,
-        course_id: findCourse,
+    return findTake;
+  }
+
+  async delete(id: string) {
+    const findtake = await TakeEntity.findOne({
+      where: {
+        id: id,
+      },
+    }).catch((e) => {
+      throw new HttpException('Bad Reqauast', HttpStatus.BAD_REQUEST);
+    });
+
+    if (!findtake) {
+      return new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    await TakeEntity.createQueryBuilder()
+      .update(TakeEntity)
+      .set({
+        active: false,
       })
-      .execute()
-      .catch((e) => {
-        throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-      });
+      .where({ id: findtake.id })
+      .execute();
   }
 }
-
-// {
-//   "userId": "3e39afc1-5fe6-488b-9d34-55c663510142",
-//   "courseId": "32e3e48f-7de8-439e-9820-fb10a895ec0f"
-// }

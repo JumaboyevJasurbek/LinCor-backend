@@ -66,7 +66,9 @@ export class AppModule implements NestModule {
         { path: '/tests/:id', method: RequestMethod.PATCH },
         { path: '/tests/:id', method: RequestMethod.DELETE },
         { path: '/vedio/all', method: RequestMethod.GET },
+        { path: '/take/:id', method: RequestMethod.GET },
         { path: '/vedio/create', method: RequestMethod.POST },
+        { path: '/take/all', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -95,6 +97,8 @@ export class AppModule implements NestModule {
         { path: '/user/update/password', method: RequestMethod.PUT },
         { path: '/user/update/image', method: RequestMethod.PUT },
         { path: '/user/:course', method: RequestMethod.GET },
+        { path: '/take/:id', method: RequestMethod.GET },
+        { path: '/take/all', method: RequestMethod.GET },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }
