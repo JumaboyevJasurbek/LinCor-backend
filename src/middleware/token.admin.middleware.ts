@@ -16,6 +16,7 @@ export class TokenAdminMiddleWare implements NestMiddleware {
       throw new HttpException('Bad Request in Token', HttpStatus.BAD_REQUEST);
     }
     const admin = jwt.verify(headers.autharization);
+    console.log(admin);
 
     if (!admin) {
       throw new HttpException('Invalid Token', HttpStatus.BAD_REQUEST);
