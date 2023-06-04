@@ -6,7 +6,6 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Patch,
   Post,
 } from '@nestjs/common';
 import {
@@ -20,14 +19,13 @@ import {
 } from '@nestjs/swagger';
 import { TakeServise } from './take.servise';
 import { CreateTakeDto } from './dto/create-take.dto';
-import { UpdateTakeDto } from './dto/update-take.dto';
 
 @ApiTags('Take')
 @Controller('take')
 export class TakeController {
   constructor(private readonly takeServise: TakeServise) {}
 
-  @Post('add')
+  @Post('create')
   @HttpCode(HttpStatus.CREATED)
   @ApiBody({
     schema: {
@@ -50,11 +48,11 @@ export class TakeController {
   @ApiNotFoundResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
-  create(@Body() createTakeDto: CreateTakeDto) {
-    return this.takeServise.create(createTakeDto);
+  async create(@Body() createTakeDto: CreateTakeDto) {
+    return await this.takeServise.create(createTakeDto);
   }
 
   @Get('all')
@@ -63,34 +61,21 @@ export class TakeController {
   @ApiOkResponse()
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
-  findAll() {
-    return this.takeServise.findAll();
-  }
-
-  @Get(':id')
-  @ApiBadRequestResponse()
-  @ApiNotFoundResponse()
-  @ApiOkResponse()
-  @ApiHeader({
-    name: 'autharization',
-    description: 'token',
-    required: true,
-  })
-  findOne(@Param('id') id: string) {
-    return this.takeServise.findOne(id);
+  async findAll() {
+    return await this.takeServise.findAll();
   }
 
   @Delete('delete/:id')
   @ApiHeader({
     name: 'autharization',
-    description: 'token',
+    description: 'admin token',
     required: true,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
-    return this.takeServise.delete(id);
+  async remove(@Param('id') id: string) {
+    return await this.takeServise.delete(id);
   }
 }

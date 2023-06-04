@@ -8,6 +8,7 @@ import { CourseEntity } from 'src/entities/course.entity';
 import { takeUtils } from 'src/utils/take.utils';
 import { TopikEntity } from 'src/entities/topik.entity';
 import { UpdateTakeDto } from './dto/update-take.dto';
+import { Discount } from 'src/entities/discount.entity';
 
 @Injectable()
 export class TakeServise {
@@ -89,6 +90,7 @@ export class TakeServise {
   }
 
   async findAll() {
+    let arr = [];
     const allTake = await TakeEntity.find({
       relations: {
         user_id: true,
@@ -96,31 +98,48 @@ export class TakeServise {
         topik_id: true,
       },
     }).catch((e) => {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     });
 
-    return allTake;
-  }
+    await Promise.all(
+      allTake.map(async (e: any) => {
+        if (e.course_id) {
+          const findDiscount = await Discount.findOne({
+            relations: {
+              take_user: {
+                user: true,
+              },
+            },
+            where: {
+              course_id: {
+                id: e.course_id.id,
+              },
+            },
+          });
 
-  async findOne(id: string) {
-    const findTake = await TakeEntity.findOne({
-      relations: {
-        user_id: true,
-        course_id: true,
-        topik_id: true,
-      },
-      where: {
-        id: id,
-      },
-    }).catch((e) => {
-      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
-    });
+          if (!findDiscount) {
+            arr.push(e);
+          } else {
+            await findDiscount.take_user.map(async (n: any) => {
+              if (n.user.id == e.user_id.id && n.win) {
+                e.discount = true;
+                e.percentage = findDiscount.percentage;
+                e.discountPrise =
+                  e.course_id.price -
+                  (e.course_id.price * findDiscount.percentage) / 100;
+                arr.push(e);
+              } else {
+                arr.push(e);
+              }
+            });
+          }
+        } else {
+          arr.push(e);
+        }
+      }),
+    );
 
-    if (!findTake) {
-      return new HttpException('Not found', HttpStatus.NOT_FOUND);
-    }
-
-    return findTake;
+    return arr;
   }
 
   async delete(id: string) {
@@ -137,10 +156,8 @@ export class TakeServise {
     }
 
     await TakeEntity.createQueryBuilder()
-      .update(TakeEntity)
-      .set({
-        active: false,
-      })
+      .delete()
+      .from(TakeEntity)
       .where({ id: findtake.id })
       .execute();
   }

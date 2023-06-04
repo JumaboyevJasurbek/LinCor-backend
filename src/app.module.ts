@@ -94,7 +94,6 @@ export class AppModule implements NestModule {
         { path: '/tests/:id', method: RequestMethod.PATCH },
         { path: '/tests/:id', method: RequestMethod.DELETE },
         { path: '/vedio/all', method: RequestMethod.GET },
-        { path: '/take/:id', method: RequestMethod.GET },
         { path: '/vedio/create', method: RequestMethod.POST },
         { path: '/take/all', method: RequestMethod.GET },
         { path: '/vedio/course/create', method: RequestMethod.POST },
@@ -121,6 +120,8 @@ export class AppModule implements NestModule {
         { path: '/user/statistika/users', method: RequestMethod.GET },
         { path: '/user/statistika/search/:search', method: RequestMethod.GET },
         { path: '/user/statistika/:id', method: RequestMethod.GET },
+        // { path: '/api/v2/discount', method: RequestMethod.POST },
+        { path: '/take/delete/:id', method: RequestMethod.DELETE },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
 
@@ -147,8 +148,6 @@ export class AppModule implements NestModule {
         { path: '/user/update/password', method: RequestMethod.PUT },
         { path: '/user/update/image', method: RequestMethod.PUT },
         { path: '/user/:course', method: RequestMethod.GET },
-        { path: '/take/:id', method: RequestMethod.GET },
-        { path: '/take/all', method: RequestMethod.GET },
         { path: '/user/email', method: RequestMethod.PUT },
         { path: '/user/email/:code', method: RequestMethod.PUT },
         { path: '/user/one', method: RequestMethod.GET },
@@ -158,9 +157,9 @@ export class AppModule implements NestModule {
         { path: '/vedio/:id', method: RequestMethod.GET },
         { path: '/vedio/one/:id', method: RequestMethod.GET },
         { path: '/tests/user', method: RequestMethod.GET },
-        { path: '/take/add', method: RequestMethod.POST },
         { path: '/course/list', method: RequestMethod.GET },
         { path: '/course/:id', method: RequestMethod.GET },
+        { path: '/api/v2/discount', method: RequestMethod.POST },
       )
       .forRoutes({ path: '/**', method: RequestMethod.ALL });
   }

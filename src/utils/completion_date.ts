@@ -38,3 +38,14 @@ export const completionDate = (startDate: Date, monthLimit: number): string => {
     .map((e: number) => (`${e}`.length === 1 ? `0${e}` : String(e)))
     .join(' ');
 };
+
+export const convertorDateToDay = (date: string): number => {
+  const dateArr = date.split(' ');
+  let sumDay = +dateArr[0];
+
+  for (let i = 1; i <= +dateArr[1]; i++) {
+    sumDay += month_return[i];
+  }
+  let day = sumDay + +dateArr[2] * 365;
+  return day;
+};
