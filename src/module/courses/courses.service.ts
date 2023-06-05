@@ -77,7 +77,7 @@ export class CoursesService {
 
   async findOne(id: string, header: any): Promise<CourseEntity> {
     const user_id: string | boolean = await tokenUtils(header);
-
+    
     const course: any = await CourseEntity.findOne({
       where: { id },
       relations: {
@@ -85,7 +85,7 @@ export class CoursesService {
           open_book: true,
         },
         sertifikat: true,
-        discount: true,
+        discount: true
       },
     }).catch(() => undefined);
     if (!course) {
@@ -98,31 +98,42 @@ export class CoursesService {
       const courseTaken = await takeUtils(id, user_id);
 
       if (courseTaken.message && courseTaken.status === 200) {
+        course.active = true;
         for (let i = 0; i < videos.length; i++) {
           if (videos[i].sequence > 2) {
             console.log(videos[i].sequence > 2);
 
             videos[i].link = '';
-            course.active = true;
           }
         }
+        delete course.discount
         return course;
       } else {
+        course.active = false;
         for (let i = 0; i < videos.length; i++) {
           if (videos[i].sequence > 2) {
             videos[i].link = '';
-            course.active = false;
           }
+        }
+        if (course.discount.length) {
+          const a = course.discount
+          delete course.discount
+          course.discunt = a[0]
+        } else {
+          course.discount = null
         }
         return course;
       }
     } else {
+      course.active = false;
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].sequence > 2) {
           videos[i].link = '';
-          course.active = false;
         }
       }
+      const a = course.discount
+      delete course.discount
+      course.discunt = a[0]
       return course;
     }
   }
