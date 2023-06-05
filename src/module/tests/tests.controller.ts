@@ -18,9 +18,7 @@ import {
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiParam,
   ApiTags,
-  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 @Controller('tests')
