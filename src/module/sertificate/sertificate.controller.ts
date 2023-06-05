@@ -1,18 +1,23 @@
 import { Controller, Get, Param, ParseUUIDPipe, Req, Res } from '@nestjs/common';
 import { SertificateService } from './sertificate.service';
 import { Request, Response } from 'express';
-import { ApiHeader, ApiHeaders, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiHeaders, ApiParam, ApiTags } from '@nestjs/swagger';
 import { UUID } from 'crypto';
 
+@ApiTags('Certificate')
 @Controller('sertificate')
-@ApiTags('sdfghj')
 export class SertificateController {
   constructor(private readonly sertificateService: SertificateService) { }
 
   @ApiHeader({
     name: 'autharization',
     description: 'User token',
-    required: false,
+    required: true,
+  })
+  @ApiParam({
+    name: "course",
+    description: "course id",
+    required: true
   })
   @Get('/get/:course')
   async get(

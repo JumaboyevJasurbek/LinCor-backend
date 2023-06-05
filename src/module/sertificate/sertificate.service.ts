@@ -318,9 +318,9 @@ export class SertificateService {
             }
         })
 
-        // if (!getTake) {
-        //     throw new HttpException("You haven't bought this course", HttpStatus.BAD_REQUEST)
-        // }
+        if (!getTake) {
+            throw new HttpException("You haven't bought this course", HttpStatus.BAD_REQUEST)
+        }
 
         const getSertificate: TakenSertifikat = await TakenSertifikat.findOneBy({
             user_id: {
@@ -335,13 +335,13 @@ export class SertificateService {
             throw new HttpException('You can download certificate only once', HttpStatus.FORBIDDEN)
         }
 
-        // const newTakenSert: unknown = await TakenSertifikat.createQueryBuilder()
-        //     .insert()
-        //     .into(TakenSertifikat)
-        //     .values({ user_id: userId as any, course: courseId as any })
-        //     .execute()
+        const newTakenSert: unknown = await TakenSertifikat.createQueryBuilder()
+            .insert()
+            .into(TakenSertifikat)
+            .values({ user_id: userId as any, course: courseId as any })
+            .execute()
 
-        const stream = res.set({
+        const stream: Response = res.set({
             "Content-Type": "application/pdf",
             "Content-Disposition": "attachment;filename=sertificate.pdf",
         })
