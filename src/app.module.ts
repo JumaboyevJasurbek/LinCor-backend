@@ -15,6 +15,7 @@ import { VedioModule } from './module/vedio/vedio.module';
 import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
+import { SertificateModule } from './module/sertificate/sertificate.module';
 import { DiscountModule } from './module/discount/discount.module';
 import { UsersDiscountModule } from './module/users_discount/users_discount.module';
 import { TakeModule } from './module/take/take.module';
@@ -41,6 +42,7 @@ dotenv.config();
     VedioModule,
     CoursesModule,
     TestsModule,
+    SertificateModule,
     OpenWorkbookModule,
     TakeModule,
     DiscountModule,
@@ -146,6 +148,7 @@ export class AppModule implements NestModule {
         { path: '/user/email/:code', method: RequestMethod.PUT },
         { path: '/user/one', method: RequestMethod.GET },
         { path: '/user/email/:id', method: RequestMethod.PUT },
+        { path: '/sertificate/get/:course', method: RequestMethod.GET },
         { path: '/open_workbook/:id', method: RequestMethod.GET },
         { path: '/user/profile', method: RequestMethod.GET },
         { path: '/vedio/:id', method: RequestMethod.GET },
