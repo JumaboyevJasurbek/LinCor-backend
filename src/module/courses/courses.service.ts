@@ -25,7 +25,17 @@ export class CoursesService {
     const img_link: string = googleCloud(file);
     const typeOfFile = extname(file.originalname);
 
+<<<<<<< HEAD
     if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
+=======
+    if (
+      typeOfFile != '.png' &&
+      typeOfFile != '.svg' &&
+      typeOfFile != '.jpeg' &&
+      typeOfFile != '.avif' &&
+      typeOfFile != '.jpg'
+    ) {
+>>>>>>> c92c394fe4cdca8029146b98e1ddf33ec614d4e3
       throw new HttpException(
         'The type of file is incorrect',
         HttpStatus.BAD_REQUEST,
@@ -71,7 +81,7 @@ export class CoursesService {
 
   async findOne(id: string, header: any): Promise<CourseEntity> {
     const user_id: string | boolean = await tokenUtils(header);
-
+    
     const course: any = await CourseEntity.findOne({
       where: { id },
       relations: {
@@ -79,7 +89,7 @@ export class CoursesService {
           open_book: true,
         },
         sertifikat: true,
-        discount: true,
+        discount: true
       },
     }).catch(() => undefined);
     if (!course) {
@@ -92,31 +102,42 @@ export class CoursesService {
       const courseTaken = await takeUtils(id, user_id);
 
       if (courseTaken.message && courseTaken.status === 200) {
+        course.active = true;
         for (let i = 0; i < videos.length; i++) {
           if (videos[i].sequence > 2) {
             console.log(videos[i].sequence > 2);
 
             videos[i].link = '';
-            course.active = true;
           }
         }
+        delete course.discount
         return course;
       } else {
+        course.active = false;
         for (let i = 0; i < videos.length; i++) {
           if (videos[i].sequence > 2) {
             videos[i].link = '';
-            course.active = false;
           }
+        }
+        if (course.discount.length) {
+          const a = course.discount
+          delete course.discount
+          course.discunt = a[0]
+        } else {
+          course.discount = null
         }
         return course;
       }
     } else {
+      course.active = false;
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].sequence > 2) {
           videos[i].link = '';
-          course.active = false;
         }
       }
+      const a = course.discount
+      delete course.discount
+      course.discunt = a[0]
       return course;
     }
   }
@@ -127,6 +148,7 @@ export class CoursesService {
     file: Express.Multer.File,
   ): Promise<void> {
     const course = await this.oneFoundCourse(id);
+<<<<<<< HEAD
     const typeOfFile = extname(file.originalname);
 
     if (
@@ -147,12 +169,33 @@ export class CoursesService {
         HttpStatus.CONFLICT,
       );
     }
+=======
+
+>>>>>>> c92c394fe4cdca8029146b98e1ddf33ec614d4e3
     let img_link: any = false;
-
     if (file) {
+      const typeOfFile = extname(file.originalname);
+      if (
+        typeOfFile != '.png' &&
+        typeOfFile != '.svg' &&
+        typeOfFile != '.jpg' &&
+        typeOfFile != '.jpeg' &&
+        typeOfFile != '.avif'
+      ) {
+        throw new HttpException(
+          'The type of file is incorrect',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       img_link = googleCloud(file);
-    }
 
+      if (course.sequence !== Number(dto.sequence)) {
+        throw new HttpException(
+          'You cannot change this course sequence',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
     await CourseEntity.createQueryBuilder()
       .update(CourseEntity)
       .set({
