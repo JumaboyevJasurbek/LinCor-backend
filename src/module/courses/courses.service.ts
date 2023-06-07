@@ -25,9 +25,7 @@ export class CoursesService {
     const img_link: string = googleCloud(file);
     const typeOfFile = extname(file.originalname);
 
-<<<<<<< HEAD
     if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
-=======
     if (
       typeOfFile != '.png' &&
       typeOfFile != '.svg' &&
@@ -35,7 +33,6 @@ export class CoursesService {
       typeOfFile != '.avif' &&
       typeOfFile != '.jpg'
     ) {
->>>>>>> c92c394fe4cdca8029146b98e1ddf33ec614d4e3
       throw new HttpException(
         'The type of file is incorrect',
         HttpStatus.BAD_REQUEST,
