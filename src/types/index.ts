@@ -44,15 +44,12 @@ export enum Auth_socials {
   NODEMAILER = 'node_mailer',
 }
 
-<<<<<<< HEAD
 export interface Tests {
   id: string;
   sequence: number;
   selectedAnswer: Answer;
 }
-=======
 export interface ISertificate {
-  fullname: string,
-  description: string
+  fullname: string;
+  description: string;
 }
->>>>>>> c92c394fe4cdca8029146b98e1ddf33ec614d4e3

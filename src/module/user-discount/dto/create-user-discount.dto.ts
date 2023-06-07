@@ -35,37 +35,31 @@ export class CreateUserDiscountDto {
         sequence: 4,
         selectedAnswer: 'a',
       },
-      ,
       {
         id: 'uuid',
         sequence: 5,
         selectedAnswer: 'b',
       },
-      ,
       {
         id: 'uuid',
         sequence: 6,
         selectedAnswer: 'c',
       },
-      ,
       {
         id: 'uuid',
         sequence: 7,
         selectedAnswer: 'a',
       },
-      ,
       {
         id: 'uuid',
         sequence: 8,
         selectedAnswer: 'b',
       },
-      ,
       {
         id: 'uuid',
         sequence: 9,
         selectedAnswer: 'c',
       },
-      ,
       {
         id: 'uuid',
         sequence: 10,

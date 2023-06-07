@@ -26,8 +26,8 @@ import {
 } from '@nestjs/swagger';
 import { CreateOpenWorkbookDto } from './dto/create.open_workbook.dto';
 import { OpenWorkbookService } from './open_workbook.service';
-import { googleCloud } from 'src/utils/google-cloud';
 import { PatchOpenWorkbookDto } from './dto/patch.open_workbook.dto';
+import { Response } from 'express';
 
 @Controller('open_workbook')
 @ApiTags('OpenWorkBook')
@@ -44,7 +44,7 @@ export class OpenWorkbookController {
     required: false,
   })
   async getOpenWorkbook(@Res() res: Response, @Param('id') id: string) {
-    return this.openWorkbookService.getOpenWorkbook(res, id);
+    return await this.openWorkbookService.getOpenWorkbook(res, id);
   }
 
   @Post('/create')
@@ -75,14 +75,11 @@ export class OpenWorkbookController {
   })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  createOpenWorkbook(
+  async createOpenWorkbook(
     @Body() body: CreateOpenWorkbookDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const pdf: string = googleCloud(file);
-    if (pdf) {
-      return this.openWorkbookService.newOpenWorkbook(body, pdf);
-    }
+    await this.openWorkbookService.newOpenWorkbook(body, file);
   }
 
   @Patch('/update/:id')
@@ -117,21 +114,13 @@ export class OpenWorkbookController {
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (file) {
-      const pdf: string = googleCloud(file);
-      return this.openWorkbookService.updateOpenWorkbook(
-        vidio_id.trim(),
-        id.trim(),
-        pdf,
-      );
-    } else {
-      return this.openWorkbookService.updateOpenWorkbook(
-        vidio_id.trim(),
-        id.trim(),
-        false,
-      );
-    }
+    await this.openWorkbookService.updateOpenWorkbook(
+      vidio_id.trim(),
+      id.trim(),
+      file ? file : false,
+    );
   }
+
   @Delete('/delete/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNotFoundResponse()
@@ -142,6 +131,6 @@ export class OpenWorkbookController {
     required: true,
   })
   async deleteOpenWorkbook(@Param('id') id: string) {
-    return this.openWorkbookService.deleteOpenWorkbook(id.trim());
+    await this.openWorkbookService.deleteOpenWorkbook(id.trim());
   }
 }

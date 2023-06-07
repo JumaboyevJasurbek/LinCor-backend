@@ -25,7 +25,7 @@ export class DiscountController {
     required: true,
   })
   async create(@Body() createDiscountDto: CreateDiscountDto) {
-    return await this.discountService.create(createDiscountDto);
+    await this.discountService.create(createDiscountDto);
   }
 
   // ? FIND ALL
@@ -35,8 +35,8 @@ export class DiscountController {
     description: 'Admin token',
     required: true,
   })
-  findAll() {
-    return this.discountService.findAll();
+  async findAll() {
+    return await this.discountService.findAll();
   }
 
   // ? UPDATE
@@ -46,11 +46,11 @@ export class DiscountController {
     description: 'Admin token',
     required: true,
   })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateDiscountDto: UpdateDiscountDto,
   ) {
-    return this.discountService.update(id, updateDiscountDto);
+    await this.discountService.update(id, updateDiscountDto);
   }
 
   // ? DELETE
@@ -60,7 +60,7 @@ export class DiscountController {
     description: 'Admin token',
     required: true,
   })
-  remove(@Param('id') id: string) {
-    return this.discountService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.discountService.remove(id);
   }
 }

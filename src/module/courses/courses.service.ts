@@ -25,7 +25,6 @@ export class CoursesService {
     const img_link: string = googleCloud(file);
     const typeOfFile = extname(file.originalname);
 
-    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
     if (
       typeOfFile != '.png' &&
       typeOfFile != '.svg' &&
@@ -78,7 +77,7 @@ export class CoursesService {
 
   async findOne(id: string, header: any): Promise<CourseEntity> {
     const user_id: string | boolean = await tokenUtils(header);
-    
+
     const course: any = await CourseEntity.findOne({
       where: { id },
       relations: {
@@ -86,7 +85,7 @@ export class CoursesService {
           open_book: true,
         },
         sertifikat: true,
-        discount: true
+        discount: true,
       },
     }).catch(() => undefined);
     if (!course) {
@@ -107,7 +106,7 @@ export class CoursesService {
             videos[i].link = '';
           }
         }
-        delete course.discount
+        delete course.discount;
         return course;
       } else {
         course.active = false;
@@ -117,11 +116,11 @@ export class CoursesService {
           }
         }
         if (course.discount.length) {
-          const a = course.discount
-          delete course.discount
-          course.discunt = a[0]
+          const a = course.discount;
+          delete course.discount;
+          course.discunt = a[0];
         } else {
-          course.discount = null
+          course.discount = null;
         }
         return course;
       }
@@ -132,9 +131,9 @@ export class CoursesService {
           videos[i].link = '';
         }
       }
-      const a = course.discount
-      delete course.discount
-      course.discunt = a[0]
+      const a = course.discount;
+      delete course.discount;
+      course.discunt = a[0];
       return course;
     }
   }
@@ -145,30 +144,7 @@ export class CoursesService {
     file: Express.Multer.File,
   ): Promise<void> {
     const course = await this.oneFoundCourse(id);
-<<<<<<< HEAD
-    const typeOfFile = extname(file.originalname);
 
-    if (
-      typeOfFile != '.png' &&
-      typeOfFile != '.svg' &&
-      typeOfFile != '.jpg' &&
-      typeOfFile != 'avif'
-    ) {
-      throw new HttpException(
-        'The type of file is incorrect',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (course.sequence !== Number(dto.sequence)) {
-      throw new HttpException(
-        'You cannot change this course sequence',
-        HttpStatus.CONFLICT,
-      );
-    }
-=======
-
->>>>>>> c92c394fe4cdca8029146b98e1ddf33ec614d4e3
     let img_link: any = false;
     if (file) {
       const typeOfFile = extname(file.originalname);

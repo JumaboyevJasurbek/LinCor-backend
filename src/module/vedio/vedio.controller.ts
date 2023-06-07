@@ -14,7 +14,6 @@ import {
   Delete,
   UploadedFile,
   Request,
-  HttpException,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,

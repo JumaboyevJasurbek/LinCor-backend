@@ -1,7 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTakeDto } from './dto/create-take.dto';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { TakeEntity } from 'src/entities/take.entity';
 import { UsersEntity } from 'src/entities/users.entity';
 import { CourseEntity } from 'src/entities/course.entity';
@@ -10,11 +8,6 @@ import { TopikEntity } from 'src/entities/topik.entity';
 
 @Injectable()
 export class TakeServise {
-  constructor(
-    @InjectRepository(TakeEntity)
-    private readonly take: Repository<TakeEntity>,
-  ) {}
-
   async create(createTakeDto: CreateTakeDto) {
     const alreadyBuy = await takeUtils(
       createTakeDto.courseId,
@@ -28,7 +21,7 @@ export class TakeServise {
       where: {
         id: createTakeDto.userId,
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
     });
 
@@ -47,7 +40,7 @@ export class TakeServise {
         where: {
           id: createTakeDto.courseId,
         },
-      }).catch((e) => {
+      }).catch(() => {
         throw new HttpException(
           'Course or topic not found',
           HttpStatus.NOT_FOUND,
@@ -68,12 +61,12 @@ export class TakeServise {
           topik_id: findTopik,
         })
         .execute()
-        .catch((e) => {
+        .catch(() => {
           throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         });
     }
 
-    const add = await TakeEntity.createQueryBuilder()
+    await TakeEntity.createQueryBuilder()
       .insert()
       .into(TakeEntity)
       .values({
@@ -81,7 +74,7 @@ export class TakeServise {
         course_id: findCourse,
       })
       .execute()
-      .catch((e) => {
+      .catch(() => {
         throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
       });
   }

@@ -1,12 +1,6 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateCourseDto } from './create-course.dto';
-import {
-  IsString,
-  Length,
-  IsOptional,
-  IsEnum,
-  IsNumber,
-} from 'class-validator';
+import { IsString, Length, IsOptional, IsNumber } from 'class-validator';
 import { Sequence } from 'src/types';
 import { Type } from 'class-transformer';
 

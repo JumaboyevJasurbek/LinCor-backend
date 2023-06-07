@@ -1,8 +1,6 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateDiscountDto } from './create-discount.dto';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
-import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import { EntityListenerMetadataArgs } from 'typeorm/metadata-args/EntityListenerMetadataArgs';
 
 export class UpdateDiscountDto extends PartialType(CreateDiscountDto) {
   @IsNumber()
