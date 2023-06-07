@@ -33,7 +33,7 @@ export class TakeServise {
       where: {
         id: createTakeDto.courseId,
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('Bad request', HttpStatus.BAD_REQUEST);
     });
 
@@ -75,21 +75,21 @@ export class TakeServise {
           course_id: findCourse,
         })
         .execute()
-        .catch((e) => {
+        .catch(() => {
           throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
         });
     }
   }
 
   async findAll() {
-    let arr = [];
+    const arr = [];
     const allTake = await TakeEntity.find({
       relations: {
         user_id: true,
         course_id: true,
         topik_id: true,
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     });
 
@@ -139,7 +139,7 @@ export class TakeServise {
       where: {
         id: id,
       },
-    }).catch((e) => {
+    }).catch(() => {
       throw new HttpException('Bad Reqauast', HttpStatus.BAD_REQUEST);
     });
 

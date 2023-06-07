@@ -54,6 +54,6 @@ export class TakeController {
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id') id: string) {
-    return await this.takeServise.delete(id);
+    await this.takeServise.delete(id);
   }
 }
