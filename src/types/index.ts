@@ -43,3 +43,9 @@ export enum Auth_socials {
   GITHUB = 'github',
   NODEMAILER = 'node_mailer',
 }
+
+export interface Tests {
+  id: string;
+  sequence: number;
+  selectedAnswer: Answer;
+}

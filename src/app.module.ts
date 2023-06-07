@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import {
   MiddlewareConsumer,
   Module,
@@ -16,11 +17,10 @@ import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
 import { DiscountModule } from './module/discount/discount.module';
-import { UsersDiscountModule } from './module/users_discount/users_discount.module';
 import { TakeModule } from './module/take/take.module';
 import { JwtModule } from '@nestjs/jwt';
 import { OpenWorkbookModule } from './module/open_workbook/open_workbook.module';
-import * as dotenv from 'dotenv';
+import { UserDiscountModule } from './module/user-discount/user-discount.module';
 dotenv.config();
 
 @Module({
@@ -44,7 +44,7 @@ dotenv.config();
     OpenWorkbookModule,
     TakeModule,
     DiscountModule,
-    UsersDiscountModule,
+    UserDiscountModule,
   ],
 })
 export class AppModule implements NestModule {

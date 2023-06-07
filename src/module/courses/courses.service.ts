@@ -19,14 +19,17 @@ export class CoursesService {
     }
 
     return course;
-  } 
+  }
 
   async create(dto: CreateCourseDto, file: Express.Multer.File): Promise<void> {
     const img_link: string = googleCloud(file);
-    const typeOfFile = extname(file.originalname) 
+    const typeOfFile = extname(file.originalname);
 
     if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
-      throw new HttpException('The type of file is incorrect', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        'The type of file is incorrect',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const courses = await CourseEntity.find();
@@ -118,12 +121,24 @@ export class CoursesService {
     }
   }
 
-  async update(id: string, dto: UpdateCourseDto, file: Express.Multer.File): Promise<void> {
+  async update(
+    id: string,
+    dto: UpdateCourseDto,
+    file: Express.Multer.File,
+  ): Promise<void> {
     const course = await this.oneFoundCourse(id);
-    const typeOfFile = extname(file.originalname) 
+    const typeOfFile = extname(file.originalname);
 
-    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg' && typeOfFile != 'avif') {
-      throw new HttpException('The type of file is incorrect', HttpStatus.BAD_REQUEST)
+    if (
+      typeOfFile != '.png' &&
+      typeOfFile != '.svg' &&
+      typeOfFile != '.jpg' &&
+      typeOfFile != 'avif'
+    ) {
+      throw new HttpException(
+        'The type of file is incorrect',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     if (course.sequence !== Number(dto.sequence)) {
