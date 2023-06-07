@@ -3,6 +3,11 @@ chegirma () {
         where: {
             course_id: course.id,
         }
+        relations: {
+            taken: {
+                user: true
+            }
+        }
     })
 
     if(discont) {
@@ -12,7 +17,7 @@ chegirma () {
             chegirma: false
         }
     } else {
-        chegirma: false
+        chegirma: null
     }
 }
 

@@ -25,7 +25,13 @@ export class CoursesService {
     const img_link: string = googleCloud(file);
     const typeOfFile = extname(file.originalname);
 
-    if (typeOfFile != '.png' && typeOfFile != '.svg' && typeOfFile != '.jpg') {
+    if (
+      typeOfFile != '.png' &&
+      typeOfFile != '.svg' &&
+      typeOfFile != '.jpeg' &&
+      typeOfFile != '.avif' &&
+      typeOfFile != '.jpg'
+    ) {
       throw new HttpException(
         'The type of file is incorrect',
         HttpStatus.BAD_REQUEST,
@@ -92,31 +98,42 @@ export class CoursesService {
       const courseTaken = await takeUtils(id, user_id);
 
       if (courseTaken.message && courseTaken.status === 200) {
+        course.active = true;
         for (let i = 0; i < videos.length; i++) {
           if (videos[i].sequence > 2) {
             console.log(videos[i].sequence > 2);
 
             videos[i].link = '';
-            course.active = true;
           }
         }
+        delete course.discount;
         return course;
       } else {
+        course.active = false;
         for (let i = 0; i < videos.length; i++) {
           if (videos[i].sequence > 2) {
             videos[i].link = '';
-            course.active = false;
           }
+        }
+        if (course.discount.length) {
+          const a = course.discount;
+          delete course.discount;
+          course.discunt = a[0];
+        } else {
+          course.discount = null;
         }
         return course;
       }
     } else {
+      course.active = false;
       for (let i = 0; i < videos.length; i++) {
         if (videos[i].sequence > 2) {
           videos[i].link = '';
-          course.active = false;
         }
       }
+      const a = course.discount;
+      delete course.discount;
+      course.discunt = a[0];
       return course;
     }
   }
@@ -127,32 +144,31 @@ export class CoursesService {
     file: Express.Multer.File,
   ): Promise<void> {
     const course = await this.oneFoundCourse(id);
-    const typeOfFile = extname(file.originalname);
 
-    if (
-      typeOfFile != '.png' &&
-      typeOfFile != '.svg' &&
-      typeOfFile != '.jpg' &&
-      typeOfFile != 'avif'
-    ) {
-      throw new HttpException(
-        'The type of file is incorrect',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    if (course.sequence !== Number(dto.sequence)) {
-      throw new HttpException(
-        'You cannot change this course sequence',
-        HttpStatus.CONFLICT,
-      );
-    }
     let img_link: any = false;
-
     if (file) {
+      const typeOfFile = extname(file.originalname);
+      if (
+        typeOfFile != '.png' &&
+        typeOfFile != '.svg' &&
+        typeOfFile != '.jpg' &&
+        typeOfFile != '.jpeg' &&
+        typeOfFile != '.avif'
+      ) {
+        throw new HttpException(
+          'The type of file is incorrect',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       img_link = googleCloud(file);
-    }
 
+      if (course.sequence !== Number(dto.sequence)) {
+        throw new HttpException(
+          'You cannot change this course sequence',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
     await CourseEntity.createQueryBuilder()
       .update(CourseEntity)
       .set({

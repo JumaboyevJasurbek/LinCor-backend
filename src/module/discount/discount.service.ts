@@ -5,8 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Discount } from 'src/entities/discount.entity';
 import { Repository } from 'typeorm';
 import { CourseEntity } from 'src/entities/course.entity';
-import { TakenDiscount } from 'src/entities/taken_discount';
-// import { CourseEntity } from 'src/entities/course.entity';
 
 @Injectable()
 export class DiscountService {
@@ -40,17 +38,6 @@ export class DiscountService {
       delete discount[i].take_user;
     }
     return discount;
-  }
-
-  async findOne(id: string) {
-    const discount = await Discount.find({
-      relations: { course_id: true, take_user: true, test: true },
-      where: { id },
-    });
-
-    return {
-      discount,
-    };
   }
 
   async update(id: string, updateDiscountDto: UpdateDiscountDto) {

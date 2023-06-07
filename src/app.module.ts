@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv';
 import {
   MiddlewareConsumer,
   Module,
@@ -15,12 +16,12 @@ import { VedioModule } from './module/vedio/vedio.module';
 import { CoursesModule } from './module/courses/courses.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { TestsModule } from './module/tests/tests.module';
+import { SertificateModule } from './module/sertificate/sertificate.module';
 import { DiscountModule } from './module/discount/discount.module';
-import { UsersDiscountModule } from './module/users_discount/users_discount.module';
 import { TakeModule } from './module/take/take.module';
 import { JwtModule } from '@nestjs/jwt';
 import { OpenWorkbookModule } from './module/open_workbook/open_workbook.module';
-import * as dotenv from 'dotenv';
+import { UserDiscountModule } from './module/user-discount/user-discount.module';
 dotenv.config();
 
 @Module({
@@ -41,10 +42,11 @@ dotenv.config();
     VedioModule,
     CoursesModule,
     TestsModule,
+    SertificateModule,
     OpenWorkbookModule,
     TakeModule,
     DiscountModule,
-    UsersDiscountModule,
+    UserDiscountModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -152,6 +154,7 @@ export class AppModule implements NestModule {
         { path: '/user/email/:code', method: RequestMethod.PUT },
         { path: '/user/one', method: RequestMethod.GET },
         { path: '/user/email/:id', method: RequestMethod.PUT },
+        { path: '/sertificate/get/:course', method: RequestMethod.GET },
         { path: '/open_workbook/:id', method: RequestMethod.GET },
         { path: '/user/profile', method: RequestMethod.GET },
         { path: '/vedio/:id', method: RequestMethod.GET },

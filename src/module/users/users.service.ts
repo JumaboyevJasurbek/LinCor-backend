@@ -10,7 +10,7 @@ import { UsersEntity } from 'src/entities/users.entity';
 import { RedisService } from '@liaoliaots/nestjs-redis';
 import { UpdateResult } from 'typeorm';
 import { LoginDto } from './dto/login';
-import { Auth_socials } from 'src/types';
+import { Auth_socials, UserArea } from 'src/types';
 import { FirebaseRegistrDto } from './dto/firebase.registr';
 import { FirebaseLoginDto } from './dto/firebase.login';
 import { AdminLoginDto } from './dto/admin.login';
@@ -392,18 +392,27 @@ export class UsersService {
       where: { id },
     });
 
+    let area: any = false;
+    if (UserArea[body.area]) {
+      area = body.area;
+    } else if (body.area !== '') {
+      throw new HttpException(
+        'Area must be one of the 12 regions of Uzbekistan',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     if (body?.phone) {
       const phone = Number(body?.phone.split(' ').join(''));
       if (!phone || String(phone).length > 9) {
         throw new HttpException('Phone Wrong format', HttpStatus.BAD_REQUEST);
       }
-
       await UsersEntity.createQueryBuilder()
         .update()
         .set({
           username: body.first_name || findUser.username,
           surname: body.last_name || findUser.surname,
-          area: body.area || findUser.area,
+          area: area || findUser.area,
           phone: phone,
         })
         .where({ id })
@@ -414,7 +423,7 @@ export class UsersService {
         .set({
           username: body.first_name || findUser.username,
           surname: body.last_name || findUser.surname,
-          area: body.area || findUser.area,
+          area: area || findUser.area,
           phone: findUser.phone,
         })
         .where({ id })
@@ -591,7 +600,9 @@ export class UsersService {
 
   async allSearch(search: string) {
     const allUsers = await UsersEntity.find();
-    const findSearch = allUsers.filter((e) => e.email.includes(search));
+    const findSearch = allUsers.filter((e) =>
+      e.email.toLocaleLowerCase().includes(search.toLocaleLowerCase()),
+    );
     return findSearch;
   }
 
