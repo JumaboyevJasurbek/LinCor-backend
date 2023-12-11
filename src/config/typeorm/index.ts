@@ -1,5 +1,5 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CourseEntity } from 'src/entities/course.entity';
 import { Discount } from 'src/entities/discount.entity';
 import { WorkbookOpen } from 'src/entities/open_book';

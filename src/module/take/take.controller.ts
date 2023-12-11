@@ -1,30 +1,59 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiBody } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiHeader,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { TakeServise } from './take.servise';
 import { CreateTakeDto } from './dto/create-take.dto';
 
+@ApiTags('Take')
 @Controller('take')
 export class TakeController {
   constructor(private readonly takeServise: TakeServise) {}
 
-  @Post('add')
+  @Post('create')
+  @ApiBadRequestResponse()
+  @ApiCreatedResponse()
+  @ApiNotFoundResponse()
   @HttpCode(HttpStatus.CREATED)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        userId: {
-          type: 'string',
-          default: 'asvfewgv32r3ave4gvwegewrgvrw',
-        },
-        courseId: {
-          type: 'string',
-          default: 'asvfewgv32r34gvwegewrgvrw',
-        },
-      },
-    },
+  async create(@Body() createTakeDto: CreateTakeDto) {
+    await this.takeServise.create(createTakeDto);
+  }
+
+  @Get('all')
+  @ApiBadRequestResponse()
+  @ApiNotFoundResponse()
+  @ApiOkResponse()
+  @ApiHeader({
+    name: 'autharization',
+    description: 'admin token',
+    required: true,
   })
-  create(@Body() createTakeDto: CreateTakeDto) {
-    return this.takeServise.create(createTakeDto);
+  async findAll() {
+    return await this.takeServise.findAll();
+  }
+
+  @Delete('delete/:id')
+  @ApiHeader({
+    name: 'autharization',
+    description: 'admin token',
+    required: true,
+  })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string) {
+    await this.takeServise.delete(id);
   }
 }

@@ -10,7 +10,7 @@ import {
 import { DiscountService } from './discount.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { ApiBody, ApiHeader, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiTags } from '@nestjs/swagger';
 
 @Controller('discount')
 @ApiTags('Discount')
@@ -21,87 +21,46 @@ export class DiscountController {
   @Post()
   @ApiHeader({
     name: 'autharization',
-    description: 'admin token',
+    description: 'Admin token',
     required: true,
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        percentage: {
-          type: 'number',
-          default: 20,
-        },
-        course_id: {
-          type: 'string',
-          default: '3b90396f-1761-472c-836f-f3a1d6095494',
-        },
-      },
-    },
-  })
   async create(@Body() createDiscountDto: CreateDiscountDto) {
-    return await this.discountService.create(createDiscountDto);
+    await this.discountService.create(createDiscountDto);
   }
 
   // ? FIND ALL
   @Get()
   @ApiHeader({
     name: 'autharization',
-    description: 'admin token',
+    description: 'Admin token',
     required: true,
   })
-  findAll() {
-    return this.discountService.findAll();
-  }
-
-  // ? FIND ONE
-  @Get()
-  @ApiHeader({
-    name: 'autharization',
-    description: 'admin token',
-    required: true,
-  })
-  findOne(@Param('id') id: string) {
-    return this.discountService.findOne(id);
+  async findAll() {
+    return await this.discountService.findAll();
   }
 
   // ? UPDATE
   @Patch(':id')
   @ApiHeader({
     name: 'autharization',
-    description: 'admin token',
+    description: 'Admin token',
     required: true,
   })
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        percentage: {
-          type: 'number',
-          default: 20,
-        },
-        course_id: {
-          type: 'string',
-          default: '3b90396f-1761-472c-836f-f3a1d6095494',
-        },
-      },
-    },
-  })
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateDiscountDto: UpdateDiscountDto,
   ) {
-    return this.discountService.update(id, updateDiscountDto);
+    await this.discountService.update(id, updateDiscountDto);
   }
 
   // ? DELETE
   @Delete(':id')
   @ApiHeader({
     name: 'autharization',
-    description: 'admin token',
+    description: 'Admin token',
     required: true,
   })
-  remove(@Param('id') id: string) {
-    return this.discountService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.discountService.remove(id);
   }
 }

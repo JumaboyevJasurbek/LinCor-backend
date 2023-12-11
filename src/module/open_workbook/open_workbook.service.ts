@@ -4,12 +4,14 @@ import { CreateOpenWorkbookDto } from './dto/create.open_workbook.dto';
 import { VideoEntity } from 'src/entities/video.entity';
 import { WorkbookOpen } from 'src/entities/open_book';
 import { extname } from 'path';
+import { Response } from 'express';
+import { googleCloud } from 'src/utils/google-cloud';
 
 @Injectable()
 export class OpenWorkbookService {
   constructor(private readonly httpService: HttpService) {}
 
-  async getOpenWorkbook(res, id: string) {
+  async getOpenWorkbook(res: Response, id: string) {
     if (!id) {
       throw new HttpException('id is not come ', HttpStatus.BAD_REQUEST);
     }
@@ -32,9 +34,10 @@ export class OpenWorkbookService {
 
   async newOpenWorkbook(
     body: CreateOpenWorkbookDto,
-    pdf: string,
+    file: Express.Multer.File,
   ): Promise<void> {
     const vidio_id: any = body.vidio_id;
+    const pdf: string = googleCloud(file);
 
     if ('.pdf' !== extname(pdf)) {
       throw new HttpException(
@@ -68,7 +71,11 @@ export class OpenWorkbookService {
       });
   }
 
-  async updateOpenWorkbook(video_id, id, pdf): Promise<void> {
+  async updateOpenWorkbook(
+    video_id: string,
+    id: string,
+    file: Express.Multer.File | boolean,
+  ): Promise<void> {
     if (!video_id) {
       throw new HttpException('vidio id not came', HttpStatus.NOT_FOUND);
     }
@@ -87,8 +94,19 @@ export class OpenWorkbookService {
     if (!foundPDF) {
       throw new HttpException('pdf not found', HttpStatus.NOT_FOUND);
     }
+    let pdf: string | boolean = false;
+    if (file) {
+      pdf = googleCloud(file);
 
-    const updatedPDF = {
+      if ('.pdf' !== extname(pdf)) {
+        throw new HttpException(
+          'file must be PDF format',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    const updatedPDF: any = {
       video_id: video_id ? video_id : foundPDF.video_id,
       pdf: pdf ? pdf : foundPDF.pdf,
     };
@@ -101,10 +119,7 @@ export class OpenWorkbookService {
   }
 
   async deleteOpenWorkbook(id: string): Promise<void> {
-    if (!id) {
-      throw new HttpException('id is not come ', HttpStatus.NOT_FOUND);
-    }
-    const foundPDF = await WorkbookOpen.findOneBy({
+    const foundPDF = await WorkbookOpen.findOneByOrFail({
       id: id,
     });
     if (!foundPDF) {

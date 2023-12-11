@@ -10,7 +10,6 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
-  Request,
   Headers,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
@@ -31,9 +30,6 @@ import {
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { googleCloud } from 'src/utils/google-cloud';
-import { tokenUtils } from 'src/utils/token.utils';
-import { Sequence } from 'src/types';
 
 @Controller('course')
 @ApiTags('Courses')
@@ -85,20 +81,17 @@ export class CoursesController {
     @Body() createCourseDto: CreateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const img_link: string = googleCloud(file);
-    if (img_link) {
-      await this.coursesService.create(createCourseDto, img_link);
-    }
+    await this.coursesService.create(createCourseDto, file as any);
   }
 
-  @Get('/list')
+  @Get('/all')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   async findAll() {
     return await this.coursesService.findAll();
   }
 
-  @Get('/:id')
+  @Get('one/:id')
   @ApiOkResponse()
   @ApiNotFoundResponse()
   @ApiHeader({
@@ -107,9 +100,7 @@ export class CoursesController {
     required: false,
   })
   async findOne(@Param('id') id: string, @Headers() header: any) {
-    const user_id = tokenUtils(header);
-
-    return await this.coursesService.findOne(id, user_id);
+    return await this.coursesService.findOne(id, header);
   }
 
   @Patch('/update/:id')
@@ -157,14 +148,7 @@ export class CoursesController {
     @Body() dto: UpdateCourseDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    if (file) {
-      const img_link: any = googleCloud(file) as any;
-      if (img_link) {
-        await this.coursesService.update(id, dto, img_link);
-      }
-    } else {
-      await this.coursesService.update(id, dto, undefined);
-    }
+    await this.coursesService.update(id, dto, file);
   }
 
   @Delete('/delete/:id')

@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   Patch,
@@ -14,13 +13,10 @@ import { CreateTestDto } from './dto/create-test.dto';
 import { UpdateTestDto } from './dto/update-test.dto';
 import {
   ApiBadRequestResponse,
-  ApiBody,
   ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiParam,
   ApiTags,
-  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 @Controller('tests')
@@ -38,8 +34,8 @@ export class TestsController {
     description: 'Admin token',
     required: true,
   })
-  create(@Body() createTestDto: CreateTestDto) {
-    return this.testsService.create(createTestDto);
+  async create(@Body() createTestDto: CreateTestDto) {
+    await this.testsService.create(createTestDto);
   }
 
   @Patch(':id')
@@ -52,8 +48,8 @@ export class TestsController {
     required: true,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
-    return this.testsService.update(id, updateTestDto);
+  async update(@Param('id') id: string, @Body() updateTestDto: UpdateTestDto) {
+    await this.testsService.update(id, updateTestDto);
   }
 
   @Delete(':id')
@@ -69,7 +65,7 @@ export class TestsController {
   @ApiBadRequestResponse()
   @ApiNotFoundResponse()
   @ApiOkResponse()
-  remove(@Param('id') id: string) {
-    return this.testsService.remove(id);
+  async remove(@Param('id') id: string) {
+    await this.testsService.remove(id);
   }
 }

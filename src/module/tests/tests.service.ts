@@ -1,33 +1,29 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTestDto } from './dto/create-test.dto';
 import { UpdateTestDto } from './dto/update-test.dto';
-import { Repository, Unique } from 'typeorm';
 import { TestsEntity } from 'src/entities/tests.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Discount } from 'src/entities/discount.entity';
 
 @Injectable()
 export class TestsService {
-  constructor() {}
-
   async create(createTestDto: CreateTestDto) {
     const findDiscount: any = await Discount.findOne({
       where: { id: createTestDto.discount },
       relations: {
         test: true,
       },
-    }).catch(() => []);
+    }).catch(() => undefined);
 
     if (!findDiscount) {
       throw new HttpException('Discount not found', HttpStatus.NOT_FOUND);
     }
 
     const unique = findDiscount?.test?.find(
-      (e) => e.sequence == createTestDto.sequence,
+      (e: TestsEntity) => e.sequence == createTestDto.sequence,
     );
 
     if (unique) {
-      throw new HttpException('Returned sequence', HttpStatus.NOT_FOUND);
+      throw new HttpException('Returned sequence', HttpStatus.BAD_REQUEST);
     }
 
     await TestsEntity.save(createTestDto);
